@@ -1,0 +1,70 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+<div id="example5.1" style="width:1000px;height:1000px;"></div>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+<script type="text/javascript">
+    google.charts.load("current", { packages: ["timeline"] });
+    google.charts.setOnLoadCallback(drawChart);
+
+    function drawChart() {
+        $(document).ready(function () {
+            $.ajax({
+                type: 'GET',
+                url: 'api/DimDrivers',
+                success: function (d) {
+                    var container = document.getElementById('example5.1');
+                    var chart = new google.visualization.Timeline(container);
+                    var dataTable = new google.visualization.DataTable();
+                    dataTable.addColumn({ type: 'string', id: 'Room' });
+                    dataTable.addColumn({ type: 'string', id: 'Name' });
+                    dataTable.addColumn({ type: 'date', id: 'Start' });
+                    dataTable.addColumn({ type: 'date', id: 'End' });
+                    // dataTable.addRows([
+                    //     ['Magnolia Room', 'Beginning JavaScript', new Date(0, 0, 0, 12, 0, 0), new Date(0, 0, 0, 13, 45, 0)],
+                    //     ['Magnolia Room', 'Advanced Google Charts', new Date(0, 0, 0, 14, 0, 0), new Date(0, 0, 0, 15, 30, 0)],
+                    //     ['Magnolia Room', 'Advanced JavaScript', new Date(0, 0, 0, 16, 0, 0), new Date(0, 0, 0, 17, 30, 0)],
+                    //     ['Willow Room', 'Beginning Google Charts', new Date(0, 0, 0, 12, 30, 0), new Date(0, 0, 0, 14, 0, 0)],
+                    //     ['Willow Room', 'Intermediate Google Charts', new Date(0, 0, 0, 14, 30, 0), new Date(0, 0, 0, 16, 0, 0)],
+                    //     ['Willow Room', 'Advanced Google Charts', new Date(0, 0, 0, 16, 30, 0), new Date(0, 0, 0, 18, 0, 0)],
+                    //     ['Willow Room', 'Advanced Google Charts', new Date(0, 0, 0, 18, 30, 0), new Date(0, 0, 0, 22, 0, 0)],
+                    //     ['mhd', 'Advanced Google Charts', new Date(0, 0, 0, 16, 30, 0), new Date(0, 0, 0, 18, 0, 0)],
+                    //     ['mhd', 'Advanced Google Charts', new Date(0, 0, 0, 18, 30, 0), new Date(0, 0, 0, 22, 0, 0)],
+                    // ]);
+                    // d.fact_bills.forEach(function(entry) {
+                    //     dataTable.addRows(
+                    //         d.Name, "test", new Date(entry.PickedupTime), new Date(entry.DeliveredTime)
+                    //     );
+                    // DeliveredTime
+                    for (index1 = 0; index1 < d.length ; ++index1) {
+                        for (index = 1; index < d[index1].Times.length; index++) {
+                            dataTable.addRows(
+                                [[d[index1].Name, "", new Date(d[index1].Times[index].PickedupTime), new Date(d[index1].Times[index].DeliveredTime)]]
+                                    // [[d[index1].Name, d[index1].DriverAltKey, new Date(d[index1].fact_bills[index].PickedupTime), new Date(d[index1].fact_bills[index].DeliveredTime)]]
+                            );
+                        }
+                    }
+                    // dataTable.addRows([
+                    //     [d.Name, "test", new Date(d.fact_bills[0].PickedupTime), new Date(d.fact_bills[0].DeliveredTime)],
+                    //     [d.Name, "test", new Date(d.fact_bills[1].PickedupTime), new Date(d.fact_bills[1].DeliveredTime)],
+                    //     [d.Name, "test", new Date(d.fact_bills[2].PickedupTime), new Date(d.fact_bills[2].DeliveredTime)],
+                    // ]);
+                    var options = {
+                        colors: ['#322fc7', '#b2c800', '#00e045', '#cdded1', '#c111d1'],
+                    };
+
+                    chart.draw(dataTable, options);
+                }
+                , error: function () {
+                    alert('error');
+                }
+            });
+        })
+    };
+
+
+</script>

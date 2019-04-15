@@ -1,0 +1,363 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="beeorderWHModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="DimDate">
+    <Key>
+      <PropertyRef Name="DateKey" />
+    </Key>
+    <Property Name="DateKey" Type="Int32" Nullable="false" />
+    <Property Name="Date" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="Day" Type="Byte" Nullable="false" />
+    <Property Name="DaySuffix" Type="String" MaxLength="2" FixedLength="true" Unicode="false" Nullable="false" />
+    <Property Name="Weekday" Type="Byte" Nullable="false" />
+    <Property Name="WeekDayName" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="WeekDayName_Short" Type="String" MaxLength="3" FixedLength="true" Unicode="false" Nullable="false" />
+    <Property Name="WeekDayName_FirstLetter" Type="String" MaxLength="1" FixedLength="true" Unicode="false" Nullable="false" />
+    <Property Name="DOWInMonth" Type="Byte" Nullable="false" />
+    <Property Name="DayOfYear" Type="Int16" Nullable="false" />
+    <Property Name="WeekOfMonth" Type="Byte" Nullable="false" />
+    <Property Name="WeekOfYear" Type="Byte" Nullable="false" />
+    <Property Name="Month" Type="Byte" Nullable="false" />
+    <Property Name="MonthName" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="MonthName_Short" Type="String" MaxLength="3" FixedLength="true" Unicode="false" Nullable="false" />
+    <Property Name="MonthName_FirstLetter" Type="String" MaxLength="1" FixedLength="true" Unicode="false" Nullable="false" />
+    <Property Name="Quarter" Type="Byte" Nullable="false" />
+    <Property Name="QuarterName" Type="String" MaxLength="6" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Year" Type="Int32" Nullable="false" />
+    <Property Name="MMYYYY" Type="String" MaxLength="6" FixedLength="true" Unicode="false" Nullable="false" />
+    <Property Name="MonthYear" Type="String" MaxLength="7" FixedLength="true" Unicode="false" Nullable="false" />
+    <Property Name="IsWeekend" Type="Boolean" Nullable="false" />
+    <Property Name="IsHoliday" Type="Boolean" Nullable="false" />
+    <Property Name="HolidayName" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="SpecialDays" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="FinancialYear" Type="Int32" />
+    <Property Name="FinancialQuater" Type="Int32" />
+    <Property Name="FinancialMonth" Type="Int32" />
+    <Property Name="FirstDateofYear" Type="DateTime" Precision="0" />
+    <Property Name="LastDateofYear" Type="DateTime" Precision="0" />
+    <Property Name="FirstDateofQuater" Type="DateTime" Precision="0" />
+    <Property Name="LastDateofQuater" Type="DateTime" Precision="0" />
+    <Property Name="FirstDateofMonth" Type="DateTime" Precision="0" />
+    <Property Name="LastDateofMonth" Type="DateTime" Precision="0" />
+    <Property Name="FirstDateofWeek" Type="DateTime" Precision="0" />
+    <Property Name="LastDateofWeek" Type="DateTime" Precision="0" />
+    <Property Name="CurrentYear" Type="Int16" />
+    <Property Name="CurrentQuater" Type="Int16" />
+    <Property Name="CurrentMonth" Type="Int16" />
+    <Property Name="CurrentWeek" Type="Int16" />
+    <Property Name="CurrentDay" Type="Int16" />
+    <NavigationProperty Name="FactBills" Relationship="Self.FK_FactBill_DimDate" FromRole="DimDate" ToRole="FactBill" />
+  </EntityType>
+  <EntityType Name="DimDish">
+    <Key>
+      <PropertyRef Name="DishKey" />
+    </Key>
+    <Property Name="DishKey" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="DishAltKey" Type="Int32" Nullable="false" />
+    <Property Name="DishName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="DishPrice" Type="Double" />
+    <Property Name="DishDeleted" Type="Int16" />
+    <Property Name="DishActive" Type="Int16" />
+    <Property Name="DishEngName" Type="String" MaxLength="110" FixedLength="false" Unicode="true" />
+    <Property Name="CurrentRecord" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="FactBills" Relationship="Self.FK_FactBill_DimDish" FromRole="DimDish" ToRole="FactBill" />
+  </EntityType>
+  <EntityType Name="DimDriver">
+    <Key>
+      <PropertyRef Name="DriverKey" />
+    </Key>
+    <Property Name="DriverKey" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="DriverAltKey" Type="Int32" Nullable="false" />
+    <Property Name="Name" Type="String" MaxLength="110" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Provider" Type="String" MaxLength="110" FixedLength="false" Unicode="true" />
+    <Property Name="Plate" Type="Int32" />
+    <Property Name="Model" Type="String" MaxLength="110" FixedLength="false" Unicode="true" />
+    <Property Name="VehicleType" Type="String" MaxLength="110" FixedLength="false" Unicode="true" />
+    <Property Name="PricePerKM" Type="Double" />
+    <Property Name="VehicleCategory" Type="Int32" />
+    <Property Name="Active" Type="Int32" />
+    <Property Name="Available" Type="Int32" />
+    <Property Name="Status" Type="Int32" />
+    <Property Name="Start" Type="String" MaxLength="110" FixedLength="false" Unicode="true" />
+    <Property Name="End" Type="String" MaxLength="110" FixedLength="false" Unicode="true" />
+    <Property Name="CurrentLat" Type="Double" />
+    <Property Name="CurrentLng" Type="Double" />
+    <Property Name="LastSeen" Type="DateTime" Precision="7" />
+    <Property Name="CurrentRecord" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="FactBills" Relationship="Self.FK_FactBill_DriverDim" FromRole="DimDriver" ToRole="FactBill" />
+  </EntityType>
+  <EntityType Name="DimRestaurant">
+    <Key>
+      <PropertyRef Name="RestaurantKey" />
+    </Key>
+    <Property Name="RestaurantKey" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="RestaurantAltKey" Type="Int32" Nullable="false" />
+    <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="LaterOrder" Type="Int32" />
+    <Property Name="Position" Type="String" MaxLength="110" FixedLength="false" Unicode="true" />
+    <Property Name="StartDelivery" Type="String" MaxLength="110" FixedLength="false" Unicode="true" />
+    <Property Name="EndDelivery" Type="String" MaxLength="110" FixedLength="false" Unicode="true" />
+    <Property Name="Active" Type="Int32" />
+    <Property Name="Phone" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="Phone2" Type="String" MaxLength="110" FixedLength="false" Unicode="true" />
+    <Property Name="Address" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="ArabicAddress" Type="String" MaxLength="110" FixedLength="false" Unicode="true" />
+    <Property Name="CityName" Type="String" MaxLength="110" FixedLength="false" Unicode="true" />
+    <Property Name="CityArabicName" Type="String" MaxLength="110" FixedLength="false" Unicode="true" />
+    <Property Name="CountryName" Type="String" MaxLength="110" FixedLength="false" Unicode="true" />
+    <Property Name="AreaName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="AreaArabicName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="Street" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="ArabicStreet" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="Description" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="ArabicDescraption" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="Longitude" Type="Double" />
+    <Property Name="Latitude" Type="Double" />
+    <Property Name="Tax" Type="Double" />
+    <Property Name="ShowPrices" Type="Int16" />
+    <Property Name="BeeorderRegisted" Type="Int32" />
+    <Property Name="TakeAway" Type="Int32" />
+    <Property Name="Delivery" Type="Int32" />
+    <Property Name="DineIn" Type="Int32" />
+    <Property Name="RestaurantType" Type="String" MaxLength="110" FixedLength="false" Unicode="true" />
+    <Property Name="OpenTime" Type="String" MaxLength="110" FixedLength="false" Unicode="true" />
+    <Property Name="CloseTime" Type="String" MaxLength="110" FixedLength="false" Unicode="true" />
+    <Property Name="CurrentStatus" Type="Int32" />
+    <Property Name="LastSeen" Type="DateTime" Precision="7" />
+    <Property Name="Copoun" Type="Int32" />
+    <Property Name="LateEstimation" Type="Int32" />
+    <Property Name="AutoClose" Type="Int32" />
+    <Property Name="MinimumOrder" Type="Int32" />
+    <Property Name="FreeDelivery" Type="Int32" />
+    <Property Name="DeliveryRegion" Type="Int32" />
+    <Property Name="DeliveryFee" Type="Double" />
+    <Property Name="DeliveryProvider" Type="Int32" />
+    <Property Name="DeliveryAvialable" Type="Int32" />
+    <Property Name="CurrentRecord" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="DimVouchers" Relationship="Self.FK_DimVoucher_DimRestaurant" FromRole="DimRestaurant" ToRole="DimVoucher" />
+    <NavigationProperty Name="FactBills" Relationship="Self.FK_FactBill_RestaurantDim" FromRole="DimRestaurant" ToRole="FactBill" />
+  </EntityType>
+  <EntityType Name="DimUser">
+    <Key>
+      <PropertyRef Name="UserKey" />
+    </Key>
+    <Property Name="UserKey" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="UserAltKey" Type="Int32" Nullable="false" />
+    <Property Name="Role" Type="Int32" />
+    <Property Name="Name" Type="String" MaxLength="110" FixedLength="false" Unicode="true" />
+    <Property Name="Mobile" Type="Int32" />
+    <Property Name="Email" Type="String" MaxLength="110" FixedLength="false" Unicode="true" />
+    <Property Name="Address" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="Street" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="Near" Type="String" MaxLength="110" FixedLength="false" Unicode="true" />
+    <Property Name="Floor" Type="String" MaxLength="110" FixedLength="false" Unicode="true" />
+    <Property Name="AreaArabicName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="AreaEngName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="CreationTime" Type="DateTime" Precision="7" />
+    <Property Name="CurrentRecord" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="FactBills" Relationship="Self.FK_FactBill_UserDim" FromRole="DimUser" ToRole="FactBill" />
+  </EntityType>
+  <EntityType Name="DimVoucher">
+    <Key>
+      <PropertyRef Name="VoucherKey" />
+    </Key>
+    <Property Name="VoucherKey" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="VoucherAltKey" Type="Int32" Nullable="false" />
+    <Property Name="RestaurantId" Type="Int32" Nullable="false" />
+    <Property Name="Voucher" Type="String" MaxLength="110" FixedLength="false" Unicode="true" />
+    <Property Name="VoucherType" Type="Int32" />
+    <Property Name="VoucherCategory" Type="String" MaxLength="25" FixedLength="false" Unicode="true" />
+    <Property Name="Value" Type="Double" />
+    <Property Name="CreationTime" Type="DateTime" Precision="7" />
+    <Property Name="Taken" Type="Int32" />
+    <Property Name="ValidateTime" Type="DateTime" Precision="7" />
+    <NavigationProperty Name="DimRestaurant" Relationship="Self.FK_DimVoucher_DimRestaurant" FromRole="DimVoucher" ToRole="DimRestaurant" />
+  </EntityType>
+  <EntityType Name="FactBill">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="BillKey" Type="Int32" Nullable="false" />
+    <Property Name="UserKey" Type="Int32" Nullable="false" />
+    <Property Name="DateKey" Type="Int32" />
+    <Property Name="ResturentKey" Type="Int32" Nullable="false" />
+    <Property Name="DriverKey" Type="Int32" Nullable="false" />
+    <Property Name="DishKey" Type="Int32" />
+    <Property Name="Status" Type="String" MaxLength="110" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Paid" Type="Int32" />
+    <Property Name="BillType" Type="Int32" />
+    <Property Name="Rate" Type="Int32" />
+    <Property Name="SubTotal" Type="Double" />
+    <Property Name="NetTotal" Type="Double" />
+    <Property Name="Tax" Type="Double" />
+    <Property Name="OpenTime" Type="DateTime" Precision="7" />
+    <Property Name="HandlingTime" Type="DateTime" Precision="7" />
+    <Property Name="ElapsedHandlingTime" Type="Double" />
+    <Property Name="ExpectedTime" Type="String" MaxLength="110" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="CloseTime" Type="DateTime" Precision="7" />
+    <Property Name="TimeType" Type="String" MaxLength="110" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="TimeToPick" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Delivery" Type="Double" />
+    <Property Name="Commision" Type="Double" />
+    <Property Name="DueFromRestaurant" Type="Double" />
+    <Property Name="BillDriverStatus" Type="Int32" Nullable="false" />
+    <Property Name="Distance" Type="Int32" />
+    <Property Name="FactorDistance" Type="Double" />
+    <Property Name="Late" Type="Double" />
+    <Property Name="ConfirmationTime" Type="DateTime" Precision="7" />
+    <Property Name="DispatchTime" Type="DateTime" Precision="7" />
+    <Property Name="DeliveredTime" Type="DateTime" Precision="7" />
+    <Property Name="PickedupTime" Type="DateTime" Precision="7" />
+    <Property Name="ArrivalTime" Type="DateTime" Precision="7" />
+    <Property Name="DepatureTime" Type="DateTime" Precision="7" />
+    <Property Name="OrderQuantity" Type="Int32" />
+    <Property Name="OrderDishPrice" Type="Double" />
+    <Property Name="OrderTotal" Type="Double" />
+    <Property Name="OrderDeleted" Type="Int16" />
+    <NavigationProperty Name="DimDate" Relationship="Self.FK_FactBill_DimDate" FromRole="FactBill" ToRole="DimDate" />
+    <NavigationProperty Name="DimDish" Relationship="Self.FK_FactBill_DimDish" FromRole="FactBill" ToRole="DimDish" />
+    <NavigationProperty Name="DimDriver" Relationship="Self.FK_FactBill_DriverDim" FromRole="FactBill" ToRole="DimDriver" />
+    <NavigationProperty Name="DimRestaurant" Relationship="Self.FK_FactBill_RestaurantDim" FromRole="FactBill" ToRole="DimRestaurant" />
+    <NavigationProperty Name="DimUser" Relationship="Self.FK_FactBill_UserDim" FromRole="FactBill" ToRole="DimUser" />
+  </EntityType>
+  <EntityType Name="migration">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="migration1" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="batch" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="OldDateDim">
+    <Key>
+      <PropertyRef Name="DateKey" />
+    </Key>
+    <Property Name="DateKey" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="FullDateLabel" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="DayNumberOfWeek" Type="Byte" />
+    <Property Name="DayNameOfWeek" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="DayNumberOfMonth" Type="Byte" />
+    <Property Name="DayNameOfMonth" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="MonthName" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="MonthNumberOfYear" Type="Byte" />
+    <Property Name="CalenderYear" Type="Int16" />
+  </EntityType>
+  <EntityType Name="sysdiagram">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="principal_id" Type="Int32" Nullable="false" />
+    <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="version" Type="Int32" />
+    <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+  </EntityType>
+  <Association Name="FK_FactBill_DimDate">
+    <End Role="DimDate" Type="Self.DimDate" Multiplicity="0..1" />
+    <End Role="FactBill" Type="Self.FactBill" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="DimDate">
+        <PropertyRef Name="DateKey" />
+      </Principal>
+      <Dependent Role="FactBill">
+        <PropertyRef Name="DateKey" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_FactBill_DimDish">
+    <End Role="DimDish" Type="Self.DimDish" Multiplicity="0..1" />
+    <End Role="FactBill" Type="Self.FactBill" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="DimDish">
+        <PropertyRef Name="DishKey" />
+      </Principal>
+      <Dependent Role="FactBill">
+        <PropertyRef Name="DishKey" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_FactBill_DriverDim">
+    <End Role="DimDriver" Type="Self.DimDriver" Multiplicity="1" />
+    <End Role="FactBill" Type="Self.FactBill" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="DimDriver">
+        <PropertyRef Name="DriverKey" />
+      </Principal>
+      <Dependent Role="FactBill">
+        <PropertyRef Name="DriverKey" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_DimVoucher_DimRestaurant">
+    <End Role="DimRestaurant" Type="Self.DimRestaurant" Multiplicity="1" />
+    <End Role="DimVoucher" Type="Self.DimVoucher" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="DimRestaurant">
+        <PropertyRef Name="RestaurantKey" />
+      </Principal>
+      <Dependent Role="DimVoucher">
+        <PropertyRef Name="RestaurantId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_FactBill_RestaurantDim">
+    <End Role="DimRestaurant" Type="Self.DimRestaurant" Multiplicity="1" />
+    <End Role="FactBill" Type="Self.FactBill" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="DimRestaurant">
+        <PropertyRef Name="RestaurantKey" />
+      </Principal>
+      <Dependent Role="FactBill">
+        <PropertyRef Name="ResturentKey" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_FactBill_UserDim">
+    <End Role="DimUser" Type="Self.DimUser" Multiplicity="1" />
+    <End Role="FactBill" Type="Self.FactBill" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="DimUser">
+        <PropertyRef Name="UserKey" />
+      </Principal>
+      <Dependent Role="FactBill">
+        <PropertyRef Name="UserKey" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="Entities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="DimDates" EntityType="Self.DimDate" />
+    <EntitySet Name="DimDishes" EntityType="Self.DimDish" />
+    <EntitySet Name="DimDrivers" EntityType="Self.DimDriver" />
+    <EntitySet Name="DimRestaurants" EntityType="Self.DimRestaurant" />
+    <EntitySet Name="DimUsers" EntityType="Self.DimUser" />
+    <EntitySet Name="DimVouchers" EntityType="Self.DimVoucher" />
+    <EntitySet Name="FactBills" EntityType="Self.FactBill" />
+    <EntitySet Name="migrations" EntityType="Self.migration" />
+    <EntitySet Name="OldDateDims" EntityType="Self.OldDateDim" />
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagram" />
+    <AssociationSet Name="FK_FactBill_DimDate" Association="Self.FK_FactBill_DimDate">
+      <End Role="DimDate" EntitySet="DimDates" />
+      <End Role="FactBill" EntitySet="FactBills" />
+    </AssociationSet>
+    <AssociationSet Name="FK_FactBill_DimDish" Association="Self.FK_FactBill_DimDish">
+      <End Role="DimDish" EntitySet="DimDishes" />
+      <End Role="FactBill" EntitySet="FactBills" />
+    </AssociationSet>
+    <AssociationSet Name="FK_FactBill_DriverDim" Association="Self.FK_FactBill_DriverDim">
+      <End Role="DimDriver" EntitySet="DimDrivers" />
+      <End Role="FactBill" EntitySet="FactBills" />
+    </AssociationSet>
+    <AssociationSet Name="FK_DimVoucher_DimRestaurant" Association="Self.FK_DimVoucher_DimRestaurant">
+      <End Role="DimRestaurant" EntitySet="DimRestaurants" />
+      <End Role="DimVoucher" EntitySet="DimVouchers" />
+    </AssociationSet>
+    <AssociationSet Name="FK_FactBill_RestaurantDim" Association="Self.FK_FactBill_RestaurantDim">
+      <End Role="DimRestaurant" EntitySet="DimRestaurants" />
+      <End Role="FactBill" EntitySet="FactBills" />
+    </AssociationSet>
+    <AssociationSet Name="FK_FactBill_UserDim" Association="Self.FK_FactBill_UserDim">
+      <End Role="DimUser" EntitySet="DimUsers" />
+      <End Role="FactBill" EntitySet="FactBills" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
