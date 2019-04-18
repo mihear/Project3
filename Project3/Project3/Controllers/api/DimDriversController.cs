@@ -26,10 +26,12 @@ namespace Project3.Controllers.api
     }
     public class DriversCharts
     {
+        public int id { get; set; }
         public string Name { get; set; }
         public List<TimesDriver> Times { get; set; }
-        public DriversCharts(string name, List<FactBill> facts)
+        public DriversCharts(string name, int id, List<FactBill> facts)
         {
+            this.id = id;
             this.Name = name;
             Times = new List<TimesDriver>();
             foreach (var item in facts)
@@ -37,6 +39,12 @@ namespace Project3.Controllers.api
                 Times.Add(new TimesDriver(item));
             }
         }
+    }
+    public class DriverFilter
+    {
+        public DateTime from { get; set; }
+        public DateTime to { get; set; }
+        public string name { get; set; }
     }
     public class DriversType
     {
@@ -46,21 +54,39 @@ namespace Project3.Controllers.api
     public class DimDriversController : ApiController
     {
         private Entities db = new Entities();
-
         // GET: api/DimDrivers
-        public List<DriversCharts> GetDimDrivers()
+        public IHttpActionResult GetDriver()
         {
             List<DriversCharts> list = new List<DriversCharts>();
             foreach (var item in db.DimDrivers.ToList())
             {
-                list.Add(new DriversCharts(item.Name, item.FactBills.Where(m =>
+                list.Add(new DriversCharts(item.Name, item.DriverKey,item.FactBills.Where(m =>
                 (DateTime.Compare(new DateTime(((DateTime)m.DeliveredTime).Year, ((DateTime)m.DeliveredTime).Month, ((DateTime)m.DeliveredTime).Day), new DateTime(2017, 12, 2)) == 0)).ToList()));
             }
-            return list;
+            return Ok(list);
+
+        }
+        [HttpPost]
+        [ResponseType(typeof(DimDriver))]
+        // GET: api/DimDrivers
+        public IHttpActionResult GetDrivers(DriverFilter filter)
+        {
+            if (filter.from == null || filter.to == null)
+            {
+                return BadRequest();
+            }
+            List<DriversCharts> list = new List<DriversCharts>();
+            foreach (var item in db.DimDrivers.ToList())
+            {
+                list.Add(new
+                    DriversCharts(item.Name, item.DriverKey, item.FactBills.Where(m =>
+                    (DateTime.Compare((DateTime)m.ConfirmationTime,filter.from)>=0 && DateTime.Compare((DateTime)m.ConfirmationTime, filter.to) < 1)).ToList()));
+            }
+            return Ok(list);
 
         }
         [HttpGet]
-        [Route("api/DriverType")]
+        //[Route("api/DriverType")]
         // GET: api/DimDrivers/5
         [ResponseType(typeof(DimDriver))]
         public IHttpActionResult DriverType()
@@ -70,7 +96,7 @@ namespace Project3.Controllers.api
             //{
             //    Size = db.DimDrivers.GroupBy(m => m.VehicleType).Count(),
             //});
-            var test = db.DimDrivers.GroupBy(m => m.VehicleType).Select(x => new { name = x.FirstOrDefault().VehicleType, y = x.Count() }); 
+            var test = db.DimDrivers.GroupBy(m => m.VehicleType).Select(x => new { name = x.FirstOrDefault().VehicleType, y = x.Count() });
 
             return Ok(test);
         }
