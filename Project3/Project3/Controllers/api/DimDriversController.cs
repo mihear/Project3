@@ -44,7 +44,7 @@ namespace Project3.Controllers.api
     {
         public DateTime from { get; set; }
         public DateTime to { get; set; }
-        public string name { get; set; }
+        public int id { get; set; }
     }
     public class DriversType
     {
@@ -54,6 +54,22 @@ namespace Project3.Controllers.api
     public class DimDriversController : ApiController
     {
         private Entities db = new Entities();
+        public IHttpActionResult getAllDrivers()
+        {
+            return Ok(db.DimDrivers.Select(m=> new
+            {
+                id=m.DriverKey,
+                nameof=m.Name
+            }).ToList());
+        }
+        public IHttpActionResult getTotalDrivers()
+        {
+            return Ok(db.DimDrivers.Count());
+        }
+        public IHttpActionResult getTotalProviderDrivers()
+        {
+            return Ok(db.DimDrivers.Where(m=>m.Provider== "beeorder").Count());
+        }
         // GET: api/DimDrivers
         public IHttpActionResult GetDriver()
         {
@@ -76,11 +92,23 @@ namespace Project3.Controllers.api
                 return BadRequest();
             }
             List<DriversCharts> list = new List<DriversCharts>();
-            foreach (var item in db.DimDrivers.ToList())
+            if (filter.id == 0)
             {
+                foreach (var item in db.DimDrivers.ToList())
+                {
+                    list.Add(new
+                        DriversCharts(item.Name, item.DriverKey, item.FactBills.Where(m =>
+                        (DateTime.Compare((DateTime)m.ConfirmationTime, filter.from) >= 0 && DateTime.Compare((DateTime)m.ConfirmationTime, filter.to) < 1)).ToList()));
+                }
+            }
+            else {
+                var item = db.DimDrivers.FirstOrDefault(m=>m.DriverKey==filter.id);
+                if (item == null)
+                    return NotFound();
                 list.Add(new
-                    DriversCharts(item.Name, item.DriverKey, item.FactBills.Where(m =>
-                    (DateTime.Compare((DateTime)m.ConfirmationTime,filter.from)>=0 && DateTime.Compare((DateTime)m.ConfirmationTime, filter.to) < 1)).ToList()));
+                DriversCharts(item.Name, item.DriverKey, item.FactBills.Where(m =>
+                (DateTime.Compare((DateTime)m.ConfirmationTime, filter.from) >= 0 && DateTime.Compare((DateTime)m.ConfirmationTime, filter.to) < 1)).ToList()));
+
             }
             return Ok(list);
 
