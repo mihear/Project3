@@ -306,6 +306,12 @@
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\_references.js" />
+    <Content Include="template\beeOrder logo\beeorder.png" />
+    <Content Include="template\beeOrder logo\beeorder_logo.png" />
+    <Content Include="template\beeOrder logo\css.css" />
+    <Content Include="template\beeOrder logo\NO_RESULT.png" />
+    <Content Include="template\beeOrder logo\unnamed.jpg" />
+    <Content Include="template\css.css" />
     <Content Include="template\css\style.css" />
     <Content Include="template\dist\img\network\acceptDeleteIcon.png" />
     <Content Include="template\dist\img\network\addNodeIcon.png" />
