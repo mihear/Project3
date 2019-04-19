@@ -5,7 +5,7 @@ function StudentDetailsService($http) {
     this.getStudentDetails = function getStudentDetails()
     {
         debugger
-        return $http.get('/api/DimUsers');
+        return $http.get('/api/DimDrivers/GetDriver');
     };
 }
 app.controller('StudentController', StudentController);

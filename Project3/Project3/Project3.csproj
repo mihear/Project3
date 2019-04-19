@@ -307,6 +307,30 @@
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="template\css\style.css" />
+    <Content Include="template\dist\img\network\acceptDeleteIcon.png" />
+    <Content Include="template\dist\img\network\addNodeIcon.png" />
+    <Content Include="template\dist\img\network\backIcon.png" />
+    <Content Include="template\dist\img\network\connectIcon.png" />
+    <Content Include="template\dist\img\network\cross.png" />
+    <Content Include="template\dist\img\network\cross2.png" />
+    <Content Include="template\dist\img\network\deleteIcon.png" />
+    <Content Include="template\dist\img\network\downArrow.png" />
+    <Content Include="template\dist\img\network\editIcon.png" />
+    <Content Include="template\dist\img\network\leftArrow.png" />
+    <Content Include="template\dist\img\network\minus.png" />
+    <Content Include="template\dist\img\network\plus.png" />
+    <Content Include="template\dist\img\network\rightArrow.png" />
+    <Content Include="template\dist\img\network\upArrow.png" />
+    <Content Include="template\dist\img\network\zoomExtends.png" />
+    <Content Include="template\dist\vis-graph3d.min.js" />
+    <Content Include="template\dist\vis-network.min.css" />
+    <Content Include="template\dist\vis-network.min.js" />
+    <Content Include="template\dist\vis-timeline-graph2d.min.css" />
+    <Content Include="template\dist\vis-timeline-graph2d.min.js" />
+    <Content Include="template\dist\vis.css" />
+    <Content Include="template\dist\vis.js" />
+    <Content Include="template\dist\vis.min.css" />
+    <Content Include="template\dist\vis.min.js" />
     <Content Include="template\fonts\Roboto\LICENSE.txt" />
     <Content Include="template\images\auth\login_1.jpg" />
     <Content Include="template\images\auth\register.jpg" />
@@ -2331,6 +2355,8 @@
     <Content Include="template\vendors\tinymce\skins\lightgray\fonts\tinymce.ttf" />
     <Content Include="template\vendors\tinymce\skins\lightgray\fonts\tinymce.woff" />
     <Content Include="Views\Dashboard\drivers.cshtml" />
+    <Content Include="template\dist\vis.js.map" />
+    <Content Include="template\dist\vis.map" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
