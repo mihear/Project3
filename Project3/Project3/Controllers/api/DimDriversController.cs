@@ -63,7 +63,7 @@ namespace Project3.Controllers.api
                 list.Add(new DriversCharts(item.Name, item.DriverKey,item.FactBills.Where(m =>
                 (DateTime.Compare(new DateTime(((DateTime)m.DeliveredTime).Year, ((DateTime)m.DeliveredTime).Month, ((DateTime)m.DeliveredTime).Day), new DateTime(2017, 12, 2)) == 0)).ToList()));
             }
-            return Ok(list);
+            return Ok(list.Where(m => m.Times.Count() >= 1).ToList());
 
         }
         [HttpPost]
