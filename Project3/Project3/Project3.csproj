@@ -263,8 +263,14 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\angular.min.js" />
+    <Content Include="Content\bootstrap-datetimepicker-0.0.11\css\bootstrap-datetimepicker.min.css" />
+    <Content Include="Content\bootstrap-datetimepicker-0.0.11\js\bootstrap-datetimepicker.min.js" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\bootstrap4\bootstrap.min.css" />
+    <Content Include="Content\bootstrap4\bootstrap.min.js" />
+    <Content Include="Content\bootstrap4\jquery-3.2.1.slim.min.js" />
+    <Content Include="Content\bootstrap4\popper.min.js" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
