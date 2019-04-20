@@ -51,15 +51,21 @@ namespace Project3.Controllers.api
         public int Size { get; set; }
         public string Type { get; set; }
     }
+    public class DriversOrder
+    {
+        public string Name { get; set; }
+        public int allOrder { get; set; }
+        public int cancelOrder { get; set; }
+    }
     public class DimDriversController : ApiController
     {
         private Entities db = new Entities();
         public IHttpActionResult getAllDrivers()
         {
-            return Ok(db.DimDrivers.Select(m=> new
+            return Ok(db.DimDrivers.Select(m => new
             {
-                id=m.DriverKey,
-                nameof=m.Name
+                id = m.DriverKey,
+                nameof = m.Name
             }).ToList());
         }
         public IHttpActionResult getTotalDrivers()
@@ -68,7 +74,7 @@ namespace Project3.Controllers.api
         }
         public IHttpActionResult getTotalProviderDrivers()
         {
-            return Ok(db.DimDrivers.Where(m=>m.Provider== "beeorder").Count());
+            return Ok(db.DimDrivers.Where(m => m.Provider == "beeorder").Count());
         }
         // GET: api/DimDrivers
         public IHttpActionResult GetDriver()
@@ -76,8 +82,9 @@ namespace Project3.Controllers.api
             List<DriversCharts> list = new List<DriversCharts>();
             foreach (var item in db.DimDrivers.ToList())
             {
-                list.Add(new DriversCharts(item.Name, item.DriverKey,item.FactBills.Where(m =>
-                (DateTime.Compare(new DateTime(((DateTime)m.DeliveredTime).Year, ((DateTime)m.DeliveredTime).Month, ((DateTime)m.DeliveredTime).Day), new DateTime(2017, 12, 2)) == 0)).ToList()));
+                list.Add(new DriversCharts(item.Name, item.DriverKey, item.FactBills.Where(m =>
+                 (DateTime.Compare(new DateTime(((DateTime)m.DeliveredTime).Year, ((DateTime)m.DeliveredTime).Month, ((DateTime)m.DeliveredTime).Day),
+                 new DateTime(2017, 12, 2)) == 0)).ToList()));
             }
             return Ok(list.Where(m => m.Times.Count() >= 1).ToList());
 
@@ -97,20 +104,21 @@ namespace Project3.Controllers.api
                 foreach (var item in db.DimDrivers.ToList())
                 {
                     list.Add(new
-                        DriversCharts(item.Name, item.DriverKey, item.FactBills.Where(m =>
-                        (DateTime.Compare((DateTime)m.ConfirmationTime, filter.from) >= 0 && DateTime.Compare((DateTime)m.ConfirmationTime, filter.to) < 1)).ToList()));
+                        DriversCharts(item.Name, item.DriverKey, item.FactBills.Where(m => m.ConfirmationTime != DateTime.MinValue &&
+                        (DateTime.Compare((DateTime)m.PickedupTime, filter.from) >= 0 && DateTime.Compare((DateTime)m.PickedupTime, filter.to) <= 1)).ToList()));
                 }
             }
-            else {
-                var item = db.DimDrivers.FirstOrDefault(m=>m.DriverKey==filter.id);
+            else
+            {
+                var item = db.DimDrivers.FirstOrDefault(m => m.DriverKey == filter.id);
                 if (item == null)
                     return NotFound();
                 list.Add(new
                 DriversCharts(item.Name, item.DriverKey, item.FactBills.Where(m =>
-                (DateTime.Compare((DateTime)m.ConfirmationTime, filter.from) >= 0 && DateTime.Compare((DateTime)m.ConfirmationTime, filter.to) < 1)).ToList()));
+                (DateTime.Compare((DateTime)m.PickedupTime, filter.from) >= 0 && DateTime.Compare((DateTime)m.PickedupTime, filter.to) <= 1)).ToList()));
 
             }
-            return Ok(list);
+            return Ok(list.Where(m => m.Times.Count() > 0));
 
         }
         [HttpGet]
@@ -128,7 +136,77 @@ namespace Project3.Controllers.api
 
             return Ok(test);
         }
+        [HttpGet]
+        public IHttpActionResult driverOrder()
+        {
+            var list = new List<DriversOrder>();
+            foreach (var item in db.DimDrivers.ToList())
+            {
+                var ordercancel = item.FactBills.Where(m => m.ConfirmationTime != DateTime.MinValue &&
+                 (DateTime.Compare((DateTime)m.PickedupTime, DateTime.Parse("2017/2/12 00:00:00")) >= 0
+                 && DateTime.Compare((DateTime)m.PickedupTime, DateTime.Parse("2017/2/12 00:00:00")) <= 1)).Count();
 
+                var order = item.FactBills.Where(m => (DateTime.Compare((DateTime)m.PickedupTime, DateTime.Parse("2017/2/12 00:00:00")) >= 0
+                 && DateTime.Compare((DateTime)m.PickedupTime, DateTime.Parse("2017/2/12 00:00:00")) <= 1)).Count();
+
+                list.Add(new DriversOrder()
+                {
+                    allOrder = order,
+                    cancelOrder = ordercancel,
+                    Name = item.Name
+                });
+            }
+            return Ok(list.Where(m => m.allOrder >= 1).ToList());
+
+        }
+        [HttpPost]
+        public IHttpActionResult driverOrder(DriverFilter filter)
+        {
+            if (filter == null || filter.from == null || filter.from == null)
+            {
+                return BadRequest();
+            }
+            var list = new List<DriversOrder>();
+            if (filter.id == 0)
+            {
+                foreach (var item in db.DimDrivers.ToList())
+                {
+                    var ordercancel = item.FactBills.Where(m => m.ConfirmationTime != DateTime.MinValue &&
+                     (DateTime.Compare((DateTime)m.PickedupTime, filter.from) >= 0
+                     && DateTime.Compare((DateTime)m.PickedupTime, filter.to) <= 1)).Count();
+
+                    var order = item.FactBills.Where(m => (DateTime.Compare((DateTime)m.PickedupTime, filter.from) >= 0
+                     && DateTime.Compare((DateTime)m.PickedupTime, filter.to) <= 1)).Count();
+
+                    list.Add(new DriversOrder()
+                    {
+                        allOrder = order,
+                        cancelOrder = ordercancel,
+                        Name = item.Name
+                    });
+                }
+            }
+            else
+            {
+                var item = db.DimDrivers.FirstOrDefault(m => m.DriverKey == filter.id);
+                if (item == null)
+                    return NotFound();
+                var ordercancel = item.FactBills.Where(m => m.ConfirmationTime != DateTime.MinValue &&
+                  (DateTime.Compare((DateTime)m.PickedupTime, filter.from) >= 0
+                  && DateTime.Compare((DateTime)m.PickedupTime, filter.to) <= 1)).Count();
+
+                var order = item.FactBills.Where(m => (DateTime.Compare((DateTime)m.PickedupTime, filter.from) >= 0
+                 && DateTime.Compare((DateTime)m.PickedupTime, filter.to) <= 1)).Count();
+
+                list.Add(new DriversOrder()
+                {
+                    allOrder = order,
+                    cancelOrder = ordercancel,
+                    Name = item.Name
+                });
+            }
+            return Ok(list.Where(m => m.allOrder >= 1));
+        }
         // PUT: api/DimDrivers/5
         [ResponseType(typeof(void))]
         public IHttpActionResult PutDimDriver(int id, DimDriver dimDriver)
