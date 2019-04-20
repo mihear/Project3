@@ -105,7 +105,7 @@ namespace Project3.Controllers.api
                 {
                     list.Add(new
                         DriversCharts(item.Name, item.DriverKey, item.FactBills.Where(m => m.ConfirmationTime != DateTime.MinValue &&
-                        (DateTime.Compare((DateTime)m.PickedupTime, filter.from) >= 0 && DateTime.Compare((DateTime)m.PickedupTime, filter.to) <= 1)).ToList()));
+                        (DateTime.Compare((DateTime)m.PickedupTime, filter.from) >= 0 && DateTime.Compare((DateTime)m.PickedupTime, filter.to) <= 0)).ToList()));
                 }
             }
             else
@@ -115,7 +115,7 @@ namespace Project3.Controllers.api
                     return NotFound();
                 list.Add(new
                 DriversCharts(item.Name, item.DriverKey, item.FactBills.Where(m =>
-                (DateTime.Compare((DateTime)m.PickedupTime, filter.from) >= 0 && DateTime.Compare((DateTime)m.PickedupTime, filter.to) <= 1)).ToList()));
+                (DateTime.Compare((DateTime)m.PickedupTime, filter.from) >= 0 && DateTime.Compare((DateTime)m.PickedupTime, filter.to) <= 0)).ToList()));
 
             }
             return Ok(list.Where(m => m.Times.Count() > 0));
@@ -137,7 +137,7 @@ namespace Project3.Controllers.api
             return Ok(test);
         }
         [HttpGet]
-        public IHttpActionResult driverOrder()
+        public IHttpActionResult driverOrde()
         {
             var list = new List<DriversOrder>();
             foreach (var item in db.DimDrivers.ToList())
@@ -173,10 +173,10 @@ namespace Project3.Controllers.api
                 {
                     var ordercancel = item.FactBills.Where(m => m.ConfirmationTime != DateTime.MinValue &&
                      (DateTime.Compare((DateTime)m.PickedupTime, filter.from) >= 0
-                     && DateTime.Compare((DateTime)m.PickedupTime, filter.to) <= 1)).Count();
+                     && DateTime.Compare((DateTime)m.PickedupTime, filter.to) <= 0)).Count();
 
                     var order = item.FactBills.Where(m => (DateTime.Compare((DateTime)m.PickedupTime, filter.from) >= 0
-                     && DateTime.Compare((DateTime)m.PickedupTime, filter.to) <= 1)).Count();
+                     && DateTime.Compare((DateTime)m.PickedupTime, filter.to) <= 0)).Count();
 
                     list.Add(new DriversOrder()
                     {
@@ -193,10 +193,10 @@ namespace Project3.Controllers.api
                     return NotFound();
                 var ordercancel = item.FactBills.Where(m => m.ConfirmationTime != DateTime.MinValue &&
                   (DateTime.Compare((DateTime)m.PickedupTime, filter.from) >= 0
-                  && DateTime.Compare((DateTime)m.PickedupTime, filter.to) <= 1)).Count();
+                  && DateTime.Compare((DateTime)m.PickedupTime, filter.to) <=0)).Count();
 
                 var order = item.FactBills.Where(m => (DateTime.Compare((DateTime)m.PickedupTime, filter.from) >= 0
-                 && DateTime.Compare((DateTime)m.PickedupTime, filter.to) <= 1)).Count();
+                 && DateTime.Compare((DateTime)m.PickedupTime, filter.to) <= 0)).Count();
 
                 list.Add(new DriversOrder()
                 {
@@ -241,7 +241,6 @@ namespace Project3.Controllers.api
 
             return StatusCode(HttpStatusCode.NoContent);
         }
-
         // POST: api/DimDrivers
         [ResponseType(typeof(DimDriver))]
         public IHttpActionResult PostDimDriver(DimDriver dimDriver)

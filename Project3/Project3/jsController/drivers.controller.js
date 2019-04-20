@@ -2,8 +2,9 @@
 var app = angular.module('myApp', [])
 app.service('StudentDetailsService', StudentDetailsService);
 function StudentDetailsService($http) {
-    this.getStudentDetails = function getStudentDetails() {
-        return $http.get('/api/DimDrivers/GetDriver');
+    this.getStudentDetails = function getStudentDetails(filter) {
+        
+        return $http.post('/api/DimDrivers/GetDrivers',filter);
     };
     this.getTotal = function getTotal() {
         return $http.get('/api/DimDrivers/getTotalDrivers')
@@ -14,119 +15,132 @@ function StudentDetailsService($http) {
     this.getDriverType = function getDriverType() {
         return $http.get('/api/DimDrivers/DriverType')
     };
+    this.getdriverOrder = function getdriverOrder() {
+        return $http.get('/api/DimDrivers/driverOrde')
+    };
+    this.getAllDrivers = function getAllDrivers() {
+        return $http.get('/api/DimDrivers/getAllDrivers')
+    };
 }
 app.controller('StudentController', StudentController);
 
 function StudentController(StudentDetailsService) {
 
     var vm = this;
+    vm.filter = {}
+    //= {
+    //    id = 0 ,
+    //    from: new Date().toISOString().substr(0, 10),
+    //    to: new Date().toISOString().substr(0, 10)
+    //};
+    var today = new Date();
+    var dd = today.getDate();
+    var ddd = today.getDate()+1;
+    var mm = today.getMonth() + 1; //January is 0!
 
-    StudentDetailsService.getStudentDetails().then(function (response) {
-        vm.drivers = response.data;
-        vm.driverName = [];
-        vm.data = []
-        console.log(vm.drivers);
-        var k = 0;
-        for (var i = 0; i < vm.drivers.length; i++) {
-            var test = {};
-            test['id'] = vm.drivers[i].id;
-            test['content'] = vm.drivers[i].Name;
-            vm.driverName.push(test);
-            for (var j = 0; j < vm.drivers[i].Times.length; j++) {
-                var object = {};
-                object['id'] = k;
-                object['group'] = vm.drivers[i].id;
-                object['start'] = vm.drivers[i].Times[j].PickedupTime;
-                object['end'] = vm.drivers[i].Times[j].DeliveredTime;
-                vm.data.push(object)
-                k++;
-            }   
-        }
+    var yyyy = today.getFullYear();
+    if (dd < 10) {
+        dd = '0' + dd;
+    }
+    if (mm < 10) {
+        mm = '0' + mm;
+    }
+    var todayn =  yyyy + '/' + mm + '/' +dd
+    var todayt = yyyy + '/' + mm + '/' + ddd
+    
+
+    vm.filter['id'] = 0;
+    vm.filter['from'] = new Date(todayn);
+    vm.filter['to'] = new Date(todayt);
+    //vm.filter['from'] = "2017/12/7";
+    //vm.filter['to'] = "2017/12/8";
+    
+    vm.dTimeline = dTimeline;
+    dTimeline();
+
+    function dTimeline() {
         
-        console.log(vm.data)
-
-        this.test = "yesssssss"
-
-
-        var groups = new vis.DataSet(vm.driverName);
-
-        // create a dataset with items
-        // note that months are zero-based in the JavaScript Date object, so month 3 is April
-        //var items = new vis.DataSet([
-        //    { id: 0, group: 4, start: new Date("2017-12-02T15:02:45"), end: new Date("2017-12-02T16:02:45") },
-        //    { id: 1, group: 4,  start: new Date("2017-12-02T15:02:45"), end: new Date("2017-12-02T17:02:45") },
-        //    { id: 2, group: 10,  start: new Date("2017-12-02T15:02:45"), end: new Date("2017-12-02T15:02:45") },
-        //    { id: 3, group: 10, start: new Date("2017-12-02T15:02:45"), end: new Date("2017-12-02T15:02:45") },
-        //    { id: 4, group: 11, start: new Date("2017-12-02T15:02:45"), end: new Date("2017-12-02T15:02:45") },
-        //    { id: 5, group: 12, start: new Date("2017-12-02T15:02:45"), end: new Date("2017-12-02T15:02:45") }
-        //]);
-
-
-
-
-
-
-        var items = new vis.DataSet(vm.data);
-
-        // create visualization
-        var container = document.getElementById('visualization');
-        var options = {
-            orientation: 'both',
-            // option groupOrder can be a property name or a sort function
-            // the sort function must compare two groups and return a value
-            //     > 0 when a > b
-            //     < 0 when a < b
-            //       0 when a == b
-            groupOrder: function (a, b) {
-                return a.value - b.value;
-            },
-            editable: {
-                add: false,         // add new items by double tapping
-                updateTime: false,  // drag items horizontally
-                updateGroup: false, // drag items from one group to another
-                remove: false,       // delete an item by tapping the delete button top right
-                overrideItems: false }
+        StudentDetailsService.getStudentDetails(vm.filter).then(function (response) {
             
-        };
+            vm.drivers = response.data;
+            if (vm.drivers.length > 0) {
+                $('#noResult').css('display', 'none');
+                console.log("data")
+                vm.driverName = [];
+                vm.data = []
+                var k = 0;
+                for (var i = 0; i < vm.drivers.length; i++) {
+                    var test = {};
+                    test['id'] = vm.drivers[i].id;
+                    test['content'] = vm.drivers[i].Name;
+                    vm.driverName.push(test);
+                    for (var j = 0; j < vm.drivers[i].Times.length; j++) {
+                        var object = {};
+                        object['id'] = k;
+                        object['group'] = vm.drivers[i].id;
+                        object['start'] = vm.drivers[i].Times[j].PickedupTime;
+                        object['end'] = vm.drivers[i].Times[j].DeliveredTime;
+                        vm.data.push(object)
+                        k++;
+                    }
+                }
 
-        var timeline = new vis.Timeline(container);
-        timeline.setOptions(options);
-        timeline.setGroups(groups);
-        timeline.setItems(items);
+
+                var groups = new vis.DataSet(vm.driverName);
+
+                var items = new vis.DataSet(vm.data);
+
+                // create visualization
+                var container = document.getElementById('visualization');
+                var options = {
+                    orientation: 'both',
+                    groupOrder: function (a, b) {
+                        return a.value - b.value;
+                    },
+                    editable: {
+                        add: false,         // add new items by double tapping
+                        updateTime: false,  // drag items horizontally
+                        updateGroup: false, // drag items from one group to another
+                        remove: false,       // delete an item by tapping the delete button top right
+                        overrideItems: false
+                    }
+
+                };
+
+                var timeline = new vis.Timeline(container);
+                timeline.setOptions(options);
+                timeline.setGroups(groups);
+                timeline.setItems(items);
+            }
+            else {
+                console.log("no date")
+                $('#noResult').css('display', 'block');
+            }
+        });
+    }
+
+   
 
 
 
 
-
-
-
-
-
-        // handle response  
-    });
     StudentDetailsService.getTotal().then(function (response) {
-
         vm.Total = response.data;
-        console.log(vm.Total)
     })
     StudentDetailsService.getDriverProv().then(function (response) {
 
         vm.DriverProv = response.data;
         vm.DriverProv = vm.DriverProv - 1;
-        console.log(vm.Total)
     })
     StudentDetailsService.getDriverType().then(function (response) {
 
         vm.DriverType = response.data;
-        vm.names = [];
-        vm.y = [];
-        console.log(vm.DriverType)
-        for (var i = 0; i < vm.DriverType.length; i++) {
-            vm.names[i] = vm.DriverType[i].name;
-            vm.y[i] = vm.DriverType[i].y
-        }
-        console.log(vm.names)
-        console.log(vm.y)
+            vm.names = [];
+            vm.y = [];
+            for (var i = 0; i < vm.DriverType.length; i++) {
+                vm.names[i] = vm.DriverType[i].name;
+                vm.y[i] = vm.DriverType[i].y
+            }
         var doughnutPieData = {
             datasets: [{
                 data: vm.y,
@@ -169,70 +183,99 @@ function StudentController(StudentDetailsService) {
 
 
     })
-   
+    StudentDetailsService.getdriverOrder().then(function (response) {
 
+            vm.driverOrder = response.data;
+            vm.labels = [];
+            vm.data1 = [];
+            vm.data2 = [];
 
+            for (var i = 0; i < vm.driverOrder.length; i++) {
+                vm.labels[i] = vm.driverOrder[i].Name;
+                vm.data1[i] = vm.driverOrder[i].allOrder;
+                vm.data2[i] = vm.driverOrder[i].cancelOrder;
 
-
-
-    var options = {
-        scales: {
-            yAxes: [{
-                ticks: {
-                    beginAtZero: true
-                }
-            }]
-        },
-        legend: {
-            display: false
-        },
-        elements: {
-            point: {
-                radius: 0
             }
-        }
-
-    };
 
 
-    var data = {
-        labels: ["2013", "2014", "2014", "2015", "2016", "2017"],
-        datasets: [{
-            label: '# of Votes',
-            data: [10, 19, 3, 5, 2, 3],
-            backgroundColor: [
-                'rgba(255, 99, 132, 0.2)',
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(255, 206, 86, 0.2)',
-                'rgba(75, 192, 192, 0.2)',
-                'rgba(153, 102, 255, 0.2)',
-                'rgba(255, 159, 64, 0.2)'
-            ],
-            borderColor: [
-                'rgba(255,99,132,1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(75, 192, 192, 1)',
-                'rgba(153, 102, 255, 1)',
-                'rgba(255, 159, 64, 1)'
-            ],
-            borderWidth: 1
-        }]
-    };
+            var ctx = document.getElementById("barChart");
+            if (ctx) {
+                ctx.height = 200;
+                var myChart = new Chart(ctx, {
+                    type: 'bar',
+                    defaultFontFamily: 'Poppins',
+                    data: {
+                        labels: vm.labels,
+                        datasets: [
+                            {
+                                label: "All Order",
+                                data: vm.data1,
+                                borderColor: "rgba(0, 123, 255, 0.9)",
+                                borderWidth: "0",
+                                backgroundColor: "rgba(0, 123, 255, 0.5)",
+                                fontFamily: "Poppins"
+                            },
+                            {
+                                label: "Cancel Order",
+                                data: vm.data2,
+                                borderColor: "rgba(0,0,0,0.09)",
+                                borderWidth: "0",
+                                backgroundColor: "rgba(0,0,0,0.07)",
+                                fontFamily: "Poppins"
+                            }
+                        ]
+                    },
+                    options: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                fontFamily: 'Poppins'
+                            }
+
+                        },
+                        scales: {
+                            xAxes: [{
+                                ticks: {
+                                    fontFamily: "Poppins"
+
+                                }
+                            }],
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true,
+                                    fontFamily: "Poppins"
+                                }
+                            }]
+                        }
+                    }
+                });
+            }
+       
+
+
+    
 
 
 
 
+        })
+    StudentDetailsService.getAllDrivers().then(function (response) {
 
-    if ($("#barChart").length) {
-        var barChartCanvas = $("#barChart").get(0).getContext("2d");
-        // This will get the first returned node in the jQuery collection.
-        var barChart = new Chart(barChartCanvas, {
-            type: 'bar',
-            data: data,
-            options: options
-        });
+        vm.allDrivers = response.data;
+    })
+
+    function getDate() {
+        let today1 = new Date().toISOString().substr(0, 10);
+        document.querySelector("#from").value = today1;
+        document.querySelector("#to").value = today1;
     }
+    getDate();
+
+
+
+    
+
+    
     console.log("controller")
 }
 
