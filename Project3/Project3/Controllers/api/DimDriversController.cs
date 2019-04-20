@@ -156,7 +156,7 @@ namespace Project3.Controllers.api
                     Name = item.Name
                 });
             }
-            return Ok(list.Where(m => m.allOrder >= 1).ToList());
+            return Ok(list.Where(m => m.allOrder >= 1).OrderBy(m => m.cancelOrder / m.allOrder).Take(10).ToList());
 
         }
         [HttpPost]
@@ -205,7 +205,7 @@ namespace Project3.Controllers.api
                     Name = item.Name
                 });
             }
-            return Ok(list.Where(m => m.allOrder >= 1));
+            return Ok(list.Where(m => m.allOrder >= 1).OrderBy(m => m.cancelOrder / m.allOrder).Take(10).ToList());
         }
         // PUT: api/DimDrivers/5
         [ResponseType(typeof(void))]
@@ -241,7 +241,6 @@ namespace Project3.Controllers.api
 
             return StatusCode(HttpStatusCode.NoContent);
         }
-
         // POST: api/DimDrivers
         [ResponseType(typeof(DimDriver))]
         public IHttpActionResult PostDimDriver(DimDriver dimDriver)
