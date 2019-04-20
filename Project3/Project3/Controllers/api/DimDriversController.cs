@@ -136,29 +136,29 @@ namespace Project3.Controllers.api
 
             return Ok(test);
         }
-        [HttpGet]
-        public IHttpActionResult driverOrde()
-        {
-            var list = new List<DriversOrder>();
-            foreach (var item in db.DimDrivers.ToList())
-            {
-                var ordercancel = item.FactBills.Where(m => m.ConfirmationTime != DateTime.MinValue &&
-                 (DateTime.Compare((DateTime)m.PickedupTime, DateTime.Parse("2017/2/12 00:00:00")) >= 0
-                 && DateTime.Compare((DateTime)m.PickedupTime, DateTime.Parse("2017/2/12 00:00:00")) <= 1)).Count();
+        //[HttpGet]
+        //public IHttpActionResult driverOrder()
+        //{
+        //    var list = new List<DriversOrder>();
+        //    foreach (var item in db.DimDrivers.ToList())
+        //    {
+        //        var ordercancel = item.FactBills.Where(m => m.ConfirmationTime == DateTime.MinValue &&
+        //         (DateTime.Compare((DateTime)m.PickedupTime, DateTime.Parse("2017/2/12 00:00:00")) >= 0
+        //         && DateTime.Compare((DateTime)m.PickedupTime, DateTime.Parse("2017/2/12 00:00:00")) <= 1)).Count();
 
-                var order = item.FactBills.Where(m => (DateTime.Compare((DateTime)m.PickedupTime, DateTime.Parse("2017/2/12 00:00:00")) >= 0
-                 && DateTime.Compare((DateTime)m.PickedupTime, DateTime.Parse("2017/2/12 00:00:00")) <= 1)).Count();
+        //        var order = item.FactBills.Where(m => (DateTime.Compare((DateTime)m.PickedupTime, DateTime.Parse("2017/2/12 00:00:00")) >= 0
+        //         && DateTime.Compare((DateTime)m.PickedupTime, DateTime.Parse("2017/2/12 00:00:00")) <= 1)).Count();
 
-                list.Add(new DriversOrder()
-                {
-                    allOrder = order,
-                    cancelOrder = ordercancel,
-                    Name = item.Name
-                });
-            }
-            return Ok(list.Where(m => m.allOrder >= 1).OrderBy(m => m.cancelOrder / m.allOrder).Take(10).ToList());
+        //        list.Add(new DriversOrder()
+        //        {
+        //            allOrder = order,
+        //            cancelOrder = ordercancel,
+        //            Name = item.Name
+        //        });
+        //    }
+        //    return Ok(list.Where(m => m.allOrder >= 1).OrderBy(m => m.cancelOrder / m.allOrder).Take(10).ToList());
 
-        }
+        //}
         [HttpPost]
         public IHttpActionResult driverOrder(DriverFilter filter)
         {
@@ -171,7 +171,7 @@ namespace Project3.Controllers.api
             {
                 foreach (var item in db.DimDrivers.ToList())
                 {
-                    var ordercancel = item.FactBills.Where(m => m.ConfirmationTime != DateTime.MinValue &&
+                    var ordercancel = item.FactBills.Where(m => m.ConfirmationTime == DateTime.MinValue &&
                      (DateTime.Compare((DateTime)m.PickedupTime, filter.from) >= 0
                      && DateTime.Compare((DateTime)m.PickedupTime, filter.to) <= 0)).Count();
 
