@@ -156,22 +156,6 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="DimVouchers">
-      <EntityTypeMapping TypeName="beeorderWHModel.DimVoucher">
-        <MappingFragment StoreEntitySet="DimVoucher">
-          <ScalarProperty Name="VoucherKey" ColumnName="VoucherKey" />
-          <ScalarProperty Name="VoucherAltKey" ColumnName="VoucherAltKey" />
-          <ScalarProperty Name="RestaurantId" ColumnName="RestaurantId" />
-          <ScalarProperty Name="Voucher" ColumnName="Voucher" />
-          <ScalarProperty Name="VoucherType" ColumnName="VoucherType" />
-          <ScalarProperty Name="VoucherCategory" ColumnName="VoucherCategory" />
-          <ScalarProperty Name="Value" ColumnName="Value" />
-          <ScalarProperty Name="CreationTime" ColumnName="CreationTime" />
-          <ScalarProperty Name="Taken" ColumnName="Taken" />
-          <ScalarProperty Name="ValidateTime" ColumnName="ValidateTime" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="FactBills">
       <EntityTypeMapping TypeName="beeorderWHModel.FactBill">
         <MappingFragment StoreEntitySet="FactBill">
@@ -213,15 +197,6 @@
           <ScalarProperty Name="OrderDishPrice" ColumnName="OrderDishPrice" />
           <ScalarProperty Name="OrderTotal" ColumnName="OrderTotal" />
           <ScalarProperty Name="OrderDeleted" ColumnName="OrderDeleted" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="migrations">
-      <EntityTypeMapping TypeName="beeorderWHModel.migration">
-        <MappingFragment StoreEntitySet="migrations">
-          <ScalarProperty Name="id" ColumnName="id" />
-          <ScalarProperty Name="migration1" ColumnName="migration" />
-          <ScalarProperty Name="batch" ColumnName="batch" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

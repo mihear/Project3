@@ -17,7 +17,6 @@ namespace Project3.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public DimRestaurant()
         {
-            this.DimVouchers = new HashSet<DimVoucher>();
             this.FactBills = new HashSet<FactBill>();
         }
     
@@ -66,8 +65,6 @@ namespace Project3.Models
         public Nullable<int> DeliveryAvialable { get; set; }
         public string CurrentRecord { get; set; }
     
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<DimVoucher> DimVouchers { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<FactBill> FactBills { get; set; }
     }

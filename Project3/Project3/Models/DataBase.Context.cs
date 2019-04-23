@@ -30,9 +30,7 @@ namespace Project3.Models
         public virtual DbSet<DimDriver> DimDrivers { get; set; }
         public virtual DbSet<DimRestaurant> DimRestaurants { get; set; }
         public virtual DbSet<DimUser> DimUsers { get; set; }
-        public virtual DbSet<DimVoucher> DimVouchers { get; set; }
         public virtual DbSet<FactBill> FactBills { get; set; }
-        public virtual DbSet<migration> migrations { get; set; }
         public virtual DbSet<OldDateDim> OldDateDims { get; set; }
         public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
     }

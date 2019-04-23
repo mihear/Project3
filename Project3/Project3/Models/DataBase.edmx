@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="beeorderWHModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="beeorderWHModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="DimDate">
           <Key>
             <PropertyRef Name="DateKey" />
@@ -155,21 +155,6 @@
           <Property Name="CreationTime" Type="datetime2" Precision="7" />
           <Property Name="CurrentRecord" Type="nchar" MaxLength="10" Nullable="false" />
         </EntityType>
-        <EntityType Name="DimVoucher">
-          <Key>
-            <PropertyRef Name="VoucherKey" />
-          </Key>
-          <Property Name="VoucherKey" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="VoucherAltKey" Type="int" Nullable="false" />
-          <Property Name="RestaurantId" Type="int" Nullable="false" />
-          <Property Name="Voucher" Type="nvarchar" MaxLength="110" />
-          <Property Name="VoucherType" Type="int" />
-          <Property Name="VoucherCategory" Type="nvarchar" MaxLength="25" />
-          <Property Name="Value" Type="float" />
-          <Property Name="CreationTime" Type="datetime2" Precision="7" />
-          <Property Name="Taken" Type="int" />
-          <Property Name="ValidateTime" Type="datetime2" Precision="7" />
-        </EntityType>
         <EntityType Name="FactBill">
           <Key>
             <PropertyRef Name="Id" />
@@ -213,14 +198,6 @@
           <Property Name="OrderTotal" Type="float" />
           <Property Name="OrderDeleted" Type="smallint" />
         </EntityType>
-        <EntityType Name="migrations">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="migration" Type="nvarchar" MaxLength="255" Nullable="false" />
-          <Property Name="batch" Type="int" Nullable="false" />
-        </EntityType>
         <EntityType Name="OldDateDim">
           <Key>
             <PropertyRef Name="DateKey" />
@@ -245,18 +222,6 @@
           <Property Name="version" Type="int" />
           <Property Name="definition" Type="varbinary(max)" />
         </EntityType>
-        <Association Name="FK_DimVoucher_DimRestaurant">
-          <End Role="DimRestaurant" Type="Self.DimRestaurant" Multiplicity="1" />
-          <End Role="DimVoucher" Type="Self.DimVoucher" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="DimRestaurant">
-              <PropertyRef Name="RestaurantKey" />
-            </Principal>
-            <Dependent Role="DimVoucher">
-              <PropertyRef Name="RestaurantId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_FactBill_DimDate">
           <End Role="DimDate" Type="Self.DimDate" Multiplicity="0..1" />
           <End Role="FactBill" Type="Self.FactBill" Multiplicity="*" />
@@ -323,15 +288,9 @@
           <EntitySet Name="DimDriver" EntityType="Self.DimDriver" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DimRestaurant" EntityType="Self.DimRestaurant" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DimUser" EntityType="Self.DimUser" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="DimVoucher" EntityType="Self.DimVoucher" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="FactBill" EntityType="Self.FactBill" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="migrations" EntityType="Self.migrations" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="OldDateDim" EntityType="Self.OldDateDim" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
-          <AssociationSet Name="FK_DimVoucher_DimRestaurant" Association="Self.FK_DimVoucher_DimRestaurant">
-            <End Role="DimRestaurant" EntitySet="DimRestaurant" />
-            <End Role="DimVoucher" EntitySet="DimVoucher" />
-          </AssociationSet>
           <AssociationSet Name="FK_FactBill_DimDate" Association="Self.FK_FactBill_DimDate">
             <End Role="DimDate" EntitySet="DimDate" />
             <End Role="FactBill" EntitySet="FactBill" />
@@ -353,8 +312,7 @@
             <End Role="FactBill" EntitySet="FactBill" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="beeorderWHModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -491,7 +449,6 @@
           <Property Name="DeliveryProvider" Type="Int32" />
           <Property Name="DeliveryAvialable" Type="Int32" />
           <Property Name="CurrentRecord" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
-          <NavigationProperty Name="DimVouchers" Relationship="Self.FK_DimVoucher_DimRestaurant" FromRole="DimRestaurant" ToRole="DimVoucher" />
           <NavigationProperty Name="FactBills" Relationship="Self.FK_FactBill_RestaurantDim" FromRole="DimRestaurant" ToRole="FactBill" />
         </EntityType>
         <EntityType Name="DimUser">
@@ -513,22 +470,6 @@
           <Property Name="CreationTime" Type="DateTime" Precision="7" />
           <Property Name="CurrentRecord" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
           <NavigationProperty Name="FactBills" Relationship="Self.FK_FactBill_UserDim" FromRole="DimUser" ToRole="FactBill" />
-        </EntityType>
-        <EntityType Name="DimVoucher">
-          <Key>
-            <PropertyRef Name="VoucherKey" />
-          </Key>
-          <Property Name="VoucherKey" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="VoucherAltKey" Type="Int32" Nullable="false" />
-          <Property Name="RestaurantId" Type="Int32" Nullable="false" />
-          <Property Name="Voucher" Type="String" MaxLength="110" FixedLength="false" Unicode="true" />
-          <Property Name="VoucherType" Type="Int32" />
-          <Property Name="VoucherCategory" Type="String" MaxLength="25" FixedLength="false" Unicode="true" />
-          <Property Name="Value" Type="Double" />
-          <Property Name="CreationTime" Type="DateTime" Precision="7" />
-          <Property Name="Taken" Type="Int32" />
-          <Property Name="ValidateTime" Type="DateTime" Precision="7" />
-          <NavigationProperty Name="DimRestaurant" Relationship="Self.FK_DimVoucher_DimRestaurant" FromRole="DimVoucher" ToRole="DimRestaurant" />
         </EntityType>
         <EntityType Name="FactBill">
           <Key>
@@ -577,14 +518,6 @@
           <NavigationProperty Name="DimDriver" Relationship="Self.FK_FactBill_DriverDim" FromRole="FactBill" ToRole="DimDriver" />
           <NavigationProperty Name="DimRestaurant" Relationship="Self.FK_FactBill_RestaurantDim" FromRole="FactBill" ToRole="DimRestaurant" />
           <NavigationProperty Name="DimUser" Relationship="Self.FK_FactBill_UserDim" FromRole="FactBill" ToRole="DimUser" />
-        </EntityType>
-        <EntityType Name="migration">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="migration1" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="batch" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="OldDateDim">
           <Key>
@@ -646,18 +579,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_DimVoucher_DimRestaurant">
-          <End Role="DimRestaurant" Type="Self.DimRestaurant" Multiplicity="1" />
-          <End Role="DimVoucher" Type="Self.DimVoucher" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="DimRestaurant">
-              <PropertyRef Name="RestaurantKey" />
-            </Principal>
-            <Dependent Role="DimVoucher">
-              <PropertyRef Name="RestaurantId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_FactBill_RestaurantDim">
           <End Role="DimRestaurant" Type="Self.DimRestaurant" Multiplicity="1" />
           <End Role="FactBill" Type="Self.FactBill" Multiplicity="*" />
@@ -688,9 +609,7 @@
           <EntitySet Name="DimDrivers" EntityType="Self.DimDriver" />
           <EntitySet Name="DimRestaurants" EntityType="Self.DimRestaurant" />
           <EntitySet Name="DimUsers" EntityType="Self.DimUser" />
-          <EntitySet Name="DimVouchers" EntityType="Self.DimVoucher" />
           <EntitySet Name="FactBills" EntityType="Self.FactBill" />
-          <EntitySet Name="migrations" EntityType="Self.migration" />
           <EntitySet Name="OldDateDims" EntityType="Self.OldDateDim" />
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagram" />
           <AssociationSet Name="FK_FactBill_DimDate" Association="Self.FK_FactBill_DimDate">
@@ -704,10 +623,6 @@
           <AssociationSet Name="FK_FactBill_DriverDim" Association="Self.FK_FactBill_DriverDim">
             <End Role="DimDriver" EntitySet="DimDrivers" />
             <End Role="FactBill" EntitySet="FactBills" />
-          </AssociationSet>
-          <AssociationSet Name="FK_DimVoucher_DimRestaurant" Association="Self.FK_DimVoucher_DimRestaurant">
-            <End Role="DimRestaurant" EntitySet="DimRestaurants" />
-            <End Role="DimVoucher" EntitySet="DimVouchers" />
           </AssociationSet>
           <AssociationSet Name="FK_FactBill_RestaurantDim" Association="Self.FK_FactBill_RestaurantDim">
             <End Role="DimRestaurant" EntitySet="DimRestaurants" />
@@ -879,22 +794,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="DimVouchers">
-            <EntityTypeMapping TypeName="beeorderWHModel.DimVoucher">
-              <MappingFragment StoreEntitySet="DimVoucher">
-                <ScalarProperty Name="VoucherKey" ColumnName="VoucherKey" />
-                <ScalarProperty Name="VoucherAltKey" ColumnName="VoucherAltKey" />
-                <ScalarProperty Name="RestaurantId" ColumnName="RestaurantId" />
-                <ScalarProperty Name="Voucher" ColumnName="Voucher" />
-                <ScalarProperty Name="VoucherType" ColumnName="VoucherType" />
-                <ScalarProperty Name="VoucherCategory" ColumnName="VoucherCategory" />
-                <ScalarProperty Name="Value" ColumnName="Value" />
-                <ScalarProperty Name="CreationTime" ColumnName="CreationTime" />
-                <ScalarProperty Name="Taken" ColumnName="Taken" />
-                <ScalarProperty Name="ValidateTime" ColumnName="ValidateTime" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="FactBills">
             <EntityTypeMapping TypeName="beeorderWHModel.FactBill">
               <MappingFragment StoreEntitySet="FactBill">
@@ -936,15 +835,6 @@
                 <ScalarProperty Name="OrderDishPrice" ColumnName="OrderDishPrice" />
                 <ScalarProperty Name="OrderTotal" ColumnName="OrderTotal" />
                 <ScalarProperty Name="OrderDeleted" ColumnName="OrderDeleted" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="migrations">
-            <EntityTypeMapping TypeName="beeorderWHModel.migration">
-              <MappingFragment StoreEntitySet="migrations">
-                <ScalarProperty Name="id" ColumnName="id" />
-                <ScalarProperty Name="migration1" ColumnName="migration" />
-                <ScalarProperty Name="batch" ColumnName="batch" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

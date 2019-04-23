@@ -150,21 +150,6 @@
     <Property Name="CreationTime" Type="datetime2" Precision="7" />
     <Property Name="CurrentRecord" Type="nchar" MaxLength="10" Nullable="false" />
   </EntityType>
-  <EntityType Name="DimVoucher">
-    <Key>
-      <PropertyRef Name="VoucherKey" />
-    </Key>
-    <Property Name="VoucherKey" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-    <Property Name="VoucherAltKey" Type="int" Nullable="false" />
-    <Property Name="RestaurantId" Type="int" Nullable="false" />
-    <Property Name="Voucher" Type="nvarchar" MaxLength="110" />
-    <Property Name="VoucherType" Type="int" />
-    <Property Name="VoucherCategory" Type="nvarchar" MaxLength="25" />
-    <Property Name="Value" Type="float" />
-    <Property Name="CreationTime" Type="datetime2" Precision="7" />
-    <Property Name="Taken" Type="int" />
-    <Property Name="ValidateTime" Type="datetime2" Precision="7" />
-  </EntityType>
   <EntityType Name="FactBill">
     <Key>
       <PropertyRef Name="Id" />
@@ -208,14 +193,6 @@
     <Property Name="OrderTotal" Type="float" />
     <Property Name="OrderDeleted" Type="smallint" />
   </EntityType>
-  <EntityType Name="migrations">
-    <Key>
-      <PropertyRef Name="id" />
-    </Key>
-    <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-    <Property Name="migration" Type="nvarchar" MaxLength="255" Nullable="false" />
-    <Property Name="batch" Type="int" Nullable="false" />
-  </EntityType>
   <EntityType Name="OldDateDim">
     <Key>
       <PropertyRef Name="DateKey" />
@@ -240,18 +217,6 @@
     <Property Name="version" Type="int" />
     <Property Name="definition" Type="varbinary(max)" />
   </EntityType>
-  <Association Name="FK_DimVoucher_DimRestaurant">
-    <End Role="DimRestaurant" Type="Self.DimRestaurant" Multiplicity="1" />
-    <End Role="DimVoucher" Type="Self.DimVoucher" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="DimRestaurant">
-        <PropertyRef Name="RestaurantKey" />
-      </Principal>
-      <Dependent Role="DimVoucher">
-        <PropertyRef Name="RestaurantId" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
   <Association Name="FK_FactBill_DimDate">
     <End Role="DimDate" Type="Self.DimDate" Multiplicity="0..1" />
     <End Role="FactBill" Type="Self.FactBill" Multiplicity="*" />
@@ -318,15 +283,9 @@
     <EntitySet Name="DimDriver" EntityType="Self.DimDriver" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="DimRestaurant" EntityType="Self.DimRestaurant" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="DimUser" EntityType="Self.DimUser" Schema="dbo" store:Type="Tables" />
-    <EntitySet Name="DimVoucher" EntityType="Self.DimVoucher" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="FactBill" EntityType="Self.FactBill" Schema="dbo" store:Type="Tables" />
-    <EntitySet Name="migrations" EntityType="Self.migrations" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="OldDateDim" EntityType="Self.OldDateDim" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
-    <AssociationSet Name="FK_DimVoucher_DimRestaurant" Association="Self.FK_DimVoucher_DimRestaurant">
-      <End Role="DimRestaurant" EntitySet="DimRestaurant" />
-      <End Role="DimVoucher" EntitySet="DimVoucher" />
-    </AssociationSet>
     <AssociationSet Name="FK_FactBill_DimDate" Association="Self.FK_FactBill_DimDate">
       <End Role="DimDate" EntitySet="DimDate" />
       <End Role="FactBill" EntitySet="FactBill" />

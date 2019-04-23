@@ -9,19 +9,25 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
 using Project3.Models;
+using System.Data.SqlClient;
 
 namespace Project3.Controllers.api
 {
     public class TimesDriver
     {
         public Nullable<System.DateTime> ConfirmationTime { get; set; }
+        public int DriverKey { get; set; }
         public Nullable<System.DateTime> DeliveredTime { get; set; }
         public Nullable<System.DateTime> PickedupTime { get; set; }
-        public TimesDriver(FactBill fact)
+        public TimesDriver(TimesDriver fact)
         {
             this.ConfirmationTime = fact.ConfirmationTime;
             this.DeliveredTime = fact.DeliveredTime;
             this.PickedupTime = fact.PickedupTime;
+        }
+        public TimesDriver()
+        {
+
         }
     }
     public class DriversCharts
@@ -29,15 +35,16 @@ namespace Project3.Controllers.api
         public int id { get; set; }
         public string Name { get; set; }
         public List<TimesDriver> Times { get; set; }
-        public DriversCharts(string name, int id, List<FactBill> facts)
+        public DriversCharts(string name, int id, List<TimesDriver> facts)
         {
             this.id = id;
             this.Name = name;
             Times = new List<TimesDriver>();
-            foreach (var item in facts)
-            {
-                Times.Add(new TimesDriver(item));
-            }
+            Times = facts;
+            //foreach (var item in facts)
+            //{
+            //    Times.Add(new TimesDriver(item));
+            //}
         }
     }
     public class DriverFilter
@@ -79,14 +86,47 @@ namespace Project3.Controllers.api
         // GET: api/DimDrivers
         public IHttpActionResult GetDriver()
         {
+            //db.FactBills.Select(m => new TimesDriver()
+            //{
+            //    DeliveredTime = m.DeliveredTime,
+            //    ConfirmationTime = m.ConfirmationTime,
+            //    PickedupTime = m.PickedupTime,
+            //    DriverKey = m.DriverKey
+            //}).Where(m => m.DriverKey == item.DriverKey
+            //&& m.ConfirmationTime != DateTime.MinValue &&
+            //((DateTime)m.DeliveredTime) >= day && ((DateTime)m.DeliveredTime) <= day2).ToList()
+            //var x = from m in db.FactBills
+            //        where m.DriverKey == item.DriverKey && m.ConfirmationTime != DateTime.MinValue && ((DateTime)m.DeliveredTime) >= day && ((DateTime)m.DeliveredTime) <= day2
+            //        select new TimesDriver()
+            //        {
+            //            DeliveredTime = m.DeliveredTime,
+            //            ConfirmationTime = m.ConfirmationTime,
+            //            PickedupTime = m.PickedupTime,
+            //            DriverKey = m.DriverKey
+            //        };
             List<DriversCharts> list = new List<DriversCharts>();
-            foreach (var item in db.DimDrivers.ToList())
+            var drivers = db.DimDrivers.Select(m => new
             {
-                list.Add(new DriversCharts(item.Name, item.DriverKey, item.FactBills.Where(m =>
-                 (DateTime.Compare(new DateTime(((DateTime)m.DeliveredTime).Year, ((DateTime)m.DeliveredTime).Month, ((DateTime)m.DeliveredTime).Day),
-                 new DateTime(2017, 12, 2)) == 0)).ToList()));
+                DriverKey = m.DriverKey,
+                Name = m.Name
+            }).ToList();
+            var day = new DateTime(2019, 1, 6);
+            var day2 = new DateTime(2019, 2, 7);
+            //(DateTime.Compare(new DateTime(((DateTime)m.DeliveredTime).Year, ((DateTime)m.DeliveredTime).Month, ((DateTime)m.DeliveredTime).Day),    day) == 0)
+            var date = db.Database
+                .SqlQuery<TimesDriver>("select [ConfirmationTime],[PickedupTime],[DeliveredTime],[DriverKey] from [beeorderWH].[dbo].[FactBill] where PickedupTime >= '2019-01-06 10:47:54' and PickedupTime <= '2019-01-07 10:47:54'")
+                .ToList();
+            //db.Database
+            //    .SqlQuery<TimesDriver>
+            //    ("select [ConfirmationTime],[PickedupTime],[DeliveredTime],[DriverKey] from [beeorderWH].[dbo].[FactBill] with(index(chartIndex)) where [DriverKey]=@id and PickedupTime >= '2019-01-06 10:47:54' and PickedupTime <= '2019-01-07 10:47:54'"
+            //    , new SqlParameter("@id", item.DriverKey)
+            foreach (var item in drivers)
+            {
+                list.Add(new DriversCharts(item.Name, item.DriverKey, date.Where(m => m.DriverKey == item.DriverKey)
+                .ToList()));
             }
-            return Ok(list.Where(m => m.Times.Count() >= 1).ToList());
+            return Ok(list.Where(m => m.Times.Count() >= 1));
+            //return Ok(date);
 
         }
         [HttpPost]
@@ -101,22 +141,32 @@ namespace Project3.Controllers.api
             List<DriversCharts> list = new List<DriversCharts>();
             if (filter.id == 0)
             {
-                foreach (var item in db.DimDrivers.ToList())
+                var drivers = db.Database
+                .SqlQuery<DimDriver>("select * from [beeorderWH].[dbo].[DimDriver]")
+                .ToList();
+                var date = db.Database
+                    .SqlQuery<TimesDriver>("select [ConfirmationTime],[PickedupTime],[DeliveredTime],[DriverKey] from [beeorderWH].[dbo].[FactBill] where DeliveredTime >= @day and DeliveredTime <= @day2"
+                 , new SqlParameter("@day", filter.from), new SqlParameter("@day2", filter.to)).ToList();
+                foreach (var item in drivers)
                 {
-                    list.Add(new
-                        DriversCharts(item.Name, item.DriverKey, item.FactBills.Where(m => m.ConfirmationTime != DateTime.MinValue &&
-                        (DateTime.Compare((DateTime)m.PickedupTime, filter.from) >= 0 && DateTime.Compare((DateTime)m.PickedupTime, filter.to) <= 0)).ToList()));
+                    list.Add(new DriversCharts(item.Name, item.DriverKey, date.Where(m => m.DriverKey == item.DriverKey)
+                 .ToList()));
                 }
             }
             else
             {
-                var item = db.DimDrivers.FirstOrDefault(m => m.DriverKey == filter.id);
+                var item = db.DimDrivers.Select(m=>new
+                {
+                    DriverKey= m.DriverKey,
+                    Name= m.Name
+                }).FirstOrDefault(m => m.DriverKey == filter.id);
                 if (item == null)
                     return NotFound();
-                list.Add(new
-                DriversCharts(item.Name, item.DriverKey, item.FactBills.Where(m =>
-                (DateTime.Compare((DateTime)m.PickedupTime, filter.from) >= 0 && DateTime.Compare((DateTime)m.PickedupTime, filter.to) <= 0)).ToList()));
-
+                var date = db.Database
+                .SqlQuery<TimesDriver>("select [ConfirmationTime],[PickedupTime],[DeliveredTime],[DriverKey] from [beeorderWH].[dbo].[FactBill] where DriverKey=@id and DeliveredTime >= @day and DeliveredTime <= @day2"
+                , new SqlParameter("@id", item.DriverKey), new SqlParameter("@day", filter.from), new SqlParameter("@day2", filter.to)).ToList();
+                list.Add(new DriversCharts(item.Name, item.DriverKey, date.Where(m => m.DriverKey == item.DriverKey)
+                .ToList()));
             }
             return Ok(list.Where(m => m.Times.Count() > 0));
 
@@ -140,23 +190,53 @@ namespace Project3.Controllers.api
         public IHttpActionResult driverOrde()
         {
             var list = new List<DriversOrder>();
-            foreach (var item in db.DimDrivers.ToList())
+            //var drivers = db.DimDrivers.Select(m => new
+            //{
+            //    DriverKey = m.DriverKey,
+            //    Name = m.Name
+            //}).ToList();
+            var drivers = db.Database
+                .SqlQuery<DimDriver>("select * from [beeorderWH].[dbo].[DimDriver]")
+                .ToList();
+            var day = new DateTime(2019, 1, 6);
+            var day2 = new DateTime(2019, 2, 7);
+            var date = db.Database
+                .SqlQuery<TimesDriver>("select [ConfirmationTime],[PickedupTime],[DeliveredTime],[DriverKey] from [beeorderWH].[dbo].[FactBill] where DeliveredTime >= '2019-01-06 00:00:00' and DeliveredTime <= '2019-02-07 00:00:00'")
+                .ToList();
+            foreach (var item in drivers)
             {
-                var ordercancel = item.FactBills.Where(m => m.ConfirmationTime != DateTime.MinValue &&
-                 (DateTime.Compare((DateTime)m.PickedupTime, DateTime.Parse("2017/2/12 00:00:00")) >= 0
-                 && DateTime.Compare((DateTime)m.PickedupTime, DateTime.Parse("2017/2/12 00:00:00")) <= 1)).Count();
+                //var ordercancel = db.FactBills.Select(m => new TimesDriver
+                //{
+                //    DeliveredTime = m.DeliveredTime,
+                //    ConfirmationTime = m.ConfirmationTime,
+                //    PickedupTime = m.PickedupTime,
+                //    DriverKey = m.DriverKey
+                //}).Where(m => m.DriverKey == item.DriverKey && m.ConfirmationTime != DateTime.MinValue && ((DateTime)m.DeliveredTime) >= day && ((DateTime)m.DeliveredTime) <= day2).Count();
 
-                var order = item.FactBills.Where(m => (DateTime.Compare((DateTime)m.PickedupTime, DateTime.Parse("2017/2/12 00:00:00")) >= 0
-                 && DateTime.Compare((DateTime)m.PickedupTime, DateTime.Parse("2017/2/12 00:00:00")) <= 1)).Count();
-
+                //var order = db.FactBills.Select(m => new TimesDriver
+                //{
+                //    DeliveredTime = m.DeliveredTime,
+                //    ConfirmationTime = m.ConfirmationTime,
+                //    PickedupTime = m.PickedupTime,
+                //    DriverKey = m.DriverKey
+                //}).Where(m => m.DriverKey == item.DriverKey&&((DateTime)m.DeliveredTime) >= day && ((DateTime)m.DeliveredTime) <= day2).Count();
+                //list.Add(new DriversOrder()
+                //{
+                //    allOrder = order,
+                //    cancelOrder = ordercancel,
+                //    Name = item.Name
+                //});
+                //var min = DateTime.MinValue == DateTime.Parse("0001-01-01 00:00:00.0000000");
                 list.Add(new DriversOrder()
                 {
-                    allOrder = order,
-                    cancelOrder = ordercancel,
+                    allOrder = date.Where(m => m.DriverKey == item.DriverKey).Count(),
+                    cancelOrder = date.Where(m => m.DriverKey == item.DriverKey && m.ConfirmationTime == DateTime.MinValue).Count(),
                     Name = item.Name
                 });
+
             }
-            return Ok(list.Where(m => m.allOrder >= 1).OrderBy(m => m.cancelOrder / m.allOrder).Take(10).ToList());
+            return Ok(list.Where(m => m.allOrder >= 1).OrderBy(m => (m.allOrder - m.cancelOrder) / m.allOrder).Take(10).ToList());
+            //return Ok(list);
 
         }
         [HttpPost]
@@ -166,46 +246,50 @@ namespace Project3.Controllers.api
             {
                 return BadRequest();
             }
+            if (filter.to == filter.from)
+            {
+                filter.to.AddDays(1);
+            }
             var list = new List<DriversOrder>();
             if (filter.id == 0)
             {
-                foreach (var item in db.DimDrivers.ToList())
+                var drivers = db.Database
+                 .SqlQuery<DimDriver>("select * from [beeorderWH].[dbo].[DimDriver]")
+                 .ToList();
+                var date = db.Database
+                    .SqlQuery<TimesDriver>("select [ConfirmationTime],[PickedupTime],[DeliveredTime],[DriverKey] from [beeorderWH].[dbo].[FactBill] where DeliveredTime >= @day and DeliveredTime <= @day2"
+                 , new SqlParameter("@day", filter.from), new SqlParameter("@day2", filter.to)).ToList();
+                foreach (var item in drivers)
                 {
-                    var ordercancel = item.FactBills.Where(m => m.ConfirmationTime != DateTime.MinValue &&
-                     (DateTime.Compare((DateTime)m.PickedupTime, filter.from) >= 0
-                     && DateTime.Compare((DateTime)m.PickedupTime, filter.to) <= 0)).Count();
-
-                    var order = item.FactBills.Where(m => (DateTime.Compare((DateTime)m.PickedupTime, filter.from) >= 0
-                     && DateTime.Compare((DateTime)m.PickedupTime, filter.to) <= 0)).Count();
-
                     list.Add(new DriversOrder()
                     {
-                        allOrder = order,
-                        cancelOrder = ordercancel,
+                        allOrder = date.Where(m => m.DriverKey == item.DriverKey).Count(),
+                        cancelOrder = date.Where(m => m.DriverKey == item.DriverKey && m.ConfirmationTime == DateTime.MinValue).Count(),
                         Name = item.Name
                     });
+
                 }
             }
             else
             {
-                var item = db.DimDrivers.FirstOrDefault(m => m.DriverKey == filter.id);
+                var item = db.DimDrivers.Select(m => new
+                {
+                    DriverKey = m.DriverKey,
+                    Name = m.Name
+                }).FirstOrDefault(m => m.DriverKey == filter.id);
                 if (item == null)
                     return NotFound();
-                var ordercancel = item.FactBills.Where(m => m.ConfirmationTime != DateTime.MinValue &&
-                  (DateTime.Compare((DateTime)m.PickedupTime, filter.from) >= 0
-                  && DateTime.Compare((DateTime)m.PickedupTime, filter.to) <=0)).Count();
-
-                var order = item.FactBills.Where(m => (DateTime.Compare((DateTime)m.PickedupTime, filter.from) >= 0
-                 && DateTime.Compare((DateTime)m.PickedupTime, filter.to) <= 0)).Count();
-
+                var date = db.Database
+                 .SqlQuery<TimesDriver>("select [ConfirmationTime],[PickedupTime],[DeliveredTime],[DriverKey] from [beeorderWH].[dbo].[FactBill] where DriverKey=@id and DeliveredTime >= @day and DeliveredTime <= @day2"
+                 , new SqlParameter("@id", item.DriverKey), new SqlParameter("@day", filter.from), new SqlParameter("@day2", filter.to)).ToList();
                 list.Add(new DriversOrder()
                 {
-                    allOrder = order,
-                    cancelOrder = ordercancel,
+                    allOrder = date.Count(),
+                    cancelOrder = date.Where(m => m.ConfirmationTime == DateTime.MinValue).Count(),
                     Name = item.Name
                 });
             }
-            return Ok(list.Where(m => m.allOrder >= 1).OrderBy(m => m.cancelOrder / m.allOrder).Take(10).ToList());
+            return Ok(list.Where(m => m.allOrder >= 1).OrderBy(m => (m.allOrder - m.cancelOrder) / m.allOrder).Take(10).ToList());
         }
         // PUT: api/DimDrivers/5
         [ResponseType(typeof(void))]

@@ -10,15 +10,12 @@
         <EntityTypeShape EntityType="beeorderWHModel.DimDriver" Width="1.5" PointX="3.75" PointY="24.875" IsExpanded="true" />
         <EntityTypeShape EntityType="beeorderWHModel.DimRestaurant" Width="1.5" PointX="0.75" PointY="3.125" IsExpanded="true" />
         <EntityTypeShape EntityType="beeorderWHModel.DimUser" Width="1.5" PointX="3.75" PointY="30.375" IsExpanded="true" />
-        <EntityTypeShape EntityType="beeorderWHModel.DimVoucher" Width="1.5" PointX="3" PointY="6.5" IsExpanded="true" />
         <EntityTypeShape EntityType="beeorderWHModel.FactBill" Width="1.5" PointX="6" PointY="3.375" IsExpanded="true" />
-        <EntityTypeShape EntityType="beeorderWHModel.migration" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="beeorderWHModel.OldDateDim" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="beeorderWHModel.sysdiagram" Width="1.5" PointX="8.75" PointY="0.75" IsExpanded="true" />
         <AssociationConnector Association="beeorderWHModel.FK_FactBill_DimDate" ManuallyRouted="false" />
         <AssociationConnector Association="beeorderWHModel.FK_FactBill_DimDish" ManuallyRouted="false" />
         <AssociationConnector Association="beeorderWHModel.FK_FactBill_DriverDim" ManuallyRouted="false" />
-        <AssociationConnector Association="beeorderWHModel.FK_DimVoucher_DimRestaurant" ManuallyRouted="false" />
         <AssociationConnector Association="beeorderWHModel.FK_FactBill_RestaurantDim" ManuallyRouted="false" />
         <AssociationConnector Association="beeorderWHModel.FK_FactBill_UserDim" ManuallyRouted="false" />
       </Diagram>
