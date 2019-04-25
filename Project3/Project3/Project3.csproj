@@ -241,11 +241,17 @@
     <Compile Include="Models\DimUser.cs">
       <DependentUpon>DataBase.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\DimVoucher.cs">
+      <DependentUpon>DataBase.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\FactBill.cs">
       <DependentUpon>DataBase.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\migration.cs">
+      <DependentUpon>DataBase.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\OldDateDim.cs">
       <DependentUpon>DataBase.tt</DependentUpon>
     </Compile>
@@ -257,6 +263,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\angular.min.js" />
+    <Content Include="Content\beeorder_logo.gif" />
     <Content Include="Content\bootstrap-datetimepicker-0.0.11\css\bootstrap-datetimepicker.min.css" />
     <Content Include="Content\bootstrap-datetimepicker-0.0.11\js\bootstrap-datetimepicker.min.js" />
     <Content Include="Content\bootstrap.css" />
@@ -270,6 +277,7 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="jsController\drivers.controller.js" />
+    <Content Include="jsController\facebook.controller.js" />
     <Content Include="Models\DataBase.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>DataBase.edmx</DependentUpon>
@@ -294,6 +302,9 @@
     <Content Include="Models\DataBase.edmx.diagram">
       <DependentUpon>DataBase.edmx</DependentUpon>
     </Content>
+    <Content Include="R.json" />
+    <Content Include="Controllers\api\R.json" />
+    <Content Include="employees.json" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -2363,6 +2374,7 @@
     <Content Include="Views\Dashboard\drivers.cshtml" />
     <Content Include="template\dist\vis.js.map" />
     <Content Include="template\dist\vis.map" />
+    <Content Include="Views\Dashboard\Facebook.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

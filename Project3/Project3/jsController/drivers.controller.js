@@ -9,6 +9,12 @@ function StudentDetailsService($http) {
     this.getTotal = function getTotal() {
         return $http.get('/api/DimDrivers/getTotalDrivers')
     };
+    this.getAvailable = function getAvailable() {
+        return $http.get('/api/DimDrivers/getAvailable')
+    };
+    this.getActive = function getActive() {
+        return $http.get('/api/DimDrivers/getActive')
+    };
     this.getDriverProv = function getDriverProv() {
         return $http.get('/api/DimDrivers/getTotalProviderDrivers')
     };
@@ -29,29 +35,63 @@ app.controller('StudentController', StudentController);
 function StudentController(StudentDetailsService) {
 
     var vm = this;
+    vm.init = init;
+   
+
+
+    vm.loading = true;
+    vm.loading1 = true;
+    vm.loading2 = true;
     vm.filter = {}
+    function init() {
+       
+        
 
-    var today = new Date();
-    var dd = today.getDate();
-    var ddd = today.getDate()+1;
-    var mm = today.getMonth() + 1; //January is 0!
+        var today = new Date();
+        var dd = today.getDate();
+        var ddd = today.getDate() + 1;
+        var mm = today.getMonth() + 1; //January is 0!
 
-    var yyyy = today.getFullYear();
-    if (dd < 10) {
-        dd = '0' + dd;
-    }
-    if (mm < 10) {
-        mm = '0' + mm;
-    }
-    var todayn =  yyyy + '/' + mm + '/' +dd
-    var todayt = yyyy + '/' + mm + '/' + ddd
-    
+        var yyyy = today.getFullYear();
+        if (dd < 10) {
+            dd = '0' + dd;
+        }
+        if (mm < 10) {
+            mm = '0' + mm;
+        }
+        var todayn = yyyy + '/' + mm + '/' + dd
+        var todayt = yyyy + '/' + mm + '/' + ddd
 
-    vm.filter['id'] = 0;
-    vm.filter['from'] = new Date(todayn);
-    vm.filter['to'] = new Date(todayt);
+
+        vm.filter['id'] = 0;
+        vm.filter['from'] = new Date(todayn);
+        vm.filter['to'] = new Date(todayt);
     //vm.filter['from'] = "2017/12/7";
     //vm.filter['to'] = "2017/12/8";
+
+
+
+
+        var today123 = new Date();
+        var dd123 = today.getDate();
+        var ddd123 = today.getDate() + 1;
+        var mm123 = today.getMonth() + 1; //January is 0!
+
+        var yyyy123 = today123.getFullYear();
+        if (dd123 < 10) {
+            dd123 = '0' + dd123;
+        }
+        if (mm123 < 10) {
+            mm123 = '0' + mm123;
+        }
+        var todayn123 = yyyy123 + '/' + mm123 + '/' + dd123
+        var todayt123 = yyyy123 + '/' + mm123 + '/' + ddd123
+
+        vm.orderFilter['from'] = new Date(todayn123);
+        vm.orderFilter['to'] = new Date(todayt123);
+
+
+    }
     
     vm.dTimeline = dTimeline;
     vm.dOrder = dOrder;
@@ -60,10 +100,14 @@ function StudentController(StudentDetailsService) {
     function dTimeline() {
         
         StudentDetailsService.getStudentDetails(vm.filter).then(function (response) {
-            
+            vm.drivers = {}
+            debugger
+            $("#visualization").empty();
+
+
             vm.drivers = response.data;
             if (vm.drivers.length > 0) {
-                $('#noResult').css('display', 'none');
+                
                 console.log("data")
                 vm.driverName = [];
                 vm.data = []
@@ -98,9 +142,9 @@ function StudentController(StudentDetailsService) {
                     },
                     editable: {
                         add: false,         // add new items by double tapping
-                        updateTime: false,  // drag items horizontally
-                        updateGroup: false, // drag items from one group to another
-                        remove: false,       // delete an item by tapping the delete button top right
+                        updateTime: true,  // drag items horizontally
+                        updateGroup: true, // drag items from one group to another
+                        remove: true,       // delete an item by tapping the delete button top right
                         overrideItems: false
                     }
 
@@ -110,8 +154,15 @@ function StudentController(StudentDetailsService) {
                 timeline.setOptions(options);
                 timeline.setGroups(groups);
                 timeline.setItems(items);
+                vm.loading2 = false;
+
+                $('#noResult').css('display', 'none');
+                $("#visualization").css('display', 'block');
+                
             }
             else {
+                vm.loading2 = false;
+
                 console.log("no date")
                 $('#noResult').css('display', 'block');
             }
@@ -126,12 +177,21 @@ function StudentController(StudentDetailsService) {
     StudentDetailsService.getTotal().then(function (response) {
         vm.Total = response.data;
     })
+    StudentDetailsService.getAvailable().then(function (response) {
+        debugger
+        vm.Available = response.data;
+    })
+    StudentDetailsService.getActive().then(function (response) {
+        debugger
+        vm.Active = response.data;
+    })
     StudentDetailsService.getDriverProv().then(function (response) {
 
         vm.DriverProv = response.data;
         vm.DriverProv = vm.DriverProv - 1;
     })
     StudentDetailsService.getDriverType().then(function (response) {
+
 
         vm.DriverType = response.data;
             vm.names = [];
@@ -179,7 +239,8 @@ function StudentController(StudentDetailsService) {
                 options: doughnutPieOptions
             });
         }
-
+        vm.loading = false;
+        $("#pieChart").css('display', 'block');
 
     })
 
@@ -188,36 +249,20 @@ function StudentController(StudentDetailsService) {
     
     vm.orderFilter = {}
 
-    var today123 = new Date();
-    var dd123 = today.getDate();
-    var ddd123 = today.getDate() + 1;
-    var mm123 = today.getMonth() + 1; //January is 0!
-
-    var yyyy123 = today123.getFullYear();
-    if (dd123 < 10) {
-        dd123 = '0' + dd123;
-    }
-    if (mm123 < 10) {
-        mm123 = '0' + mm123;
-    }
-    var todayn123 = yyyy123 + '/' + mm123 + '/' + dd123
-    var todayt123 = yyyy123 + '/' + mm123 + '/' + ddd123
    
-    vm.orderFilter['from'] = new Date(todayn123);
-    vm.orderFilter['to'] = new Date(todayt123);
     
     dOrder();
     function dOrder() {
         StudentDetailsService.getdriverOrder(vm.orderFilter).then(function (response) {
-          
+            
             vm.driverOrder = response.data;
             vm.labels = [];
             vm.data1 = [];
             vm.data2 = [];
             if (vm.driverOrder.length > 0) {
-                debugger
-                $('#noResultOrder').css('display', 'none');
-                $('#barChart').css('display', 'block');
+                
+               
+               // $('#barCha').css('display', 'block');
 
                 for (var i = 0; i < vm.driverOrder.length; i++) {
                     vm.labels[i] = vm.driverOrder[i].Name;
@@ -280,14 +325,17 @@ function StudentController(StudentDetailsService) {
                     });
                 }
 
-
+                vm.loading1 = false;
+                $('#noResultOrder').css('display', 'none');
+                $("#barCha").css('display', 'block');
 
 
 
             }
             else {
+                vm.loading1 = false;
                 $('#noResultOrder').css('display', 'block');
-                $('#barChart').css('display', 'none');
+               // $('#barCha').css('display', 'none');
             }
 
 
