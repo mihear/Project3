@@ -88,6 +88,7 @@
             <div class="col-lg-6 grid-margin stretch-card">
                 <div class="card">
                     <div class="card-body">
+
                         <h4 class="card-title">Drivers Vehicle</h4>
                         <canvas id="pieChart" style="height:250px"></canvas>
                     </div>
@@ -96,11 +97,22 @@
             <div class="col-lg-6 grid-margin stretch-card">
                 <div class="card">
                     <div class="card-body">
+                        <div class="row" style="padding-bottom : 2%">
+                            <div class="col-md-11">
                         <h4 class="card-title">Conformation Order</h4>
+                            </div>
+                            <div class="col-md-1" style="text-align: center;padding-top: 1%;font-size: 20px;">
+                                <i data-toggle="modal" data-target="#dOrder" class="glyphicon glyphicon-filter"></i>
+                            </div>
+                        </div>
+
                         <canvas id="barChart" style="height:230px"></canvas>
+                        <div id="noResultOrder" style="text-align : center ">
+                            <img width="500" src="~/template/beeOrder logo/NO_RESULT.png" />
                     </div>
                 </div>
             </div>
+        </div>
         </div>
         <div class="row">
             <div class="col-md-12 grid-margin">
@@ -118,7 +130,7 @@
                         </div>
                         <div class="chart-container">
                             <div id="visualization"></div>
-                            <div id="noResult" style="text-align : center ; display : none" >
+                            <div id="noResult" style="text-align : center ; display : none">
                                 <img width="500" src="~/template/beeOrder logo/NO_RESULT.png" />
                             </div>
                         </div>
@@ -157,7 +169,7 @@
                                     <label for="sel1">Drivers</label>
                                     <select class="form-control" id="sel1" name="sellist1" ng-model="vm.filter.id">
                                         <option></option>
-                                        <option ng-value="item.id" id="dr" ng-repeat="item in vm.allDrivers" >
+                                        <option ng-value="item.id" id="dr" ng-repeat="item in vm.allDrivers">
                                             {{item.nameof}}
                                         </option>
                                     </select>
@@ -173,6 +185,44 @@
                     <!-- Modal footer -->
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="vm.dTimeline()">Filter</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+        <!-- driver order modal-->
+        <div class="modal" id="dOrder" style="padding-right : 50% !important">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h4 class="modal-title">Timeline Drivers Filter</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>From</label>
+                                <input id="from" name="date" type="date" class="form-control" ng-model="vm.orderFilter.from" />
+                            </div>
+                            <div class="col-md-6">
+                                <label>To</label>
+                                <input type="date" id="to" class="form-control" ng-model="vm.orderFilter.to" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="vm.dOrder()">Filter</button>
                     </div>
 
                 </div>

@@ -15,8 +15,10 @@ function StudentDetailsService($http) {
     this.getDriverType = function getDriverType() {
         return $http.get('/api/DimDrivers/DriverType')
     };
-    this.getdriverOrder = function getdriverOrder() {
-        return $http.get('/api/DimDrivers/driverOrde')
+    this.getdriverOrder = function getdriverOrder(orderFilter) {
+        
+        
+        return $http.post('/api/DimDrivers/driverOrder', orderFilter)
     };
     this.getAllDrivers = function getAllDrivers() {
         return $http.get('/api/DimDrivers/getAllDrivers')
@@ -28,11 +30,7 @@ function StudentController(StudentDetailsService) {
 
     var vm = this;
     vm.filter = {}
-    //= {
-    //    id = 0 ,
-    //    from: new Date().toISOString().substr(0, 10),
-    //    to: new Date().toISOString().substr(0, 10)
-    //};
+
     var today = new Date();
     var dd = today.getDate();
     var ddd = today.getDate()+1;
@@ -56,6 +54,7 @@ function StudentController(StudentDetailsService) {
     //vm.filter['to'] = "2017/12/8";
     
     vm.dTimeline = dTimeline;
+    vm.dOrder = dOrder;
     dTimeline();
 
     function dTimeline() {
@@ -183,86 +182,127 @@ function StudentController(StudentDetailsService) {
 
 
     })
-    StudentDetailsService.getdriverOrder().then(function (response) {
 
+
+
+    
+    vm.orderFilter = {}
+
+    var today123 = new Date();
+    var dd123 = today.getDate();
+    var ddd123 = today.getDate() + 1;
+    var mm123 = today.getMonth() + 1; //January is 0!
+
+    var yyyy123 = today123.getFullYear();
+    if (dd123 < 10) {
+        dd123 = '0' + dd123;
+    }
+    if (mm123 < 10) {
+        mm123 = '0' + mm123;
+    }
+    var todayn123 = yyyy123 + '/' + mm123 + '/' + dd123
+    var todayt123 = yyyy123 + '/' + mm123 + '/' + ddd123
+   
+    vm.orderFilter['from'] = new Date(todayn123);
+    vm.orderFilter['to'] = new Date(todayt123);
+    
+    dOrder();
+    function dOrder() {
+        StudentDetailsService.getdriverOrder(vm.orderFilter).then(function (response) {
+          
             vm.driverOrder = response.data;
             vm.labels = [];
             vm.data1 = [];
             vm.data2 = [];
+            if (vm.driverOrder.length > 0) {
+                debugger
+                $('#noResultOrder').css('display', 'none');
+                $('#barChart').css('display', 'block');
 
-            for (var i = 0; i < vm.driverOrder.length; i++) {
-                vm.labels[i] = vm.driverOrder[i].Name;
-                vm.data1[i] = vm.driverOrder[i].allOrder;
-                vm.data2[i] = vm.driverOrder[i].cancelOrder;
+                for (var i = 0; i < vm.driverOrder.length; i++) {
+                    vm.labels[i] = vm.driverOrder[i].Name;
+                    vm.data1[i] = vm.driverOrder[i].allOrder;
+                    vm.data2[i] = vm.driverOrder[i].cancelOrder;
 
-            }
+                }
 
 
-            var ctx = document.getElementById("barChart");
-            if (ctx) {
-                ctx.height = 200;
-                var myChart = new Chart(ctx, {
-                    type: 'bar',
-                    defaultFontFamily: 'Poppins',
-                    data: {
-                        labels: vm.labels,
-                        datasets: [
-                            {
-                                label: "All Order",
-                                data: vm.data1,
-                                borderColor: "rgba(0, 123, 255, 0.9)",
-                                borderWidth: "0",
-                                backgroundColor: "rgba(0, 123, 255, 0.5)",
-                                fontFamily: "Poppins"
-                            },
-                            {
-                                label: "Cancel Order",
-                                data: vm.data2,
-                                borderColor: "rgba(0,0,0,0.09)",
-                                borderWidth: "0",
-                                backgroundColor: "rgba(0,0,0,0.07)",
-                                fontFamily: "Poppins"
-                            }
-                        ]
-                    },
-                    options: {
-                        legend: {
-                            position: 'top',
-                            labels: {
-                                fontFamily: 'Poppins'
-                            }
-
+                var ctx = document.getElementById("barChart");
+                if (ctx) {
+                    ctx.height = 200;
+                    var myChart = new Chart(ctx, {
+                        type: 'bar',
+                        defaultFontFamily: 'Poppins',
+                        data: {
+                            labels: vm.labels,
+                            datasets: [
+                                {
+                                    label: "All Order",
+                                    data: vm.data1,
+                                    borderColor: "rgba(0, 123, 255, 0.9)",
+                                    borderWidth: "0",
+                                    backgroundColor: "rgba(0, 123, 255, 0.5)",
+                                    fontFamily: "Poppins"
+                                },
+                                {
+                                    label: "Cancel Order",
+                                    data: vm.data2,
+                                    borderColor: "rgba(0,0,0,0.09)",
+                                    borderWidth: "0",
+                                    backgroundColor: "rgba(0,0,0,0.07)",
+                                    fontFamily: "Poppins"
+                                }
+                            ]
                         },
-                        scales: {
-                            xAxes: [{
-                                ticks: {
-                                    fontFamily: "Poppins"
+                        options: {
+                            legend: {
+                                position: 'top',
+                                labels: {
+                                    fontFamily: 'Poppins'
+                                }
 
-                                }
-                            }],
-                            yAxes: [{
-                                ticks: {
-                                    beginAtZero: true,
-                                    fontFamily: "Poppins"
-                                }
-                            }]
+                            },
+                            scales: {
+                                xAxes: [{
+                                    ticks: {
+                                        fontFamily: "Poppins"
+
+                                    }
+                                }],
+                                yAxes: [{
+                                    ticks: {
+                                        beginAtZero: true,
+                                        fontFamily: "Poppins"
+                                    }
+                                }]
+                            }
                         }
-                    }
-                });
+                    });
+                }
+
+
+
+
+
             }
-       
-
-
-    
-
+            else {
+                $('#noResultOrder').css('display', 'block');
+                $('#barChart').css('display', 'none');
+            }
 
 
 
         })
+    }
+    
+
+
+
     StudentDetailsService.getAllDrivers().then(function (response) {
 
         vm.allDrivers = response.data;
     })
+
 
     function getDate() {
         let today1 = new Date().toISOString().substr(0, 10);
