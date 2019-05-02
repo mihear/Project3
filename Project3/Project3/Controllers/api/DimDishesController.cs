@@ -9,102 +9,82 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
 using Project3.Models;
+using Project3.Models.Filters;
+using Project3.Models.Restaurants;
+using System.Data.SqlClient;
 
 namespace Project3.Controllers.api
 {
     public class DimDishesController : ApiController
     {
-        private Entities db = new Entities();
-
-        // GET: api/DimDishes
-        public IHttpActionResult GetDimDishes()
+        private Entities db;
+        public DimDishesController()
         {
-            return Ok(db.DimDishes.Where(t => t.DishPrice != 0).Select(m => new
-            {
-                name = m.DishName,
-                data = m.DishPrice
-            }).Take(20));
+            db = new Entities();
         }
-
-        // GET: api/DimDishes/5
-        [ResponseType(typeof(DimDish))]
-        public IHttpActionResult GetDimDish(int id)
+        [HttpGet]
+        public IHttpActionResult getAllDish()
         {
-            DimDish dimDish = db.DimDishes.Find(id);
-            if (dimDish == null)
+            return Ok(db.DimDishes.Select(m => new
             {
-                return NotFound();
-            }
-
-            return Ok(dimDish);
+                id = m.DishAltKey,
+                nameof = m.DishEngName
+            }).ToList());
         }
-
-        // PUT: api/DimDishes/5
-        [ResponseType(typeof(void))]
-        public IHttpActionResult PutDimDish(int id, DimDish dimDish)
+        [HttpPost]
+        public IHttpActionResult OrderRateH(TimeFilter filter)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            if (id != dimDish.DishKey)
+            if (filter.from == null || filter.to == null)
             {
                 return BadRequest();
             }
-
-            db.Entry(dimDish).State = EntityState.Modified;
-
-            try
+            List<OrderRate> list = new List<OrderRate>();
+            if (filter.id == 0)
             {
-                db.SaveChanges();
+                var date = db.Database
+                    .SqlQuery<OrderRate>(" select TOP (10) count(distinct [BillKey]) as Count ,[DimDish].[DishEngName]as Name   from [FactBill] inner join[DimDish] on" +
+                     "[FactBill].[DishKey] = [DimDish].[DishAltKey] where [FactBill].[OpenTime] >= @day and [FactBill].[OpenTime] <= @day2" +
+                     " group by [FactBill].[DishKey],[DimDish].[DishEngName] order by  count(distinct[BillKey]) desc"
+                 , new SqlParameter("@day", filter.from), new SqlParameter("@day2", filter.to)).ToList();
+                return Ok(date);
             }
-            catch (DbUpdateConcurrencyException)
+            else
             {
-                if (!DimDishExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                var date = db.Database
+                     .SqlQuery<OrderRate>(" select TOP (10) count(distinct [BillKey]) as Count ,[DimDish].[DishEngName] as Name  from [FactBill] inner join[DimDish] on" +
+                     "[FactBill].[DishKey] = [DimDish].[DishAltKey] where [FactBill].[DishKey]=@id and [FactBill].[OpenTime] >= @day and[FactBill].[OpenTime] <= @day2" +
+                     " group by[FactBill].[DishKey],[DimDish].[DishEngName] order by  count(distinct[BillKey]) desc"
+                  , new SqlParameter("@id", filter.id), new SqlParameter("@day", filter.from), new SqlParameter("@day2", filter.to)).ToList();
+                return Ok(date);
             }
-
-            return StatusCode(HttpStatusCode.NoContent);
         }
-
-        // POST: api/DimDishes
-        [ResponseType(typeof(DimDish))]
-        public IHttpActionResult PostDimDish(DimDish dimDish)
+        [HttpPost]
+        public IHttpActionResult OrderRateL(TimeFilter filter)
         {
-            if (!ModelState.IsValid)
+            if (filter.from == null || filter.to == null)
             {
-                return BadRequest(ModelState);
+                return BadRequest();
             }
-
-            db.DimDishes.Add(dimDish);
-            db.SaveChanges();
-
-            return CreatedAtRoute("DefaultApi", new { id = dimDish.DishKey }, dimDish);
-        }
-
-        // DELETE: api/DimDishes/5
-        [ResponseType(typeof(DimDish))]
-        public IHttpActionResult DeleteDimDish(int id)
-        {
-            DimDish dimDish = db.DimDishes.Find(id);
-            if (dimDish == null)
+            List<OrderRate> list = new List<OrderRate>();
+            if (filter.id == 0)
             {
-                return NotFound();
+                var date = db.Database
+                    .SqlQuery<OrderRate>(" select TOP (10) count(distinct [BillKey]) as Count ,[DimDish].[DishEngName] as Name  from [FactBill] inner join[DimDish] on" +
+                     "[FactBill].[DishKey] = [DimDish].[DishAltKey] where [FactBill].[OpenTime] >= @day and[FactBill].[OpenTime] <= @day2" +
+                     " group by[FactBill].[DishKey],[DimDish].[DishEngName] order by  count(distinct[BillKey]) "
+                 , new SqlParameter("@day", filter.from), new SqlParameter("@day2", filter.to)).ToList();
+                return Ok(date);
             }
-
-            db.DimDishes.Remove(dimDish);
-            db.SaveChanges();
-
-            return Ok(dimDish);
+            else
+            {
+                var date = db.Database
+                     .SqlQuery<OrderRate>("  select TOP (10) count(distinct [BillKey]) as Count ,[DimDish].[DishEngName] as Name   from [FactBill] inner join[DimDish] on" +
+                     "[FactBill].[DishKey] = [DimDish].[DishAltKey] where [FactBill].[DishKey]=@id and [FactBill].[OpenTime] >= @day and[FactBill].[OpenTime] <= @day2" +
+                     " group by[FactBill].[DishKey],[DimDish].[DishEngName] order by  count(distinct[BillKey])"
+                  , new SqlParameter("@id", filter.id), new SqlParameter("@day", filter.from), new SqlParameter("@day2", filter.to)).ToList();
+                return Ok(date);
+            }
         }
-
         protected override void Dispose(bool disposing)
         {
             if (disposing)
@@ -112,11 +92,6 @@ namespace Project3.Controllers.api
                 db.Dispose();
             }
             base.Dispose(disposing);
-        }
-
-        private bool DimDishExists(int id)
-        {
-            return db.DimDishes.Count(e => e.DishKey == id) > 0;
         }
     }
 }
