@@ -2,7 +2,7 @@
     <div class="content-wrapper">
         <div class="row">
             <div class="col-lg-6 grid-margin stretch-card">
-                <div class="card">
+                <div class="card" style="height : 480px">
                     <div class="card-body">
                         <div class="row" style="padding-bottom : 2%">
                             <div class="col-md-11 col-sm-8 ">
@@ -12,13 +12,13 @@
                                 <i data-toggle="modal" data-target="#Order_Rate" class="glyphicon glyphicon-filter"></i>
                             </div>
                         </div>
-                        <div style="text-align : center ; padding-top : 16% ; height: 289px; " ng-show="false">
+                        <div style="text-align : center ; padding-top : 20% ; height: 289px; " ng-show="vm.oRL">
                             <img width="100" src="~/Content/beeorder_logo.gif" />
                         </div>
-                        <div id="barCha" >
-                            <canvas id="myChart" style="width : 100%" height="400"></canvas>
+                        <div id="barCha" style="display : none" >
+                            <canvas id="myChart"  width="580" height="400" ></canvas>
                         </div>
-                        <div id="noResultOrder" style="text-align : center  ; display : none">
+                        <div id="noResultOrder" style="text-align : center  ; display : none ; padding-top : 5%">
                             <img width="500" src="~/template/beeOrder logo/NO_RESULT.png" />
                         </div>
                         </div>
@@ -70,7 +70,7 @@
                             <div class="col-md-6">
                                 <label style="font-weight: 400;color: #2e444b;" for="sel1">Restaurant</label>
                                 <select class="form-control" id="sel1" name="sellist1" ng-model="vm.filter.id">
-                                    <option ng-value="item.id" id="dr" ng-repeat="item in vm.allDrivers">
+                                    <option ng-value="item.id" id="dr" ng-repeat="item in vm.AllRestaurants">
                                         {{item.nameof}}
                                     </option>
                                 </select>
@@ -84,7 +84,7 @@
 
                     <!-- Modal footer -->
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="vm.dTimeline()">Filter</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="vm.orderRate()">Filter</button>
                     </div>
 
                 </div>

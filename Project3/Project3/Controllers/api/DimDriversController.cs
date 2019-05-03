@@ -140,6 +140,15 @@ namespace Project3.Controllers.api
 
             return Ok(test);
         }
+        public IHttpActionResult getAvailable()
+        {
+            return Ok(db.DimDrivers.Where(x => x.Available == 1).Count());
+        }
+        public IHttpActionResult getActive()
+        {
+            return Ok(db.DimDrivers.Where(x => x.Active == 1).Count());
+        }
+
         [HttpGet]
         public IHttpActionResult driverOrde()
         {
