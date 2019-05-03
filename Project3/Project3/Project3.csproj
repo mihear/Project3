@@ -202,6 +202,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\api\DimDishesController.cs" />
     <Compile Include="Controllers\api\DimDriversController.cs" />
+    <Compile Include="Controllers\api\DimRestaurantsController.cs" />
     <Compile Include="Controllers\api\DimUsersController.cs" />
     <Compile Include="Controllers\ChartController.cs" />
     <Compile Include="Controllers\DashboardController.cs" />
@@ -241,14 +242,20 @@
     <Compile Include="Models\DimUser.cs">
       <DependentUpon>DataBase.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Drivers\DriversCharts.cs" />
+    <Compile Include="Models\Drivers\DriversOrder.cs" />
+    <Compile Include="Models\Drivers\DriversType.cs" />
+    <Compile Include="Models\Drivers\TimesDriver.cs" />
     <Compile Include="Models\FactBill.cs">
       <DependentUpon>DataBase.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Filters\TimeFilter.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\OldDateDim.cs">
       <DependentUpon>DataBase.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Restaurants\OrderRate.cs" />
     <Compile Include="Models\sysdiagram.cs">
       <DependentUpon>DataBase.tt</DependentUpon>
     </Compile>
