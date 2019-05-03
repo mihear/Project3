@@ -3,7 +3,7 @@ var app = angular.module('myApp', [])
 app.service('StudentDetailsService', StudentDetailsService);
 function StudentDetailsService($http) {
     this.getStudentDetails = function getStudentDetails(filter) {
-        
+        debugger
         return $http.post('/api/DimDrivers/GetDrivers',filter);
     };
     this.getTotal = function getTotal() {
@@ -100,6 +100,7 @@ function StudentController(StudentDetailsService) {
     function dTimeline() {
         
         StudentDetailsService.getStudentDetails(vm.filter).then(function (response) {
+            console.log(response.data)
             vm.drivers = {}
             debugger
             $("#visualization").empty();

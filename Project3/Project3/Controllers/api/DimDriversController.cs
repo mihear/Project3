@@ -47,6 +47,7 @@ namespace Project3.Controllers.api
             //}
         }
     }
+
     public class DriverFilter
     {
         public DateTime from { get; set; }
@@ -83,6 +84,15 @@ namespace Project3.Controllers.api
         {
             return Ok(db.DimDrivers.Where(m => m.Provider == "beeorder").Count());
         }
+        public IHttpActionResult getAvailable()
+        {
+            return Ok(db.DimDrivers.Where(x => x.Available == 1).Count());
+        }
+        public IHttpActionResult getActive()
+        {
+            return Ok(db.DimDrivers.Where(x => x.Active == 1).Count());
+        }
+
         // GET: api/DimDrivers
         public IHttpActionResult GetDriver()
         {

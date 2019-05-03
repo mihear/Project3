@@ -272,6 +272,7 @@
     <Content Include="Content\Site.css" />
     <Content Include="jsController\drivers.controller.js" />
     <Content Include="jsController\facebook.controller.js" />
+    <Content Include="jsController\restaurants.controller.js" />
     <Content Include="Models\DataBase.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>DataBase.edmx</DependentUpon>
@@ -2369,6 +2370,7 @@
     <Content Include="template\dist\vis.js.map" />
     <Content Include="template\dist\vis.map" />
     <Content Include="Views\Dashboard\Facebook.cshtml" />
+    <Content Include="Views\Dashboard\restaurants.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

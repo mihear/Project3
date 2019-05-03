@@ -21,5 +21,9 @@ namespace Project3.Controllers
         {
             return View();
         }
+        public ActionResult restaurants()
+        {
+            return View();
+        }
     }
 }
