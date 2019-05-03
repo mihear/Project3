@@ -81,6 +81,91 @@ namespace Project3.Controllers.api
                 return Ok(date);
             }
         }
+        [HttpPost]
+        public IHttpActionResult OnOffOrderTop(TimeFilter filter)
+        {
+            if (filter.from == null || filter.to == null)
+            {
+                return BadRequest();
+            }
+            List<OnOffOrder> list = new List<OnOffOrder>();
+            if (filter.id == 0)
+            {
+                list = db.Database
+                    .SqlQuery<OnOffOrder>(" select TOP (10)  count(distinct [BillKey]) as 'On' ,DimRestaurant.[Name] from [FactBill]  inner hash   join [DimRestaurant] " +
+                    "on [DimRestaurant].RestaurantKey = [FactBill].[ResturentKey] " +
+                    "where [FactBill].[OpenTime] >= @day and [FactBill].[OpenTime] <=  @day2 and(DATEPART(HOUR,[DimRestaurant].StartDelivery) <= DATEPART(HOUR,[FactBill].[OpenTime]) and DATEPART(HOUR,[FactBill].[OpenTime]) <= DATEPART(HOUR,[DimRestaurant].EndDelivery))" +
+                    "group by[ResturentKey],[DimRestaurant].[Name]" +
+                    "order by[ResturentKey]"
+                 , new SqlParameter("@day", filter.from), new SqlParameter("@day2", filter.to)).ToList();
+                var date = db.Database
+                   .SqlQuery<int>(" select TOP (10)  count(distinct [BillKey]) as 'Off' from [FactBill]  inner hash   join [DimRestaurant] " +
+                   "on[DimRestaurant].RestaurantKey = [FactBill].[ResturentKey] Where [FactBill].[OpenTime] >= @day and[FactBill].[OpenTime] <=  @day2 and (DATEPART(HOUR,[DimRestaurant].StartDelivery) > DATEPART(HOUR,[FactBill].[OpenTime]) or DATEPART(HOUR,[FactBill].[OpenTime]) > DATEPART(HOUR,[DimRestaurant].EndDelivery))" +
+                   "group by[ResturentKey],[DimRestaurant].[Name]" +
+                   "order by[ResturentKey]"
+                , new SqlParameter("@day", filter.from), new SqlParameter("@day2", filter.to)).ToList();
+                int i = 0;
+                foreach(var item in list)
+                {
+                    item.Off = date[i++];
+                }
+                return Ok(list);
+            }
+            return BadRequest();
+        }
+        [HttpPost]
+        public IHttpActionResult OnOffOrder(TimeFilter filter)
+        {
+            if (filter.from == null || filter.to == null)
+            {
+                return BadRequest();
+            }
+            List<OnOffOrder> list = new List<OnOffOrder>();
+            if (filter.id == 0)
+            {
+                list = db.Database
+                    .SqlQuery<OnOffOrder>(" select count(distinct [BillKey]) as 'On' ,DimRestaurant.[Name] from [FactBill]  inner hash   join [DimRestaurant] " +
+                    "on [DimRestaurant].RestaurantKey = [FactBill].[ResturentKey] " +
+                    "where [FactBill].[OpenTime] >= @day and [FactBill].[OpenTime] <=  @day2 and(DATEPART(HOUR,[DimRestaurant].StartDelivery) <= DATEPART(HOUR,[FactBill].[OpenTime]) and DATEPART(HOUR,[FactBill].[OpenTime]) <= DATEPART(HOUR,[DimRestaurant].EndDelivery))" +
+                    "group by[ResturentKey],[DimRestaurant].[Name]" +
+                    "order by[ResturentKey]"
+                 , new SqlParameter("@day", filter.from), new SqlParameter("@day2", filter.to)).ToList();
+                var date = db.Database
+                   .SqlQuery<int>(" select count(distinct [BillKey]) as 'Off' from [FactBill]  inner hash   join [DimRestaurant] " +
+                   "on[DimRestaurant].RestaurantKey = [FactBill].[ResturentKey] Where [FactBill].[OpenTime] >= @day and[FactBill].[OpenTime] <=  @day2 and (DATEPART(HOUR,[DimRestaurant].StartDelivery) > DATEPART(HOUR,[FactBill].[OpenTime]) or DATEPART(HOUR,[FactBill].[OpenTime]) > DATEPART(HOUR,[DimRestaurant].EndDelivery))" +
+                   "group by[ResturentKey],[DimRestaurant].[Name]" +
+                   "order by[ResturentKey]"
+                , new SqlParameter("@day", filter.from), new SqlParameter("@day2", filter.to)).ToList();
+                int i = 0;
+                foreach (var item in list)
+                {
+                    item.Off = date[i++];
+                }
+                return Ok(list);
+            }
+            return BadRequest();
+        }
+        [HttpPost]
+        public IHttpActionResult RestTypeOrder(TimeFilter filter)
+        {
+            if (filter.from == null || filter.to == null)
+            {
+                return BadRequest();
+            }
+            List<OrderRate> list = new List<OrderRate>();
+            if (filter.id == 0)
+            {
+                list = db.Database
+                    .SqlQuery<OrderRate>("select count(distinct[BillKey]) as count ,[DimRestaurant].RestaurantType as name from [FactBill]   inner hash   join [DimRestaurant] "+
+                    "on [DimRestaurant].RestaurantKey = [FactBill].[ResturentKey]"+
+                    "where [FactBill].[OpenTime] >= @day and [FactBill].[OpenTime] <= @day2  "+
+                    "group by[DimRestaurant].RestaurantType"
+                 , new SqlParameter("@day", filter.from), new SqlParameter("@day2", filter.to)).ToList();
+                return Ok(list);
+            }
+            return BadRequest();
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)

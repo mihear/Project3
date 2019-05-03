@@ -255,6 +255,7 @@
     <Compile Include="Models\OldDateDim.cs">
       <DependentUpon>DataBase.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Restaurants\OnOffOrder.cs" />
     <Compile Include="Models\Restaurants\OrderRate.cs" />
     <Compile Include="Models\sysdiagram.cs">
       <DependentUpon>DataBase.tt</DependentUpon>
