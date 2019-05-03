@@ -105,7 +105,7 @@ namespace Project3.Controllers.api
                    "order by[ResturentKey]"
                 , new SqlParameter("@day", filter.from), new SqlParameter("@day2", filter.to)).ToList();
                 int i = 0;
-                foreach(var item in list)
+                foreach (var item in list)
                 {
                     item.Off = date[i++];
                 }
@@ -146,24 +146,16 @@ namespace Project3.Controllers.api
             return BadRequest();
         }
         [HttpPost]
-        public IHttpActionResult RestTypeOrder(TimeFilter filter)
+        public IHttpActionResult RestTypeOrder()
         {
-            if (filter.from == null || filter.to == null)
-            {
-                return BadRequest();
-            }
-            List<OrderRate> list = new List<OrderRate>();
-            if (filter.id == 0)
-            {
-                list = db.Database
-                    .SqlQuery<OrderRate>("select count(distinct[BillKey]) as count ,[DimRestaurant].RestaurantType as name from [FactBill]   inner hash   join [DimRestaurant] "+
-                    "on [DimRestaurant].RestaurantKey = [FactBill].[ResturentKey]"+
-                    "where [FactBill].[OpenTime] >= @day and [FactBill].[OpenTime] <= @day2  "+
-                    "group by[DimRestaurant].RestaurantType"
-                 , new SqlParameter("@day", filter.from), new SqlParameter("@day2", filter.to)).ToList();
-                return Ok(list);
-            }
-            return BadRequest();
+            var list = db.Database
+                 .SqlQuery<OrderRate>("select count(distinct[BillKey]) as count ,[DimRestaurant].RestaurantType as name from [FactBill]   inner hash   join [DimRestaurant] " +
+                 "on [DimRestaurant].RestaurantKey = [FactBill].[ResturentKey]" +
+                 //"where [FactBill].[OpenTime] >= @day and [FactBill].[OpenTime] <= @day2  "+
+                 "group by[DimRestaurant].RestaurantType"
+              //, new SqlParameter("@day", filter.from), new SqlParameter("@day2", filter.to)
+              ).ToList();
+            return Ok(list);
         }
 
         protected override void Dispose(bool disposing)
