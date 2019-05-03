@@ -33,6 +33,7 @@
     <script src="~/Content/angular.min.js"></script>
     <script src="~/jsController/drivers.controller.js"></script>
     <script src="~/jsController/facebook.controller.js"></script>
+    <script src="~/jsController/restaurants.controller.js"></script>
 
     <link href="~/Content/bootstrap4/bootstrap.min.css" rel="stylesheet" />
     @*<script src="~/Content/bootstrap4/bootstrap.min.js"></script>*@
@@ -42,7 +43,32 @@
 
 
 </head>
+
+
+
 <body>
+
+    <style>
+        .vis-item {
+            background-color: #d8917ccf !important;
+            border-color: #d3907f !important;
+        }
+
+        .show {
+            padding-right: 48% !important;
+        }
+
+        .btn-primary {
+            background-color: #e58453;
+            border-color: #e58453;
+        }
+
+            .btn-primary:hover {
+                background-color: #d6662d;
+                border-color: #d6662d;
+            }
+    </style>
+
     <!-- partial:partials/_navbar.html -->
     <nav class="navbar default-layout col-lg-12 col-12 p-0 fixed-top d-flex flex-row" style="
     border: 0;
@@ -67,7 +93,7 @@ background : #f79462 !important">
         <!-- partial -->
         <div class="container-fluid page-body-wrapper">
             <!-- partial:partials/_sidebar.html -->
-            <nav class="sidebar sidebar-offcanvas" id="sidebar"  style="box-shadow: 1px 1px 5px #00000045;">
+            <nav class="sidebar sidebar-offcanvas" id="sidebar" style="box-shadow: 1px 1px 5px #00000045;">
                 <ul class="nav">
 
                     <li class="nav-item">

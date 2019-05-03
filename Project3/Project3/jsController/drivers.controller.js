@@ -104,7 +104,7 @@ function StudentController(StudentDetailsService) {
             vm.drivers = {}
             debugger
             $("#visualization").empty();
-
+            
 
             vm.drivers = response.data;
             if (vm.drivers.length > 0) {
