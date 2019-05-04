@@ -25,5 +25,9 @@ namespace Project3.Controllers
         {
             return View();
         }
+        public ActionResult Delivery_Time()
+        {
+            return View();
+        }
     }
 }

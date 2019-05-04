@@ -278,6 +278,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="jsController\deliveryTime.controller.js" />
     <Content Include="jsController\drivers.controller.js" />
     <Content Include="jsController\facebook.controller.js" />
     <Content Include="jsController\restaurants.controller.js" />
@@ -2379,6 +2380,7 @@
     <Content Include="template\dist\vis.map" />
     <Content Include="Views\Dashboard\Facebook.cshtml" />
     <Content Include="Views\Dashboard\restaurants.cshtml" />
+    <Content Include="Views\Dashboard\Delivery_Time.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

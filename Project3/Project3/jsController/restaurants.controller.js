@@ -16,12 +16,16 @@ function restaurantsService($http) {
         return $http.post('/api/DimDishes/OrderRateL', filter);
     };
     this.getDishH = function getDishH(filter) {
-        debugger
+        
         return $http.post('/api/DimDishes/OrderRateH', filter);
     };
     this.getAllDish = function getAllDish() {
         return $http.get('/api/DimDishes/getAllDish');
     }
+    this.getOnOffOrderTop = function getOnOffOrderTop(filter) {
+
+        return $http.post('/api/DimRestaurants/OnOffOrderTop', filter);
+    };
 
 
 
@@ -36,10 +40,12 @@ function restaurantsController(restaurantsService) {
     vm.DishRL = true
     vm.filter = {}
     vm.filterDish = {}
+    vm.OnOffTopFilter = {}
+    vm.OnOffFilter = {}
 
     vm.orderRateLowest = orderRateLowest
     vm.orderRateHighest = orderRateHighest
-
+    vm.OnOffOrderTop = OnOffOrderTop
     vm.DishLowest = DishLowest
     vm.DishHighest = DishHighest
 
@@ -53,10 +59,17 @@ function restaurantsController(restaurantsService) {
 
         vm.filterDish.from = firstDay;
         vm.filterDish.to = lastDay;
+
+        vm.OnOffTopFilter.from = firstDay;
+        vm.OnOffTopFilter.to = lastDay;
+
+        vm.OnOffFilter.from = firstDay;
+        vm.OnOffFilter.to = lastDay;
     }
     orderRateLowest();
     DishLowest();
-
+    OnOffOrderTop();
+  
 
     function orderRateLowest() {
         vm.oRL = true
@@ -345,9 +358,9 @@ function restaurantsController(restaurantsService) {
         $("#arrowDishL").css('display', 'none');
         $("#arrowDishH").css('display', 'contents');
         $('#noResultDish').css('display', 'none');
-        debugger
+        
         restaurantsService.getDishH(vm.filterDish).then(function (response) {
-            debugger
+            
             vm.DishRL = false
             vm.DishH = response.data
             console.log(vm.DishH)
@@ -430,16 +443,18 @@ function restaurantsController(restaurantsService) {
         });
     }
 
-
-
-
-
-
     restaurantsService.getAllRestaurant().then(function (response) {
 
         vm.AllRestaurants = response.data;
     })
 
-
+    function OnOffOrderTop() {
+        debugger
+        restaurantsService.getOnOffOrderTop(vm.OnOffTopFilter).then(function (response) {
+            debugger
+            vm.OnOffTop = response.data;          
+            console.log(vm.OnOffTop)
+        })
+    }
 
 }
