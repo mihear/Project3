@@ -9,98 +9,128 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
 using Project3.Models;
+using Project3.Models.Filters;
+using Project3.Models.Restaurants;
+using System.Data.SqlClient;
 
 namespace Project3.Controllers.api
 {
     public class DimUsersController : ApiController
     {
-        private Entities db = new Entities();
-
-        // GET: api/DimUsers
-        public IHttpActionResult GetDimUsers()
+        private Entities db;
+        public DimUsersController()
         {
-            return Ok(db.DimUsers.GroupBy(m => m.AreaEngName).Select(x => new { name = x.FirstOrDefault().AreaEngName, y = x.Count() }));
+            db = new Entities();
         }
-
-        // GET: api/DimUsers/5
-        [ResponseType(typeof(DimUser))]
-        public IHttpActionResult GetDimUser(int id)
+        [HttpGet]
+        public IHttpActionResult getAllRestaurants()
         {
-            DimUser dimUser = db.DimUsers.Find(id);
-            if (dimUser == null)
+            return Ok(db.DimRestaurants.Select(m => new
             {
-                return NotFound();
-            }
-
-            return Ok(dimUser);
+                id = m.RestaurantKey,
+                nameof = m.Name
+            }).ToList());
         }
-
-        // PUT: api/DimUsers/5
-        [ResponseType(typeof(void))]
-        public IHttpActionResult PutDimUser(int id, DimUser dimUser)
+        [HttpPost]
+        public IHttpActionResult UserRateH(TimeFilter filter)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            if (id != dimUser.UserKey)
+            if (filter.from == null || filter.to == null)
             {
                 return BadRequest();
             }
-
-            db.Entry(dimUser).State = EntityState.Modified;
-
-            try
+            List<OrderRate> list = new List<OrderRate>();
+            if (filter.id == 0)
             {
-                db.SaveChanges();
+                var date = db.Database
+                    .SqlQuery<OrderRate>("select distinct Top(10) [DimUser].Name  ,count(distinct[BillKey]) as count , [DimUser].UserAltKey " +
+                    " from [FactBill]  inner hash join [DimUser] on [DimUser].UserAltKey = [FactBill].UserKey " +
+                    " where [FactBill].[OpenTime] >= @day and[FactBill].[OpenTime] <= @day2 " +
+                    " group by[DimUser].UserAltKey, [DimUser].Name " +
+                    " order by count desc"
+                 , new SqlParameter("@day", filter.from), new SqlParameter("@day2", filter.to)).ToList();
+                return Ok(date);
             }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!DimUserExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return StatusCode(HttpStatusCode.NoContent);
+            return BadRequest();
         }
-
-        // POST: api/DimUsers
-        [ResponseType(typeof(DimUser))]
-        public IHttpActionResult PostDimUser(DimUser dimUser)
+        [HttpPost]
+        public IHttpActionResult UserRateL(TimeFilter filter)
         {
-            if (!ModelState.IsValid)
+            if (filter.from == null || filter.to == null)
             {
-                return BadRequest(ModelState);
+                return BadRequest();
             }
-
-            db.DimUsers.Add(dimUser);
-            db.SaveChanges();
-
-            return CreatedAtRoute("DefaultApi", new { id = dimUser.UserKey }, dimUser);
+            List<OrderRate> list = new List<OrderRate>();
+            if (filter.id == 0)
+            {
+                var date = db.Database
+                    .SqlQuery<OrderRate>(" select distinct Top(10) [DimUser].Name  ,count(distinct[BillKey]) as count , [DimUser].UserAltKey " +
+                    " from[FactBill]   inner hash join[DimUser] on[DimUser].UserAltKey = [FactBill].UserKey " +
+                    " where[FactBill].[OpenTime] >= @day and[FactBill].[OpenTime] <= @day2 " +
+                    " group by[DimUser].UserAltKey, [DimUser].Name " +
+                    " order by count "
+                 , new SqlParameter("@day", filter.from), new SqlParameter("@day2", filter.to)).ToList();
+                return Ok(date);
+            }
+            return BadRequest();
         }
-
-        // DELETE: api/DimUsers/5
-        [ResponseType(typeof(DimUser))]
-        public IHttpActionResult DeleteDimUser(int id)
+        [HttpPost]
+        public IHttpActionResult AreaOrderH(TimeFilter filter)
         {
-            DimUser dimUser = db.DimUsers.Find(id);
-            if (dimUser == null)
+            if (filter.from == null || filter.to == null)
             {
-                return NotFound();
+                return BadRequest();
             }
-
-            db.DimUsers.Remove(dimUser);
-            db.SaveChanges();
-
-            return Ok(dimUser);
+            List<OrderRate> list = new List<OrderRate>();
+            if (filter.id == 0)
+            {
+                var date = db.Database
+                    .SqlQuery<OrderRate>(" select  top(10) count(distinct[BillKey]) as count , [DimUser].AreaEngName as Name " +
+                    " from[FactBill]   inner hash join[DimUser] on[DimUser].UserAltKey = [FactBill].UserKey " +
+                    "  where[FactBill].[OpenTime] >= @day and[FactBill].[OpenTime] <= @day2 " +
+                    " group by[DimUser].AreaEngName " +
+                    "order by count desc"
+                 , new SqlParameter("@day", filter.from), new SqlParameter("@day2", filter.to)).ToList();
+                return Ok(date);
+            }
+            return BadRequest();
         }
-
+        [HttpPost]
+        public IHttpActionResult AreaOrderL(TimeFilter filter)
+        {
+            if (filter.from == null || filter.to == null)
+            {
+                return BadRequest();
+            }
+            List<OrderRate> list = new List<OrderRate>();
+            if (filter.id == 0)
+            {
+                var date = db.Database
+                    .SqlQuery<OrderRate>(" select  top(10) count(distinct[BillKey]) as count , [DimUser].AreaEngName as Name " +
+                    " from[FactBill]   inner hash join[DimUser] on[DimUser].UserAltKey = [FactBill].UserKey " +
+                    "  where[FactBill].[OpenTime] >= @day and[FactBill].[OpenTime] <= @day2 " +
+                    " group by[DimUser].AreaEngName " +
+                    "order by count "
+                 , new SqlParameter("@day", filter.from), new SqlParameter("@day2", filter.to)).ToList();
+                return Ok(date);
+            }
+            return BadRequest();
+        }
+        public IHttpActionResult UserAreaH()
+        {
+            List<OrderRate> list = new List<OrderRate>();
+            var date = db.Database
+                .SqlQuery<OrderRate>(" select top(10) count([DimUser].[UserAltKey]) as count ,[DimUser].AreaEngName as Name from [DimUser] " +
+                " group by[DimUser].AreaEngName order by count desc").ToList();
+            return Ok(date);
+        }
+        public IHttpActionResult UserAreaL()
+        {
+            List<OrderRate> list = new List<OrderRate>();
+            var date = db.Database
+                .SqlQuery<OrderRate>(" select top(10) count([DimUser].[UserAltKey]) as count ,[DimUser].AreaEngName as Name from [DimUser] " +
+                " group by[DimUser].AreaEngName order by count").ToList();
+            return Ok(date);
+        }
         protected override void Dispose(bool disposing)
         {
             if (disposing)
@@ -108,11 +138,6 @@ namespace Project3.Controllers.api
                 db.Dispose();
             }
             base.Dispose(disposing);
-        }
-
-        private bool DimUserExists(int id)
-        {
-            return db.DimUsers.Count(e => e.UserKey == id) > 0;
         }
     }
 }
