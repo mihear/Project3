@@ -1,0 +1,5 @@
+﻿CREATE NONCLUSTERED INDEX chartIndex ON FactBill 
+([OpenTime],[ConfirmationTime], [PickedupTime], [DeliveredTime], [DriverKey],[BillKey],[UserKey],[DishKey],[ResturentKey])
+
+CREATE NONCLUSTERED INDEX DimResIndex ON DimRestaurant 
+([Name], [RestaurantKey],StartDelivery,EndDelivery)
