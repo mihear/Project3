@@ -274,6 +274,7 @@
     <Content Include="Content\bootstrap4\bootstrap.min.js" />
     <Content Include="Content\bootstrap4\jquery-3.2.1.slim.min.js" />
     <Content Include="Content\bootstrap4\popper.min.js" />
+    <Content Include="Content\food.svg" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
