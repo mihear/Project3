@@ -35,6 +35,7 @@
     <script src="~/jsController/facebook.controller.js"></script>
     <script src="~/jsController/restaurants.controller.js"></script>
     <script src="~/jsController/deliveryTime.controller.js"></script>
+    <script src="~/jsController/user.controller.js"></script>
 
 
     <link href="~/Content/bootstrap4/bootstrap.min.css" rel="stylesheet" />
@@ -101,12 +102,12 @@ background : #f79462 !important">
             <nav class="sidebar sidebar-offcanvas" id="sidebar" style="box-shadow: 1px 1px 5px #00000045;">
                 <ul class="nav">
 
-                    <li class="nav-item">
+                    @*<li class="nav-item">
                         <a class="nav-link" href="@Url.Action("Index","Dashboard")">
                             <i class="menu-icon mdi mdi-television"></i>
                             <span class="menu-title">Dashboard</span>
                         </a>
-                    </li>
+                    </li>*@
                     <li class="nav-item">
                         <a class="nav-link" href="@Url.Action("drivers","Dashboard")">
                             <i class="menu-icon mdi mdi-motorbike"></i>
@@ -120,12 +121,18 @@ background : #f79462 !important">
                         </a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("user","Dashboard")">
+                            <i class="menu-icon mdi mdi-account-multiple"></i>
+                            <span class="menu-title">Users</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="@Url.Action("Facebook","Dashboard")">
                             <i class="menu-icon mdi mdi-facebook"></i>
                             <span class="menu-title">Facebook</span>
                         </a>
                     </li>
-                    <li class="nav-item">
+                    @*<li class="nav-item">
                         <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
                             <i class="menu-icon mdi mdi-content-copy"></i>
                             <span class="menu-title">Basic UI Elements</span>
@@ -191,7 +198,7 @@ background : #f79462 !important">
                                 </li>
                             </ul>
                         </div>
-                    </li>
+                    </li>*@
                 </ul>
             </nav>
 

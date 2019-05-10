@@ -283,6 +283,7 @@
     <Content Include="jsController\drivers.controller.js" />
     <Content Include="jsController\facebook.controller.js" />
     <Content Include="jsController\restaurants.controller.js" />
+    <Content Include="jsController\user.controller.js" />
     <Content Include="Models\DataBase.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>DataBase.edmx</DependentUpon>
@@ -2383,6 +2384,7 @@
     <Content Include="Views\Dashboard\Facebook.cshtml" />
     <Content Include="Views\Dashboard\restaurants.cshtml" />
     <Content Include="Views\Dashboard\Delivery_Time.cshtml" />
+    <Content Include="Views\Dashboard\user.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

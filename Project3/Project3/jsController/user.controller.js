@@ -1,40 +1,38 @@
-﻿app.service('restaurantsService', restaurantsService);
-function restaurantsService($http) {
+﻿app.service('userService', userService);
+function userService($http) {
     this.getOrderRateL = function getOrderRateL(filter) {
 
-        return $http.post('/api/DimRestaurants/OrderRateL', filter);
+        return $http.post('/api/DimUsers/UserRateL', filter);
     };
     this.getOrderRateH = function getOrderRateH(filter) {
 
-        return $http.post('/api/DimRestaurants/OrderRateH', filter);
+        return $http.post('/api/DimUsers/UserRateH', filter);
     };
-    this.getAllRestaurant = function getAllRestaurant() {
-        return $http.get('/api/DimRestaurants/getAllRestaurants');
-    }
     this.getDishL = function getDishL(filter) {
 
-        return $http.post('/api/DimDishes/OrderRateL', filter);
+        return $http.post('/api/DimUsers/AreaOrderL', filter);
     };
     this.getDishH = function getDishH(filter) {
-        
-        return $http.post('/api/DimDishes/OrderRateH', filter);
-    };
-    this.getAllDish = function getAllDish() {
-        return $http.get('/api/DimDishes/getAllDish');
-    }
-    this.getOnOffOrderTop = function getOnOffOrderTop(filter) {
 
-        return $http.post('/api/DimRestaurants/OnOffOrderTop', filter);
+        return $http.post('/api/DimUsers/AreaOrderH', filter);
     };
-    this.getRestTypeOrder = function getRestTypeOrder() {
-        return $http.get('/api/DimRestaurants/RestTypeOrder');
-    }
+
+    this.getAreaL = function getAreaL(filter) {
+
+        return $http.post('/api/DimUsers/AreaOrderL', filter);
+    };
+    this.getAreaH = function getAreaH(filter) {
+
+        return $http.post('/api/DimUsers/AreaOrderH', filter);
+    };
+
+
 
 
 }
 
-app.controller('restaurantsController', restaurantsController);
-function restaurantsController(restaurantsService) {
+app.controller('userController', userController);
+function userController(userService) {
 
     vm = this;
     vm.loading = true;
@@ -42,16 +40,18 @@ function restaurantsController(restaurantsService) {
     vm.init = init
     vm.oRL = true
     vm.DishRL = true
+    vm.AreaRL = true
     vm.filter = {}
     vm.filterDish = {}
-    vm.OnOffTopFilter = {}
-    vm.OnOffFilter = {}
+    vm.areaOrderFilter = {}
+    vm.areaOrderFilter = {}
 
     vm.orderRateLowest = orderRateLowest
     vm.orderRateHighest = orderRateHighest
-    vm.OnOffOrderTop = OnOffOrderTop
     vm.DishLowest = DishLowest
     vm.DishHighest = DishHighest
+    vm.areaOrderLowest = areaOrderLowest
+    vm.areaOrderHighest = areaOrderHighest
 
     function init() {
         var date = new Date();
@@ -64,16 +64,13 @@ function restaurantsController(restaurantsService) {
         vm.filterDish.from = firstDay;
         vm.filterDish.to = lastDay;
 
-        vm.OnOffTopFilter.from = firstDay;
-        vm.OnOffTopFilter.to = lastDay;
+        vm.areaOrderFilter.from = firstDay;
+        vm.areaOrderFilter.to = lastDay;
 
-        vm.OnOffFilter.from = firstDay;
-        vm.OnOffFilter.to = lastDay;
     }
     orderRateLowest();
-    DishLowest();
-    OnOffOrderTop();
-  
+    DishLowest(); 
+    areaOrderLowest();
 
     function orderRateLowest() {
         vm.oRL = true
@@ -83,13 +80,14 @@ function restaurantsController(restaurantsService) {
         $("#arrowL").css('display', 'contents');
         $('#noResultOrder').css('display', 'none');
 
-        restaurantsService.getOrderRateL(vm.filter).then(function (response) {
+        userService.getOrderRateL(vm.filter).then(function (response) {
 
-            
+
             vm.orderRateL = response.data
             console.log(vm.orderRateL)
             $("#myChart").empty();
             if (vm.orderRateL.length > 0) {
+                $("#myChart").empty();
                 vm.oRL = false
                 restName = []
                 date = []
@@ -106,7 +104,7 @@ function restaurantsController(restaurantsService) {
                         labels: restName,
                         //labels: ["2015-01", "2015-02", "2015-03", "2015-04", "2015-05", "2015-06", "2015-07", "2015-08", "2015-09", "2015-10", "2015-11", "2015-12"],
                         datasets: [{
-                            label: 'Restaurant',
+                            label: 'Orders',
                             data: date,
                             //data: [12, 19, 3, 5, 2, 3, 20, 3, 5, 6, 2, 1],
                             backgroundColor: [
@@ -176,16 +174,17 @@ function restaurantsController(restaurantsService) {
 
         $('#noResultOrdeH').css('display', 'none');
 
-        restaurantsService.getOrderRateH(vm.filter).then(function (response) {
+        userService.getOrderRateH(vm.filter).then(function (response) {
 
             $('#noResultOrder').css('display', 'none');
-            vm.oRL = false
+
             vm.orderRateH = response.data
             $("#myChart").empty();
             vm.myChart.destroy();
 
             if (vm.orderRateH.length > 0) {
-
+                vm.oRL = false
+                $("#myChart").empty();
                 restName = []
                 date = []
                 for (var i = 0; i < vm.orderRateH.length; i++) {
@@ -201,7 +200,7 @@ function restaurantsController(restaurantsService) {
                         labels: restName,
                         //labels: ["2015-01", "2015-02", "2015-03", "2015-04", "2015-05", "2015-06", "2015-07", "2015-08", "2015-09", "2015-10", "2015-11", "2015-12"],
                         datasets: [{
-                            label: 'Restaurant',
+                            label: 'Orders',
                             data: date,
                             //data: [12, 19, 3, 5, 2, 3, 20, 3, 5, 6, 2, 1],
                             backgroundColor: [
@@ -271,14 +270,14 @@ function restaurantsController(restaurantsService) {
         $("#arrowDishL").css('display', 'contents');
         $('#noResultDish').css('display', 'none');
 
-        restaurantsService.getDishL(vm.filterDish).then(function (response) {
+        userService.getDishL(vm.filterDish).then(function (response) {
 
             vm.DishRL = false
             vm.DishL = response.data
             console.log(vm.DishL)
             $("#myChartD").empty();
             if (vm.DishL.length > 0) {
-
+                $("#myChartD").empty();
                 restName = []
                 date = []
                 for (var i = 0; i < vm.DishL.length; i++) {
@@ -294,7 +293,7 @@ function restaurantsController(restaurantsService) {
                         labels: restName,
                         //labels: ["2015-01", "2015-02", "2015-03", "2015-04", "2015-05", "2015-06", "2015-07", "2015-08", "2015-09", "2015-10", "2015-11", "2015-12"],
                         datasets: [{
-                            label: 'Dishs',
+                            label: 'Users',
                             data: date,
                             //data: [12, 19, 3, 5, 2, 3, 20, 3, 5, 6, 2, 1],
                             backgroundColor: [
@@ -362,15 +361,16 @@ function restaurantsController(restaurantsService) {
         $("#arrowDishL").css('display', 'none');
         $("#arrowDishH").css('display', 'contents');
         $('#noResultDish').css('display', 'none');
-        
-        restaurantsService.getDishH(vm.filterDish).then(function (response) {
-            
+
+        userService.getDishH(vm.filterDish).then(function (response) {
+
             vm.DishRL = false
             vm.DishH = response.data
             console.log(vm.DishH)
             $("#myChartD").empty();
-            if (vm.DishH.length > 0) {
 
+            if (vm.DishH.length > 0) {
+                $("#myChartD").empty();
                 restName = []
                 date = []
                 for (var i = 0; i < vm.DishH.length; i++) {
@@ -386,7 +386,7 @@ function restaurantsController(restaurantsService) {
                         labels: restName,
                         //labels: ["2015-01", "2015-02", "2015-03", "2015-04", "2015-05", "2015-06", "2015-07", "2015-08", "2015-09", "2015-10", "2015-11", "2015-12"],
                         datasets: [{
-                            label: 'Dishs',
+                            label: 'Users',
                             data: date,
                             //data: [12, 19, 3, 5, 2, 3, 20, 3, 5, 6, 2, 1],
                             backgroundColor: [
@@ -447,74 +447,193 @@ function restaurantsController(restaurantsService) {
         });
     }
 
-    restaurantsService.getAllRestaurant().then(function (response) {
+    function areaOrderLowest() {
+        vm.AreaRL = true
+        $("#areaH").css('display', 'none');
+        $("#areaL").css('display', 'block');
+        $("#arrowAreaH").css('display', 'none');
+        $("#arrowAreaL").css('display', 'contents');
+        $('#noResultArea').css('display', 'none');
 
-        vm.AllRestaurants = response.data;
-    })
+        userService.getAreaL(vm.areaOrderFilter).then(function (response) {
 
-    function OnOffOrderTop() {
-        debugger
-        restaurantsService.getOnOffOrderTop(vm.OnOffTopFilter).then(function (response) {
-            debugger
-            vm.OnOffTop = response.data;          
-            console.log(vm.OnOffTop)
-        })
+            vm.AreaRL = false
+            vm.AreaL = response.data
+            console.log(vm.AreaL)
+            $("#myChartA").empty();
+            if (vm.AreaL.length > 0) {
+                $("#myChartA").empty();
+                restName = []
+                date = []
+                for (var i = 0; i < vm.AreaL.length; i++) {
+                    restName[i] = vm.AreaL[i].Name;
+                    date[i] = vm.AreaL[i].Count;
+                }
+
+
+                var ctx = document.getElementById("myChartA");
+                vm.myChartAO = new Chart(ctx, {
+                    type: 'horizontalBar',
+                    data: {
+                        labels: restName,
+                        //labels: ["2015-01", "2015-02", "2015-03", "2015-04", "2015-05", "2015-06", "2015-07", "2015-08", "2015-09", "2015-10", "2015-11", "2015-12"],
+                        datasets: [{
+                            label: 'Orders',
+                            data: date,
+                            //data: [12, 19, 3, 5, 2, 3, 20, 3, 5, 6, 2, 1],
+                            backgroundColor: [
+                                'rgba(255, 99, 132, 0.2)',
+                                'rgba(54, 162, 235, 0.2)',
+                                'rgba(255, 206, 86, 0.2)',
+                                'rgba(75, 192, 192, 0.2)',
+                                'rgba(153, 102, 255, 0.2)',
+                                'rgba(255, 159, 64, 0.2)',
+                                'rgba(255, 99, 132, 0.2)',
+                                'rgba(54, 162, 235, 0.2)',
+                                'rgba(255, 206, 86, 0.2)',
+                                'rgba(75, 192, 192, 0.2)',
+                                'rgba(153, 102, 255, 0.2)',
+                                'rgba(255, 159, 64, 0.2)'
+                            ],
+                            borderColor: [
+                                'rgba(255,99,132,1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)',
+                                'rgba(255, 159, 64, 1)',
+                                'rgba(255,99,132,1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)',
+                                'rgba(255, 159, 64, 1)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: false,
+                        scales: {
+                            xAxes: [{
+                                ticks: {
+                                    maxRotation: 90,
+                                    minRotation: 80
+                                }
+                            }],
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true
+                                }
+                            }]
+                        }
+                    }
+                });
+
+                $('#barChaArea').css('display', 'block');
+
+            } else {
+                vm.AreaRL = false
+                $('#noResultArea').css('display', 'block');
+            }
+        });
     }
 
-    restaurantsService.getRestTypeOrder().then(function (response) {
+    function areaOrderHighest() {
+        vm.AreaRL = true
+        $("#areaL").css('display', 'none');
+        $("#areaH").css('display', 'block');
+        $("#arrowAreaL").css('display', 'none');
+        $("#arrowAreaH").css('display', 'contents');
+        $('#noResultArea').css('display', 'none');
+
+        userService.getAreaH(vm.areaOrderFilter).then(function (response) {
+            debugger
+            vm.AreaRL = false
+            vm.AreaH = response.data
+            console.log(vm.AreaH)
+            $("#myChartA").empty();
+
+            if (vm.AreaH.length > 0) {
+
+                $("#myChartA").empty();
+                restName = []
+                date = []
+                for (var i = 0; i < vm.AreaH.length; i++) {
+                    restName[i] = vm.AreaH[i].Name;
+                    date[i] = vm.AreaH[i].Count;
+                }
 
 
-        vm.RestType = response.data;
-        vm.names = [];
-        vm.y = [];
-        for (var i = 0; i < vm.RestType.length; i++) {
-            vm.names[i] = vm.RestType[i].Name;
-            vm.y[i] = vm.RestType[i].Count
-        }
-        debugger
-        var doughnutPieData = {
-            datasets: [{
-                data: vm.y,
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.5)',
-                    'rgba(54, 162, 235, 0.5)',
-                    'rgba(255, 206, 86, 0.5)',
-                    'rgba(153, 102, 255, 0.5)',
-                    'rgba(255, 159, 64, 0.5)'
-                ],
-                borderColor: [
-                    'rgba(255,99,132,1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(153, 102, 255, 1)',
-                    'rgba(255, 159, 64, 1)'
-                ],
-            }],
+                var ctx = document.getElementById("myChartA");
+                vm.myChartAO = new Chart(ctx, {
+                    type: 'horizontalBar',
+                    data: {
+                        labels: restName,
+                        //labels: ["2015-01", "2015-02", "2015-03", "2015-04", "2015-05", "2015-06", "2015-07", "2015-08", "2015-09", "2015-10", "2015-11", "2015-12"],
+                        datasets: [{
+                            label: 'Orders',
+                            data: date,
+                            //data: [12, 19, 3, 5, 2, 3, 20, 3, 5, 6, 2, 1],
+                            backgroundColor: [
+                                'rgba(255, 99, 132, 0.2)',
+                                'rgba(54, 162, 235, 0.2)',
+                                'rgba(255, 206, 86, 0.2)',
+                                'rgba(75, 192, 192, 0.2)',
+                                'rgba(153, 102, 255, 0.2)',
+                                'rgba(255, 159, 64, 0.2)',
+                                'rgba(255, 99, 132, 0.2)',
+                                'rgba(54, 162, 235, 0.2)',
+                                'rgba(255, 206, 86, 0.2)',
+                                'rgba(75, 192, 192, 0.2)',
+                                'rgba(153, 102, 255, 0.2)',
+                                'rgba(255, 159, 64, 0.2)'
+                            ],
+                            borderColor: [
+                                'rgba(255,99,132,1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)',
+                                'rgba(255, 159, 64, 1)',
+                                'rgba(255,99,132,1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)',
+                                'rgba(255, 159, 64, 1)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: false,
+                        scales: {
+                            xAxes: [{
+                                ticks: {
+                                    maxRotation: 90,
+                                    minRotation: 80
+                                }
+                            }],
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true
+                                }
+                            }]
+                        }
+                    }
+                });
 
-            // These labels appear in the legend and in the tooltips when hovering different arcs
-            labels: vm.names
-        };
-        var doughnutPieOptions = {
-            responsive: true,
-            animation: {
-                animateScale: true,
-                animateRotate: true
+                $('#barChaArea').css('display', 'block');
+
+            } else {
+                vm.AreaRL = false
+                $('#noResultArea').css('display', 'block');
             }
-        };
+        });
+    }
 
 
-        if ($("#pieChart").length) {
-            var pieChartCanvas = $("#pieChart").get(0).getContext("2d");
-            var pieChart = new Chart(pieChartCanvas, {
-                type: 'pie',
-                data: doughnutPieData,
-                options: doughnutPieOptions
-            });
-        }
-        vm.loading = false;
-        $("#pieChart").css('display', 'block');
-
-    })
 
 
 }
