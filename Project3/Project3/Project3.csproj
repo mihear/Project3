@@ -245,6 +245,9 @@
     <Compile Include="Models\Drivers\DriversCharts.cs" />
     <Compile Include="Models\Drivers\DriversOrder.cs" />
     <Compile Include="Models\Drivers\DriversType.cs" />
+    <Compile Include="Models\Drivers\FreeActive.cs" />
+    <Compile Include="Models\Drivers\RejectOrder.cs" />
+    <Compile Include="Models\Drivers\SuccefullOrder.cs" />
     <Compile Include="Models\Drivers\TimesDriver.cs" />
     <Compile Include="Models\FactBill.cs">
       <DependentUpon>DataBase.tt</DependentUpon>
@@ -274,13 +277,16 @@
     <Content Include="Content\bootstrap4\bootstrap.min.js" />
     <Content Include="Content\bootstrap4\jquery-3.2.1.slim.min.js" />
     <Content Include="Content\bootstrap4\popper.min.js" />
+    <Content Include="Content\food.svg" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="jsController\deliveryTime.controller.js" />
     <Content Include="jsController\drivers.controller.js" />
     <Content Include="jsController\facebook.controller.js" />
     <Content Include="jsController\restaurants.controller.js" />
+    <Content Include="jsController\user.controller.js" />
     <Content Include="Models\DataBase.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>DataBase.edmx</DependentUpon>
@@ -2380,6 +2386,8 @@
     <Content Include="template\dist\vis.map" />
     <Content Include="Views\Dashboard\Facebook.cshtml" />
     <Content Include="Views\Dashboard\restaurants.cshtml" />
+    <Content Include="Views\Dashboard\Delivery_Time.cshtml" />
+    <Content Include="Views\Dashboard\user.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

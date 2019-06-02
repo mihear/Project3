@@ -31,6 +31,8 @@ namespace Project3.Controllers.api
                 nameof = m.Name
             }).ToList());
         }
+
+
         [HttpPost]
         public IHttpActionResult UserRateH(TimeFilter filter)
         {
@@ -115,6 +117,7 @@ namespace Project3.Controllers.api
             }
             return BadRequest();
         }
+
         public IHttpActionResult UserAreaH()
         {
             List<OrderRate> list = new List<OrderRate>();
@@ -131,6 +134,7 @@ namespace Project3.Controllers.api
                 " group by[DimUser].AreaEngName order by count").ToList();
             return Ok(date);
         }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)

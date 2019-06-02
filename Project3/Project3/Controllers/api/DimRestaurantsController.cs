@@ -145,7 +145,7 @@ namespace Project3.Controllers.api
             }
             return BadRequest();
         }
-        [HttpPost]
+        [HttpGet]
         public IHttpActionResult RestTypeOrder()
         {
             var list = db.Database
