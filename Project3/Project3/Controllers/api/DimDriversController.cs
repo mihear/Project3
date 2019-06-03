@@ -19,6 +19,114 @@ namespace Project3.Controllers.api
     public class DimDriversController : ApiController
     {
         private Entities db = new Entities();
+
+        //report 1 
+        [HttpPost]
+        [ResponseType(typeof(DimDriver))]
+        public IHttpActionResult DriverType(TimeFilter filter)
+        {
+            List<DriversType> list = new List<DriversType>();
+
+            if (filter == null || filter.from == null || filter.from == null)
+            {
+                return BadRequest();
+            }
+            var date = db.Database
+               .SqlQuery<DriversType>("select  count(distinct[BillKey]) as 'Size' , [DimDriver].VehicleType as 'Type' " +
+               " from  [FactBill] inner hash join [DimDriver] on [DimDriver].DriverKey = [FactBill].DriverKey " +
+               " where [FactBill].[OpenTime] >= @day and [FactBill].[OpenTime] <= @day2 " +
+               " group by [DimDriver].VehicleType"
+                 , new SqlParameter("@day", filter.from), new SqlParameter("@day2", filter.to))
+               .ToList();
+            return Ok(date);
+            //list.Add(new DriversType()
+            //{
+            //    Size = db.DimDrivers.GroupBy(m => m.VehicleType).Count(),
+            //});
+            //var test = db.DimDrivers.GroupBy(m => m.VehicleType).Select(x => new { name = x.FirstOrDefault().VehicleType, y = x.Count() });
+            //return Ok(test);
+        }
+
+        //report 2
+        [HttpPost]
+        [ResponseType(typeof(DimDriver))]
+        public IHttpActionResult SuccefulOrderDriver(TimeFilter filter)
+        {
+            List<DriversType> list = new List<DriversType>();
+
+            if (filter == null || filter.from == null || filter.id == 0)
+            {
+                return BadRequest();
+            }
+            var date = db.Database
+               .SqlQuery<SuccefullOrder>("DECLARE @FirstDate AS datetime " +
+               " DECLARE @SecondDate AS datetime " + " DECLARE @AllDate AS int " + " SET @FirstDate = (select top(1) PickedupTime from FactBill where [DriverKey] = @id and  OpenTime >= @day and OpenTime <= @day2 and PickedupTime != '0001-01-01 00:00:00.0000000'order by[FactBill].BillKey)" +
+               "SET @SecondDate = (select  top(1) CloseTime from FactBill where [DriverKey] =@id and OpenTime>= @day and OpenTime<= @day2 and PickedupTime != '0001-01-01 00:00:00.0000000' order by[FactBill].BillKey DESC )" +
+               "SET @AllDate = (select COUNT(distinct BillKey) from FactBill where [DriverKey] =@id and OpenTime>= @day and OpenTime<= @day2 and PickedupTime != '0001-01-01 00:00:00.0000000')" +
+               "select @AllDate as NumberOfOrder , DATEDIFF(MINUTE, @FirstDate, @SecondDate) as WorkHours,@FirstDate as 'Start' ,@SecondDate as 'End'"
+                 , new SqlParameter("@id", filter.id), new SqlParameter("@day", filter.from), new SqlParameter("@day2", filter.from.AddDays(1))).FirstOrDefault();
+            if (date != null)
+            {
+                date.AV = date.NumberOfOrder / (date.WorkHours / 60.0);
+            }
+            return Ok(date);
+        }
+        //report 3
+        [HttpPost]
+        [ResponseType(typeof(DimDriver))]
+        public IHttpActionResult FreeActive(TimeFilter filter)
+        {
+            List<DriversType> list = new List<DriversType>();
+
+            if (filter == null || filter.from == null || filter.id == 0)
+            {
+                return BadRequest();
+            }
+            var date = db.Database
+               .SqlQuery<FreeActive>("DECLARE @FirstDate AS datetime " +
+               " DECLARE @SecondDate AS datetime " + " DECLARE @AllDate AS int " +
+               " SET @FirstDate = (select top(1) PickedupTime from FactBill where [DriverKey] = @id and  OpenTime >= @day and OpenTime <= @day2 and PickedupTime != '0001-01-01 00:00:00.0000000'order by[FactBill].BillKey)" +
+               "SET @SecondDate = (select  top(1) CloseTime from FactBill where [DriverKey] =@id and OpenTime>= @day and OpenTime<= @day2 and PickedupTime != '0001-01-01 00:00:00.0000000' order by[FactBill].BillKey DESC )" +
+               "SET @AllDate = (select sum(DATEDIFF(MINUTE, PickedupTime, CloseTime))  from (select distinct FactBill.BillKey, PickedupTime, CloseTime from FactBill where [DriverKey] =@id and OpenTime>= @day and OpenTime<= @day2 and PickedupTime != '0001-01-01 00:00:00.0000000') as p)" +
+               "select @AllDate as Active,DATEDIFF(MINUTE, @FirstDate, @SecondDate) - @AllDate as Free ,DATEDIFF(MINUTE, @FirstDate, @SecondDate) as 'All' "
+                 , new SqlParameter("@id", filter.id), new SqlParameter("@day", filter.from), new SqlParameter("@day2", filter.from.AddDays(1))).FirstOrDefault();
+            return Ok(date);
+        }
+        //report 4
+        [HttpPost]
+        [ResponseType(typeof(DimDriver))]
+        public IHttpActionResult AcceptReject(TimeFilter filter)
+        {
+
+            if (filter == null || filter.from == null)
+            {
+                return BadRequest();
+            }
+            var date = db.Database
+               .SqlQuery<RejectOrder>("select  d.DriverKey,d.Name,COUNT(distinct[BillKey])  as Reject  from FactBill f  inner hash join DimDriver d on  f.DriverKey =d.DriverKey " +
+                    " where  f.ConfirmationTime = '0001-01-01 00:00:00.0000000' and OpenTime >= @day and OpenTime <= @day2 " +
+                    " group by d.DriverKey, d.Name ",
+                    new SqlParameter("@day", filter.from), new SqlParameter("@day2", filter.from.AddDays(1))).ToList();
+            var date2 = db.Database
+              .SqlQuery<RejectOrder>("select  d.DriverKey,d.Name,COUNT(distinct[BillKey])  as Accepted  from FactBill  f inner hash join DimDriver d on  f.DriverKey =d.DriverKey " +
+                   " where  f.ConfirmationTime != '0001-01-01 00:00:00.0000000' and OpenTime >= @day and OpenTime <= @day2 " +
+                   " group by d.DriverKey, d.Name ",
+                   new SqlParameter("@day", filter.from), new SqlParameter("@day2", filter.from.AddDays(1))).ToList();
+            date.AddRange(date2);
+            List<RejectOrder> list = new List<RejectOrder>();
+            foreach (var item in date)
+            {
+                var temp = date.FindLast(m => m.DriverKey == item.DriverKey);
+                if (temp != null)
+                {
+                    item.Accepted = temp.Accepted;
+                }
+                if (list.FirstOrDefault(m => m.DriverKey == item.DriverKey) == null)
+                    list.Add(item);
+            }
+            return Ok(list);
+          
+        }
         public IHttpActionResult getAllDrivers()
         {
             return Ok(db.DimDrivers.Select(m => new
@@ -98,7 +206,7 @@ namespace Project3.Controllers.api
                 .ToList();
                 var date = db.Database
                     .SqlQuery<TimesDriver>("select  distinct [BillKey],[OpenTime],[DispatchTime],[CloseTime], [ConfirmationTime],[PickedupTime],[DeliveredTime],[DriverKey]" +
-                    " from [beeorderWH].[dbo].[FactBill] where DeliveredTime >= @day and DeliveredTime <= @day2"
+                    " from [beeorderWH].[dbo].[FactBill] where OpenTime >= @day and OpenTime <= @day2 and PickedupTime !='0001-01-01 00:00:00.0000000'"
                  , new SqlParameter("@day", filter.from), new SqlParameter("@day2", filter.to)).ToList();
                 foreach (var item in drivers)
                 {
@@ -117,7 +225,7 @@ namespace Project3.Controllers.api
                     return NotFound();
                 var date = db.Database
                 .SqlQuery<TimesDriver>("select  distinct [BillKey],[OpenTime],[DispatchTime],[CloseTime], [ConfirmationTime],[PickedupTime],[DeliveredTime],[DriverKey]" +
-                " from [beeorderWH].[dbo].[FactBill] where DriverKey=@id and DeliveredTime >= @day and DeliveredTime <= @day2"
+                " from [beeorderWH].[dbo].[FactBill] where DriverKey=@id and OpenTime >= @day and OpenTime <= @day2 and PickedupTime !='0001-01-01 00:00:00.0000000'"
                 , new SqlParameter("@id", item.DriverKey), new SqlParameter("@day", filter.from), new SqlParameter("@day2", filter.to)).ToList();
                 list.Add(new DriversCharts(item.Name, item.DriverKey, date.Where(m => m.DriverKey == item.DriverKey)
                 .ToList()));
@@ -125,21 +233,7 @@ namespace Project3.Controllers.api
             return Ok(list.Where(m => m.Times.Count() > 0));
 
         }
-        [HttpGet]
-        //[Route("api/DriverType")]
-        // GET: api/DimDrivers/5
-        [ResponseType(typeof(DimDriver))]
-        public IHttpActionResult DriverType()
-        {
-            List<DriversType> list = new List<DriversType>();
-            //list.Add(new DriversType()
-            //{
-            //    Size = db.DimDrivers.GroupBy(m => m.VehicleType).Count(),
-            //});
-            var test = db.DimDrivers.GroupBy(m => m.VehicleType).Select(x => new { name = x.FirstOrDefault().VehicleType, y = x.Count() });
 
-            return Ok(test);
-        }
         public IHttpActionResult getAvailable()
         {
             return Ok(db.DimDrivers.Where(x => x.Available == 1).Count());
@@ -158,13 +252,14 @@ namespace Project3.Controllers.api
             //    DriverKey = m.DriverKey,
             //    Name = m.Name
             //}).ToList();
+
             var drivers = db.Database
                 .SqlQuery<DimDriver>("select * from [beeorderWH].[dbo].[DimDriver]")
                 .ToList();
             var day = new DateTime(2019, 1, 6);
             var day2 = new DateTime(2019, 2, 7);
             var date = db.Database
-                .SqlQuery<TimesDriver>("select  distinct [BillKey], [ConfirmationTime],[PickedupTime],[DeliveredTime],[DriverKey] "+
+                .SqlQuery<TimesDriver>("select  distinct [BillKey], [ConfirmationTime],[PickedupTime],[DeliveredTime],[DriverKey] " +
                 "from [beeorderWH].[dbo].[FactBill] where DeliveredTime >= '2019-01-06 00:00:00' and DeliveredTime <= '2019-02-07 00:00:00'")
                 .ToList();
             foreach (var item in drivers)
@@ -206,7 +301,7 @@ namespace Project3.Controllers.api
         [HttpPost]
         public IHttpActionResult driverOrder(TimeFilter filter)
         {
-            if (filter == null || filter.from == null || filter.from == null)
+            if (filter == null || filter.to == null || filter.from == null)
             {
                 return BadRequest();
             }
@@ -221,7 +316,7 @@ namespace Project3.Controllers.api
                  .SqlQuery<DimDriver>("select * from [beeorderWH].[dbo].[DimDriver]")
                  .ToList();
                 var date = db.Database
-                    .SqlQuery<TimesDriver>("select  distinct [BillKey], [ConfirmationTime],[PickedupTime],[DeliveredTime],[DriverKey] "+
+                    .SqlQuery<TimesDriver>("select  distinct [BillKey], [ConfirmationTime],[PickedupTime],[DeliveredTime],[DriverKey] " +
                     "from [beeorderWH].[dbo].[FactBill] where DeliveredTime >= @day and DeliveredTime <= @day2"
                  , new SqlParameter("@day", filter.from), new SqlParameter("@day2", filter.to)).ToList();
                 foreach (var item in drivers)
@@ -245,7 +340,7 @@ namespace Project3.Controllers.api
                 if (item == null)
                     return NotFound();
                 var date = db.Database
-                 .SqlQuery<TimesDriver>("select  distinct [BillKey], [ConfirmationTime],[PickedupTime],[DeliveredTime],[DriverKey] "+
+                 .SqlQuery<TimesDriver>("select  distinct [BillKey], [ConfirmationTime],[PickedupTime],[DeliveredTime],[DriverKey] " +
                  "from [beeorderWH].[dbo].[FactBill] where DriverKey=@id and DeliveredTime >= @day and DeliveredTime <= @day2"
                  , new SqlParameter("@id", item.DriverKey), new SqlParameter("@day", filter.from), new SqlParameter("@day2", filter.to)).ToList();
                 list.Add(new DriversOrder()

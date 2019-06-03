@@ -245,6 +245,9 @@
     <Compile Include="Models\Drivers\DriversCharts.cs" />
     <Compile Include="Models\Drivers\DriversOrder.cs" />
     <Compile Include="Models\Drivers\DriversType.cs" />
+    <Compile Include="Models\Drivers\FreeActive.cs" />
+    <Compile Include="Models\Drivers\RejectOrder.cs" />
+    <Compile Include="Models\Drivers\SuccefullOrder.cs" />
     <Compile Include="Models\Drivers\TimesDriver.cs" />
     <Compile Include="Models\FactBill.cs">
       <DependentUpon>DataBase.tt</DependentUpon>
