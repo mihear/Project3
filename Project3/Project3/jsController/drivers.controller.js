@@ -255,7 +255,8 @@ function StudentController(StudentDetailsService) {
     dOrder();
     function dOrder() {
         StudentDetailsService.getdriverOrder(vm.orderFilter).then(function (response) {
-            
+            $("#barChart").empty();
+
             vm.driverOrder = response.data;
             vm.labels = [];
             vm.data1 = [];
