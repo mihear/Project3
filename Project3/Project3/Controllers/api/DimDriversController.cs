@@ -48,6 +48,7 @@ namespace Project3.Controllers.api
         }
 
         //report 2
+        [Route("api/DimDrivers/SuccefulOrderDriver")]
         [HttpPost]
         [ResponseType(typeof(DimDriver))]
         public IHttpActionResult SuccefulOrderDriver(TimeFilter filter)
@@ -127,6 +128,8 @@ namespace Project3.Controllers.api
             return Ok(list);
           
         }
+
+
         public IHttpActionResult getAllDrivers()
         {
             return Ok(db.DimDrivers.Select(m => new
