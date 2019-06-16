@@ -226,5 +226,44 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <EntitySetMapping Name="FacebookComments">
+      <EntityTypeMapping TypeName="beeorderWHModel.FacebookComment">
+        <MappingFragment StoreEntitySet="FacebookComment">
+          <ScalarProperty Name="Haha" ColumnName="Haha" />
+          <ScalarProperty Name="Sad" ColumnName="Sad" />
+          <ScalarProperty Name="Angry" ColumnName="Angry" />
+          <ScalarProperty Name="Wow" ColumnName="Wow" />
+          <ScalarProperty Name="Like" ColumnName="Like" />
+          <ScalarProperty Name="Love" ColumnName="Love" />
+          <ScalarProperty Name="Post" ColumnName="Post" />
+          <ScalarProperty Name="Date" ColumnName="Date" />
+          <ScalarProperty Name="Mention" ColumnName="Mention" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="PostId" ColumnName="PostId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="FacebookPosts">
+      <EntityTypeMapping TypeName="beeorderWHModel.FacebookPost">
+        <MappingFragment StoreEntitySet="FacebookPosts">
+          <ScalarProperty Name="Topic" ColumnName="Topic" />
+          <ScalarProperty Name="Resturant" ColumnName="Resturant" />
+          <ScalarProperty Name="Postivity" ColumnName="Postivity" />
+          <ScalarProperty Name="IsPositive" ColumnName="IsPositive" />
+          <ScalarProperty Name="Haha" ColumnName="Haha" />
+          <ScalarProperty Name="Sad" ColumnName="Sad" />
+          <ScalarProperty Name="Like" ColumnName="Like" />
+          <ScalarProperty Name="Angry" ColumnName="Angry" />
+          <ScalarProperty Name="Wow" ColumnName="Wow" />
+          <ScalarProperty Name="Love" ColumnName="Love" />
+          <ScalarProperty Name="Date" ColumnName="Date" />
+          <ScalarProperty Name="Post" ColumnName="Post" />
+          <ScalarProperty Name="Comment" ColumnName="Comment" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
   </EntityContainerMapping>
 </Mapping>

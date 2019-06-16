@@ -150,6 +150,43 @@
     <Property Name="CreationTime" Type="datetime2" Precision="7" />
     <Property Name="CurrentRecord" Type="nchar" MaxLength="10" Nullable="false" />
   </EntityType>
+  <EntityType Name="FacebookComment">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="PostId" Type="nvarchar" MaxLength="50" />
+    <Property Name="Name" Type="nvarchar" MaxLength="250" />
+    <Property Name="Mention" Type="nvarchar" MaxLength="50" />
+    <Property Name="Date" Type="nvarchar" MaxLength="250" />
+    <Property Name="Post" Type="nvarchar(max)" />
+    <Property Name="Love" Type="nvarchar" MaxLength="50" />
+    <Property Name="Like" Type="nvarchar" MaxLength="50" />
+    <Property Name="Wow" Type="nvarchar" MaxLength="50" />
+    <Property Name="Angry" Type="nvarchar" MaxLength="50" />
+    <Property Name="Sad" Type="nvarchar" MaxLength="50" />
+    <Property Name="Haha" Type="nvarchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="FacebookPosts">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="250" />
+    <Property Name="Comment" Type="nvarchar" MaxLength="250" />
+    <Property Name="Post" Type="nvarchar(max)" />
+    <Property Name="Date" Type="nvarchar" MaxLength="250" />
+    <Property Name="Love" Type="nvarchar" MaxLength="50" />
+    <Property Name="Wow" Type="nvarchar" MaxLength="50" />
+    <Property Name="Angry" Type="nvarchar" MaxLength="50" />
+    <Property Name="Like" Type="nvarchar" MaxLength="50" />
+    <Property Name="Sad" Type="nvarchar" MaxLength="50" />
+    <Property Name="Haha" Type="nvarchar" MaxLength="50" />
+    <Property Name="IsPositive" Type="nvarchar" MaxLength="50" />
+    <Property Name="Postivity" Type="nvarchar" MaxLength="50" />
+    <Property Name="Resturant" Type="nvarchar" MaxLength="50" />
+    <Property Name="Topic" Type="nvarchar" MaxLength="50" />
+  </EntityType>
   <EntityType Name="FactBill">
     <Key>
       <PropertyRef Name="Id" />
@@ -217,6 +254,18 @@
     <Property Name="version" Type="int" />
     <Property Name="definition" Type="varbinary(max)" />
   </EntityType>
+  <Association Name="FK_FacebookComment_FacebookPosts">
+    <End Role="FacebookPosts" Type="Self.FacebookPosts" Multiplicity="0..1" />
+    <End Role="FacebookComment" Type="Self.FacebookComment" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="FacebookPosts">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="FacebookComment">
+        <PropertyRef Name="PostId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <Association Name="FK_FactBill_DimDate">
     <End Role="DimDate" Type="Self.DimDate" Multiplicity="0..1" />
     <End Role="FactBill" Type="Self.FactBill" Multiplicity="*" />
@@ -283,9 +332,15 @@
     <EntitySet Name="DimDriver" EntityType="Self.DimDriver" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="DimRestaurant" EntityType="Self.DimRestaurant" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="DimUser" EntityType="Self.DimUser" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="FacebookComment" EntityType="Self.FacebookComment" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="FacebookPosts" EntityType="Self.FacebookPosts" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="FactBill" EntityType="Self.FactBill" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="OldDateDim" EntityType="Self.OldDateDim" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_FacebookComment_FacebookPosts" Association="Self.FK_FacebookComment_FacebookPosts">
+      <End Role="FacebookPosts" EntitySet="FacebookPosts" />
+      <End Role="FacebookComment" EntitySet="FacebookComment" />
+    </AssociationSet>
     <AssociationSet Name="FK_FactBill_DimDate" Association="Self.FK_FactBill_DimDate">
       <End Role="DimDate" EntitySet="DimDate" />
       <End Role="FactBill" EntitySet="FactBill" />

@@ -204,6 +204,7 @@
     <Compile Include="Controllers\api\DimDriversController.cs" />
     <Compile Include="Controllers\api\DimRestaurantsController.cs" />
     <Compile Include="Controllers\api\DimUsersController.cs" />
+    <Compile Include="Controllers\api\FaceBookController.cs" />
     <Compile Include="Controllers\ChartController.cs" />
     <Compile Include="Controllers\DashboardController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -249,6 +250,12 @@
     <Compile Include="Models\Drivers\RejectOrder.cs" />
     <Compile Include="Models\Drivers\SuccefullOrder.cs" />
     <Compile Include="Models\Drivers\TimesDriver.cs" />
+    <Compile Include="Models\FacebookComment.cs">
+      <DependentUpon>DataBase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FacebookPost.cs">
+      <DependentUpon>DataBase.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\FactBill.cs">
       <DependentUpon>DataBase.tt</DependentUpon>
     </Compile>
@@ -333,6 +340,10 @@
     <Content Include="template\beeOrder logo\unnamed.jpg" />
     <Content Include="template\css.css" />
     <Content Include="template\css\style.css" />
+    <Content Include="template\datepicker\daterangepicker.css" />
+    <Content Include="template\datepicker\daterangepicker.js" />
+    <Content Include="template\datepicker\global.js" />
+    <Content Include="template\datepicker\moment.min.js" />
     <Content Include="template\dist\img\network\acceptDeleteIcon.png" />
     <Content Include="template\dist\img\network\addNodeIcon.png" />
     <Content Include="template\dist\img\network\backIcon.png" />

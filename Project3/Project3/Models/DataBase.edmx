@@ -155,6 +155,43 @@
           <Property Name="CreationTime" Type="datetime2" Precision="7" />
           <Property Name="CurrentRecord" Type="nchar" MaxLength="10" Nullable="false" />
         </EntityType>
+        <EntityType Name="FacebookComment">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="PostId" Type="nvarchar" MaxLength="50" />
+          <Property Name="Name" Type="nvarchar" MaxLength="250" />
+          <Property Name="Mention" Type="nvarchar" MaxLength="50" />
+          <Property Name="Date" Type="nvarchar" MaxLength="250" />
+          <Property Name="Post" Type="nvarchar(max)" />
+          <Property Name="Love" Type="nvarchar" MaxLength="50" />
+          <Property Name="Like" Type="nvarchar" MaxLength="50" />
+          <Property Name="Wow" Type="nvarchar" MaxLength="50" />
+          <Property Name="Angry" Type="nvarchar" MaxLength="50" />
+          <Property Name="Sad" Type="nvarchar" MaxLength="50" />
+          <Property Name="Haha" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="FacebookPosts">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="250" />
+          <Property Name="Comment" Type="nvarchar" MaxLength="250" />
+          <Property Name="Post" Type="nvarchar(max)" />
+          <Property Name="Date" Type="nvarchar" MaxLength="250" />
+          <Property Name="Love" Type="nvarchar" MaxLength="50" />
+          <Property Name="Wow" Type="nvarchar" MaxLength="50" />
+          <Property Name="Angry" Type="nvarchar" MaxLength="50" />
+          <Property Name="Like" Type="nvarchar" MaxLength="50" />
+          <Property Name="Sad" Type="nvarchar" MaxLength="50" />
+          <Property Name="Haha" Type="nvarchar" MaxLength="50" />
+          <Property Name="IsPositive" Type="nvarchar" MaxLength="50" />
+          <Property Name="Postivity" Type="nvarchar" MaxLength="50" />
+          <Property Name="Resturant" Type="nvarchar" MaxLength="50" />
+          <Property Name="Topic" Type="nvarchar" MaxLength="50" />
+        </EntityType>
         <EntityType Name="FactBill">
           <Key>
             <PropertyRef Name="Id" />
@@ -222,6 +259,18 @@
           <Property Name="version" Type="int" />
           <Property Name="definition" Type="varbinary(max)" />
         </EntityType>
+        <Association Name="FK_FacebookComment_FacebookPosts">
+          <End Role="FacebookPosts" Type="Self.FacebookPosts" Multiplicity="0..1" />
+          <End Role="FacebookComment" Type="Self.FacebookComment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="FacebookPosts">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="FacebookComment">
+              <PropertyRef Name="PostId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_FactBill_DimDate">
           <End Role="DimDate" Type="Self.DimDate" Multiplicity="0..1" />
           <End Role="FactBill" Type="Self.FactBill" Multiplicity="*" />
@@ -288,9 +337,15 @@
           <EntitySet Name="DimDriver" EntityType="Self.DimDriver" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DimRestaurant" EntityType="Self.DimRestaurant" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DimUser" EntityType="Self.DimUser" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="FacebookComment" EntityType="Self.FacebookComment" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="FacebookPosts" EntityType="Self.FacebookPosts" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="FactBill" EntityType="Self.FactBill" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="OldDateDim" EntityType="Self.OldDateDim" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_FacebookComment_FacebookPosts" Association="Self.FK_FacebookComment_FacebookPosts">
+            <End Role="FacebookPosts" EntitySet="FacebookPosts" />
+            <End Role="FacebookComment" EntitySet="FacebookComment" />
+          </AssociationSet>
           <AssociationSet Name="FK_FactBill_DimDate" Association="Self.FK_FactBill_DimDate">
             <End Role="DimDate" EntitySet="DimDate" />
             <End Role="FactBill" EntitySet="FactBill" />
@@ -632,7 +687,64 @@
             <End Role="DimUser" EntitySet="DimUsers" />
             <End Role="FactBill" EntitySet="FactBills" />
           </AssociationSet>
+          <EntitySet Name="FacebookComments" EntityType="beeorderWHModel.FacebookComment" />
+          <EntitySet Name="FacebookPosts" EntityType="beeorderWHModel.FacebookPost" />
+          <AssociationSet Name="FK_FacebookComment_FacebookPosts" Association="beeorderWHModel.FK_FacebookComment_FacebookPosts">
+            <End Role="FacebookPost" EntitySet="FacebookPosts" />
+            <End Role="FacebookComment" EntitySet="FacebookComments" />
+          </AssociationSet>
         </EntityContainer>
+        <EntityType Name="FacebookComment">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PostId" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Name" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="Mention" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Date" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="Post" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Love" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Like" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Wow" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Angry" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Sad" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Haha" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="FacebookPost" Relationship="beeorderWHModel.FK_FacebookComment_FacebookPosts" FromRole="FacebookComment" ToRole="FacebookPost" />
+        </EntityType>
+        <EntityType Name="FacebookPost">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Name" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="Comment" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="Post" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Date" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="Love" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Wow" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Angry" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Like" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Sad" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Haha" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="IsPositive" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Postivity" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Resturant" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Topic" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="FacebookComments" Relationship="beeorderWHModel.FK_FacebookComment_FacebookPosts" FromRole="FacebookPost" ToRole="FacebookComment" />
+        </EntityType>
+        <Association Name="FK_FacebookComment_FacebookPosts">
+          <End Type="beeorderWHModel.FacebookPost" Role="FacebookPost" Multiplicity="0..1" />
+          <End Type="beeorderWHModel.FacebookComment" Role="FacebookComment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="FacebookPost">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="FacebookComment">
+              <PropertyRef Name="PostId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -861,6 +973,45 @@
                 <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
                 <ScalarProperty Name="version" ColumnName="version" />
                 <ScalarProperty Name="definition" ColumnName="definition" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="FacebookComments">
+            <EntityTypeMapping TypeName="beeorderWHModel.FacebookComment">
+              <MappingFragment StoreEntitySet="FacebookComment">
+                <ScalarProperty Name="Haha" ColumnName="Haha" />
+                <ScalarProperty Name="Sad" ColumnName="Sad" />
+                <ScalarProperty Name="Angry" ColumnName="Angry" />
+                <ScalarProperty Name="Wow" ColumnName="Wow" />
+                <ScalarProperty Name="Like" ColumnName="Like" />
+                <ScalarProperty Name="Love" ColumnName="Love" />
+                <ScalarProperty Name="Post" ColumnName="Post" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Mention" ColumnName="Mention" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="PostId" ColumnName="PostId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="FacebookPosts">
+            <EntityTypeMapping TypeName="beeorderWHModel.FacebookPost">
+              <MappingFragment StoreEntitySet="FacebookPosts">
+                <ScalarProperty Name="Topic" ColumnName="Topic" />
+                <ScalarProperty Name="Resturant" ColumnName="Resturant" />
+                <ScalarProperty Name="Postivity" ColumnName="Postivity" />
+                <ScalarProperty Name="IsPositive" ColumnName="IsPositive" />
+                <ScalarProperty Name="Haha" ColumnName="Haha" />
+                <ScalarProperty Name="Sad" ColumnName="Sad" />
+                <ScalarProperty Name="Like" ColumnName="Like" />
+                <ScalarProperty Name="Angry" ColumnName="Angry" />
+                <ScalarProperty Name="Wow" ColumnName="Wow" />
+                <ScalarProperty Name="Love" ColumnName="Love" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Post" ColumnName="Post" />
+                <ScalarProperty Name="Comment" ColumnName="Comment" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

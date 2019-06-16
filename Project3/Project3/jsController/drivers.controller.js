@@ -3,7 +3,7 @@ var app = angular.module('myApp', [])
 app.service('StudentDetailsService', StudentDetailsService);
 function StudentDetailsService($http) {
     this.getStudentDetails = function getStudentDetails(filter) {
-        debugger
+        
         return $http.post('/api/DimDrivers/GetDrivers',filter);
     };
     this.getTotal = function getTotal() {
@@ -18,17 +18,20 @@ function StudentDetailsService($http) {
     this.getDriverProv = function getDriverProv() {
         return $http.get('/api/DimDrivers/getTotalProviderDrivers')
     };
-    this.getDriverType = function getDriverType() {
-        return $http.get('/api/DimDrivers/DriverType')
+    this.getDriverType = function getDriverType(filter) {
+        return $http.post('/api/DimDrivers/DriverType', filter)
     };
     this.getdriverOrder = function getdriverOrder(orderFilter) {
-        
-        
+          
         return $http.post('/api/DimDrivers/driverOrder', orderFilter)
     };
     this.getAllDrivers = function getAllDrivers() {
         return $http.get('/api/DimDrivers/getAllDrivers')
     };
+    this.SuccefulOrderDriver = function SuccefulOrderDriver(filter) {
+        return $http.post('/api/DimDrivers/SuccefulOrderDriver', filter)
+    };
+    
 }
 app.controller('StudentController', StudentController);
 
@@ -38,14 +41,15 @@ function StudentController(StudentDetailsService) {
     vm.init = init;
    
 
-
+    vm.sloading = true;
     vm.loading = true;
     vm.loading1 = true;
     vm.loading2 = true;
+
     vm.filter = {}
+    vm.filter1 = {}
+    vm.filter3 = {}
     function init() {
-       
-        
 
         var today = new Date();
         var dd = today.getDate();
@@ -66,6 +70,14 @@ function StudentController(StudentDetailsService) {
         vm.filter['id'] = 0;
         vm.filter['from'] = new Date(todayn);
         vm.filter['to'] = new Date(todayt);
+
+        vm.filter1['id'] = 0;
+        vm.filter1['from'] = new Date(todayn);
+        vm.filter1['to'] = new Date(todayt);
+
+        vm.filter3['id'] = 1;
+        vm.filter3['to'] = new Date(todayn);
+        vm.filter3['from'] = new Date(todayn);
     //vm.filter['from'] = "2017/12/7";
     //vm.filter['to'] = "2017/12/8";
 
@@ -95,21 +107,46 @@ function StudentController(StudentDetailsService) {
     
     vm.dTimeline = dTimeline;
     vm.dOrder = dOrder;
+    vm.sOrder = sOrder
+    sOrder()
+    function sOrder() {
+        debugger
+        $('#sOrder').css('display', 'none');
+        $('#sResult').css('display', 'none');
+        vm.sloading = true
+        StudentDetailsService.SuccefulOrderDriver(vm.filter3).then(function (response) {
+            debugger
+            vm.listSucOrder = response.data;
+            vm.sloading = false
+            if (vm.listSucOrder.length > 0) {
+                $('#sOrder').css('display', 'block');
+            } else {
+                $('#sResult').css('display', 'block');
+
+            }
+        })
+    }
+
+
+
+
+
+
     dTimeline();
 
     function dTimeline() {
         
         StudentDetailsService.getStudentDetails(vm.filter).then(function (response) {
-            console.log(response.data)
+           // console.log(response.data)
             vm.drivers = {}
-            debugger
+           // 
             $("#visualization").empty();
             
 
             vm.drivers = response.data;
             if (vm.drivers.length > 0) {
                 
-                console.log("data")
+              //  console.log("data")
                 vm.driverName = [];
                 vm.data = []
                 var k = 0;
@@ -164,26 +201,22 @@ function StudentController(StudentDetailsService) {
             else {
                 vm.loading2 = false;
 
-                console.log("no date")
+              //  console.log("no date")
                 $('#noResult').css('display', 'block');
             }
         });
     }
 
-   
-
-
-
-
+  
     StudentDetailsService.getTotal().then(function (response) {
         vm.Total = response.data;
     })
     StudentDetailsService.getAvailable().then(function (response) {
-        debugger
+        
         vm.Available = response.data;
     })
     StudentDetailsService.getActive().then(function (response) {
-        debugger
+        
         vm.Active = response.data;
     })
     StudentDetailsService.getDriverProv().then(function (response) {
@@ -191,67 +224,81 @@ function StudentController(StudentDetailsService) {
         vm.DriverProv = response.data;
         vm.DriverProv = vm.DriverProv - 1;
     })
-    StudentDetailsService.getDriverType().then(function (response) {
+
+    vm.driversType = driversType
+    driversType()
+    function driversType() {
+        $('#pieResultOrder').css('display', 'none');
+        $('#pieCha').css('display', 'none');
+
+        vm.loading = true;
+
+        StudentDetailsService.getDriverType(vm.filter1).then(function (response) {
 
 
-        vm.DriverType = response.data;
-            vm.names = [];
-            vm.y = [];
-            for (var i = 0; i < vm.DriverType.length; i++) {
-                vm.names[i] = vm.DriverType[i].name;
-                vm.y[i] = vm.DriverType[i].y
+            vm.DriverType = response.data;
+            console.log("DriverType", vm.DriverType)
+            if (vm.DriverType.length > 0) {
+                vm.names = [];
+                vm.y = [];
+                for (var i = 0; i < vm.DriverType.length; i++) {
+                    vm.names[i] = vm.DriverType[i].Type;
+                    vm.y[i] = vm.DriverType[i].Size
+                }
+                var doughnutPieData = {
+                    datasets: [{
+                        data: vm.y,
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.5)',
+                            'rgba(54, 162, 235, 0.5)',
+                            'rgba(255, 206, 86, 0.5)',
+                            'rgba(153, 102, 255, 0.5)',
+                            'rgba(255, 159, 64, 0.5)'
+                        ],
+                        borderColor: [
+                            'rgba(255,99,132,1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)'
+                        ],
+                    }],
+
+                    // These labels appear in the legend and in the tooltips when hovering different arcs
+                    labels: vm.names
+                };
+                var doughnutPieOptions = {
+                    responsive: true,
+                    animation: {
+                        animateScale: true,
+                        animateRotate: true
+                    }
+                };
+
+
+                if ($("#pieChart").length) {
+                    var pieChartCanvas = $("#pieChart").get(0).getContext("2d");
+                    var pieChart = new Chart(pieChartCanvas, {
+                        type: 'pie',
+                        data: doughnutPieData,
+                        options: doughnutPieOptions
+                    });
+                }
+
+                $('#pieResultOrder').css('display', 'none');
+                vm.loading = false;
+                $("#pieCha").css('display', 'block');
+            } else {
+                vm.loading = false;
+                $('#pieResultOrder').css('display', 'block');
             }
-        var doughnutPieData = {
-            datasets: [{
-                data: vm.y,
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.5)',
-                    'rgba(54, 162, 235, 0.5)',
-                    'rgba(255, 206, 86, 0.5)',
-                    'rgba(153, 102, 255, 0.5)',
-                    'rgba(255, 159, 64, 0.5)'
-                ],
-                borderColor: [
-                    'rgba(255,99,132,1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(153, 102, 255, 1)',
-                    'rgba(255, 159, 64, 1)'
-                ],
-            }],
-
-            // These labels appear in the legend and in the tooltips when hovering different arcs
-            labels: vm.names
-        };
-        var doughnutPieOptions = {
-            responsive: true,
-            animation: {
-                animateScale: true,
-                animateRotate: true
-            }
-        };
 
 
-        if ($("#pieChart").length) {
-            var pieChartCanvas = $("#pieChart").get(0).getContext("2d");
-            var pieChart = new Chart(pieChartCanvas, {
-                type: 'pie',
-                data: doughnutPieData,
-                options: doughnutPieOptions
-            });
-        }
-        vm.loading = false;
-        $("#pieChart").css('display', 'block');
+        })
+    }
 
-    })
-
-
-
-    
     vm.orderFilter = {}
 
-   
-    
     dOrder();
     function dOrder() {
         StudentDetailsService.getdriverOrder(vm.orderFilter).then(function (response) {
@@ -344,9 +391,6 @@ function StudentController(StudentDetailsService) {
 
         })
     }
-    
-
-
 
     StudentDetailsService.getAllDrivers().then(function (response) {
 
@@ -361,11 +405,6 @@ function StudentController(StudentDetailsService) {
     }
     getDate();
 
-
-
-    
-
-    
     console.log("controller")
 }
 
