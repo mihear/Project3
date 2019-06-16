@@ -333,6 +333,10 @@
     <Content Include="template\beeOrder logo\unnamed.jpg" />
     <Content Include="template\css.css" />
     <Content Include="template\css\style.css" />
+    <Content Include="template\datepicker\daterangepicker.css" />
+    <Content Include="template\datepicker\daterangepicker.js" />
+    <Content Include="template\datepicker\global.js" />
+    <Content Include="template\datepicker\moment.min.js" />
     <Content Include="template\dist\img\network\acceptDeleteIcon.png" />
     <Content Include="template\dist\img\network\addNodeIcon.png" />
     <Content Include="template\dist\img\network\backIcon.png" />

@@ -10,8 +10,8 @@
                     <div class="card-body">
                         <div class="clearfix">
                             <div class="float-left">
-                                <i style="color : #8a9395!important"  class="mdi mdi-account-multiple text-info icon-lg"></i>
-                             
+                                <i style="color : #8a9395!important" class="mdi mdi-account-multiple text-info icon-lg"></i>
+
                             </div>
                             <div class="float-right">
                                 <p class="mb-0 text-right">Total Drivers</p>
@@ -28,7 +28,7 @@
                     <div class="card-body">
                         <div class="clearfix">
                             <div class="float-left">
-                                <i style="color : #8a9395!important"  class="mdi mdi-motorbike text-info icon-lg"></i>
+                                <i style="color : #8a9395!important" class="mdi mdi-motorbike text-info icon-lg"></i>
                             </div>
                             <div class="float-right">
                                 <p class="mb-0 text-right">BeeOrder Drivers</p>
@@ -62,7 +62,7 @@
                     <div class="card-body">
                         <div class="clearfix">
                             <div class="float-left">
-                                <i style="color : #8a9395!important"  class="mdi mdi-checkbox-marked-circle text-info icon-lg"></i>
+                                <i style="color : #8a9395!important" class="mdi mdi-checkbox-marked-circle text-info icon-lg"></i>
                             </div>
                             <div class="float-right">
                                 <p class="mb-0 text-right">Active Drivers</p>
@@ -79,11 +79,23 @@
             <div class="col-lg-6 grid-margin stretch-card">
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="card-title" style="font-size : 24px ; color : #4b4b4b">Drivers Vehicles</h4>
+                        <div class="row" style="padding-bottom : 2%">
+                            <div class="col-md-11 col-sm-8 ">
+                                <h4 class="card-title" style="font-size : 24px ; color : #4b4b4b">Drivers Vehicles</h4>
+                            </div>
+                            <div class="col-md-1 col-sm-4 " style="text-align: center;font-size: 20px;  cursor : pointer">
+                                <i data-toggle="modal" data-target="#dType" class="glyphicon glyphicon-filter"></i>
+                            </div>
+                        </div>
                         <div style="text-align : center ; padding-top : 16% ; height: 289px; " ng-show="vm.loading">
                             <img width="100" src="~/Content/beeorder_logo.gif" />
                         </div>
-                        <canvas id="pieChart" style="height:250px ; display : none"></canvas>
+                        <div id="pieCha" style="display : none">
+                            <canvas id="pieChart" style="height:250px "></canvas>
+                        </div>
+                        <div id="pieResultOrder" style="text-align : center  ; display : none">
+                            <img width="500" src="~/template/beeOrder logo/NO_RESULT.png" />
+                        </div>
                     </div>
                 </div>
             </div>
@@ -107,6 +119,103 @@
                         <div id="noResultOrder" style="text-align : center  ; display : none">
                             <img width="500" src="~/template/beeOrder logo/NO_RESULT.png" />
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-header" style="background-color : #fff">
+                        <div class="col-md-12">
+                            <h4 class="card-title" style="font-size : 24px ; color : #4b4b4b ; margin-top : 10px">Successful Order Driver</h4>
+                        </div>
+                    </div>
+                    <div class="card-body" style="padding : 0">
+                        <div class="row" style="    padding: 4%;margin: 0;border-bottom: 1px solid rgba(0,0,0,.125);" ng-cloak>
+                            <div class="col-md-6">
+                                <label style="font-weight: 400;color: #2e444b;" for="sel1">Driver</label>
+                                <select class="form-control" id="sel1" name="sellist1" ng-model="vm.filter3.id" ng-change="vm.sOrder()" style="height : 34px">
+                                    <option ng-value="item.id" id="dr" ng-repeat="item in vm.allDrivers">
+                                        {{item.nameof}}
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label style="font-weight: 400;color: #2e444b;">Date</label>
+                                <input id="from" name="date" type="date" class="form-control" ng-model="vm.filter3.from" ng-change="vm.sOrder()" />
+                            </div>
+                        </div>
+                        <div id="sOrder" class="row" style="margin : 0 ; padding : 4% ; display : none">
+                            <div class="col-md-12" style="padding : 0 ; padding-bottom: 4%;border-bottom: 1px solid rgba(0,0,0,.125);">
+                                <div class="col-md-6">
+                                    <div class="row" style=" text-align: center;display: block;">
+                                        <span>Number OF Order</span>
+                                    </div>
+                                    <div class="row" style=" text-align: center; display: block; margin-top: 7%; font-size: 18px; font-style: italic; color: #7b6f69;font-weight: bold;">
+                                        <span>
+                                            {{vm.listSucOrder.NumberOfOrder}}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="row" style=" text-align: center;display: block;">
+                                        <span>Work Hours</span>
+                                    </div>
+                                    <div class="row" style=" text-align: center; display: block; margin-top: 7%; font-size: 18px; font-style: italic; color: #7b6f69;font-weight: bold;">
+                                        <span>
+                                            {{vm.listSucOrder.WorkHours}}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12" style="margin : 0 ; padding : 4% ; padding-bottom : 0 ">
+                                <div class="row" style="padding-bottom : 3%">
+                                    <span>
+                                        Avarage :
+                                    </span>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-8" style="margin-left : 5% ; margin-top : 1%">
+                                        <div class="progress">
+                                            <div class="progress-bar bg-dark progress-bar-striped" role="progressbar" style="width:{{vm.listSucOrder.AV}} %" aria-valuenow="100" aria-valuemin="0"
+                                                 aria-valuemax="100">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <span>
+                                            {{vm.listSucOrder.AV}} %
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <div class="col-md-4">
+                                        <span>
+                                            Start : {{vm.listSucOrder.Start}}
+                                        </span>
+                                    </div>
+                                    <div class="col-md-4" style="float : right">
+                                        <span>
+                                            End : {{vm.listSucOrder.End}}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="sResult" style="text-align : center ; display : none ">
+                            <img width="500" src="~/template/beeOrder logo/NO_RESULT.png" />
+                        </div>
+                        <div style="text-align : center ; padding-top : 14% ; height: 289px; " ng-show="vm.sloading">
+                            <img width="100" src="~/Content/beeorder_logo.gif" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
                     </div>
                 </div>
             </div>
@@ -140,6 +249,68 @@
             </div>
         </div>
 
+
+
+
+
+        <!-- The Pie Modal -->
+        <div class="modal" id="dType" style="padding-right : 50% !important">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h4 class="modal-title" style="font-weight: 400;color: #2e444b;">Drivers Type</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+
+                    <!-- Modal body -->
+                    <div class="modal-body">
+
+                        @*<div class="row">
+                                <div class="col-md-6">
+                                    <label style="font-weight: 400;color: #2e444b;">Date : </label>
+                                    <input id="from" name="date" type="text" class="form-control input--style-2 js-datepicker" ng-model="vm.filter1.from" />
+                                </div>
+                            </div>*@
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label style="font-weight: 400;color: #2e444b;">From : </label>
+                                <input id="from" name="date" type="date" class="form-control" ng-model="vm.filter1.from" />
+                            </div>
+                            <div class="col-md-6">
+                                <label style="font-weight: 400;color: #2e444b;">To :</label>
+                                <input type="date" id="to" class="form-control" ng-model="vm.filter1.to" />
+                            </div>
+                        </div>
+
+                        <div class="row" style="margin-top : 3%">
+                            <div class="col-md-6">
+                                <label style="font-weight: 400;color: #2e444b;" for="sel1">Drivers</label>
+                                <select class="form-control" id="sel1" name="sellist1" ng-model="vm.filter1.id">
+                                    <option ng-value="item.id" id="dr" ng-repeat="item in vm.allDrivers">
+                                        {{item.nameof}}
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="vm.driversType()">Filter</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
         <!-- The Modal -->
         <div class="modal" id="myModal" style="padding-right : 50% !important">
             <div class="modal-dialog modal-lg">
@@ -166,12 +337,12 @@
 
                         <div class="row" style="margin-top : 3%">
                             <div class="col-md-6">
-                                    <label style="font-weight: 400;color: #2e444b;" for="sel1">Drivers</label>
-                                    <select class="form-control" id="sel1" name="sellist1" ng-model="vm.filter.id">
-                                        <option ng-value="item.id" id="dr" ng-repeat="item in vm.allDrivers">
-                                            {{item.nameof}}
-                                        </option>
-                                    </select>
+                                <label style="font-weight: 400;color: #2e444b;" for="sel1">Drivers</label>
+                                <select class="form-control" id="sel1" name="sellist1" ng-model="vm.filter.id">
+                                    <option ng-value="item.id" id="dr" ng-repeat="item in vm.allDrivers">
+                                        {{item.nameof}}
+                                    </option>
+                                </select>
                             </div>
                             <div class="col-md-6">
 
@@ -188,9 +359,6 @@
                 </div>
             </div>
         </div>
-
-
-
 
 
         <!-- driver order modal-->

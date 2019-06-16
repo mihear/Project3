@@ -58,6 +58,12 @@ namespace Project3.Controllers.api
             {
                 return BadRequest();
             }
+            string sql = string.Format("DECLARE @FirstDate AS datetime " +
+               " DECLARE @SecondDate AS datetime " + " DECLARE @AllDate AS int " + " SET @FirstDate = (select top(1) PickedupTime from FactBill where [DriverKey] = @id and  OpenTime >= @day and OpenTime <= @day2 and PickedupTime != '0001-01-01 00:00:00.0000000'order by[FactBill].BillKey)" +
+               "SET @SecondDate = (select  top(1) CloseTime from FactBill where [DriverKey] =@id and OpenTime>= @day and OpenTime<= @day2 and PickedupTime != '0001-01-01 00:00:00.0000000' order by[FactBill].BillKey DESC )" +
+               "SET @AllDate = (select COUNT(distinct BillKey) from FactBill where [DriverKey] =@id and OpenTime>= @day and OpenTime<= @day2 and PickedupTime != '0001-01-01 00:00:00.0000000')" +
+               "select @AllDate as NumberOfOrder , DATEDIFF(MINUTE, @FirstDate, @SecondDate) as WorkHours,@FirstDate as 'Start' ,@SecondDate as 'End'"
+                 , new SqlParameter("@id", filter.id), new SqlParameter("@day", filter.from), new SqlParameter("@day2", filter.from.AddDays(1)));
             var date = db.Database
                .SqlQuery<SuccefullOrder>("DECLARE @FirstDate AS datetime " +
                " DECLARE @SecondDate AS datetime " + " DECLARE @AllDate AS int " + " SET @FirstDate = (select top(1) PickedupTime from FactBill where [DriverKey] = @id and  OpenTime >= @day and OpenTime <= @day2 and PickedupTime != '0001-01-01 00:00:00.0000000'order by[FactBill].BillKey)" +
@@ -67,7 +73,16 @@ namespace Project3.Controllers.api
                  , new SqlParameter("@id", filter.id), new SqlParameter("@day", filter.from), new SqlParameter("@day2", filter.from.AddDays(1))).FirstOrDefault();
             if (date != null)
             {
-                date.AV = date.NumberOfOrder / (date.WorkHours / 60.0);
+                if(date.NumberOfOrder != null && date.WorkHours != null )
+                {
+                    date.AV = date.NumberOfOrder.Value / (date.WorkHours.Value / 60.0);
+                }
+                else
+                {
+                    date.AV = 0;
+                }
+                
+
             }
             return Ok(date);
         }

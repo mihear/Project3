@@ -7,10 +7,10 @@ namespace Project3.Models.Drivers
 {
     public class SuccefullOrder
     {
-        public int NumberOfOrder { get; set; }
-        public int WorkHours { get; set; }
+        public int? NumberOfOrder { get; set; }
+        public int? WorkHours { get; set; }
         public double AV { get; set; }
-        public DateTime Start { get; set; }
-        public DateTime End { get; set; }
+        public DateTime? Start { get; set; }
+        public DateTime? End { get; set; }
     }
 }
