@@ -31,7 +31,9 @@ function StudentDetailsService($http) {
     this.SuccefulOrderDriver = function SuccefulOrderDriver(filter) {
         return $http.post('/api/DimDrivers/SuccefulOrderDriver', filter)
     };
-    
+    this.AcceptReject = function AcceptReject(filter) {
+        return $http.post('/api/DimDrivers/AcceptReject', filter)
+    };
 }
 app.controller('StudentController', StudentController);
 
@@ -45,10 +47,14 @@ function StudentController(StudentDetailsService) {
     vm.loading = true;
     vm.loading1 = true;
     vm.loading2 = true;
+    vm.loading4 = true;
+
 
     vm.filter = {}
     vm.filter1 = {}
     vm.filter3 = {}
+    vm.filter4 = {}
+
     function init() {
 
         var today = new Date();
@@ -79,8 +85,8 @@ function StudentController(StudentDetailsService) {
         vm.filter3['to'] = new Date(todayn);
         vm.filter3['from'] = new Date(todayn);
     //vm.filter['from'] = "2017/12/7";
-    //vm.filter['to'] = "2017/12/8";
-
+        //vm.filter['to'] = "2017/12/8";
+        vm.filter4['from'] = new Date(todayn);
 
 
 
@@ -108,17 +114,24 @@ function StudentController(StudentDetailsService) {
     vm.dTimeline = dTimeline;
     vm.dOrder = dOrder;
     vm.sOrder = sOrder
+
+    vm.AcceptReject = AcceptReject
+
     sOrder()
     function sOrder() {
-        debugger
+        
         $('#sOrder').css('display', 'none');
         $('#sResult').css('display', 'none');
         vm.sloading = true
+
+
         StudentDetailsService.SuccefulOrderDriver(vm.filter3).then(function (response) {
-            debugger
+            
             vm.listSucOrder = response.data;
+            console.log(vm.listSucOrder)
+            vm.listSucOrder.WorkHours = vm.listSucOrder.WorkHours/60
             vm.sloading = false
-            if (vm.listSucOrder.length > 0) {
+            if (vm.listSucOrder.AV != 0) {
                 $('#sOrder').css('display', 'block');
             } else {
                 $('#sResult').css('display', 'block');
@@ -127,9 +140,27 @@ function StudentController(StudentDetailsService) {
         })
     }
 
+    AcceptReject()
+    function AcceptReject() {
+        vm.loading4 = true;
+        $('#arNoResult').css('display', 'none');
+        StudentDetailsService.AcceptReject(vm.filter4).then(function (response) {
+            vm.arOrderList = response.data;
+            vm.loading4 = false;
+            debugger
+            if (vm.arOrderList.length > 0) {
+                vm.arOrderL = {}
+                for (var i = 0; i < 5; i++) {
+                    vm.arOrderL[i] = vm.arOrderList[i]
+                }
+                $('#arTable').css('display', 'block');
+            } else {
+                $('#arNoResult').css('display', 'block');
+            }
 
 
-
+        })
+    }
 
 
     dTimeline();
@@ -207,7 +238,6 @@ function StudentController(StudentDetailsService) {
         });
     }
 
-  
     StudentDetailsService.getTotal().then(function (response) {
         vm.Total = response.data;
     })
@@ -395,6 +425,7 @@ function StudentController(StudentDetailsService) {
     StudentDetailsService.getAllDrivers().then(function (response) {
 
         vm.allDrivers = response.data;
+        console.log("All Driver", vm.allDrivers)
     })
 
 
@@ -409,4 +440,52 @@ function StudentController(StudentDetailsService) {
 }
 
 
+app.controller('AcReController', AcReController);
+
+function AcReController(StudentDetailsService) {
+    debugger
+    var vm = this;
+    vm.init = init;
+    vm.loading5 = true;
+    vm.filter5 = {}
+    function init() {
+
+        var today = new Date();
+        var dd = today.getDate();
+        var ddd = today.getDate() + 1;
+        var mm = today.getMonth() + 1; //January is 0!
+
+        var yyyy = today.getFullYear();
+        if (dd < 10) {
+            dd = '0' + dd;
+        }
+        if (mm < 10) {
+            mm = '0' + mm;
+        }
+        var todayn = yyyy + '/' + mm + '/' + dd
+        var todayt = yyyy + '/' + mm + '/' + ddd
+
+
+        vm.filter5['from'] = new Date(todayn);
+
+    }
+    vm.fAcceptReject = fAcceptReject
+    fAcceptReject()
+    function fAcceptReject() {
+        vm.loading5 = true;
+        $('#farNoResult').css('display', 'none');
+        StudentDetailsService.AcceptReject(vm.filter5).then(function (response) {
+            vm.farOrderList = response.data;
+            vm.loading5 = false;
+            debugger
+            if (vm.farOrderList.length > 0) {
+                $('#farTable').css('display', 'block');
+            } else {
+                $('#farNoResult').css('display', 'block');
+            }
+
+
+        })
+    }
+}
 

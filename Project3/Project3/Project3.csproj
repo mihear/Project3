@@ -2399,6 +2399,7 @@
     <Content Include="Views\Dashboard\restaurants.cshtml" />
     <Content Include="Views\Dashboard\Delivery_Time.cshtml" />
     <Content Include="Views\Dashboard\user.cshtml" />
+    <Content Include="Views\Dashboard\AcceptedRejected.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

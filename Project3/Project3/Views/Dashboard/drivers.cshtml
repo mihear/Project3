@@ -125,7 +125,7 @@
         </div>
         <div class="row">
             <div class="col-lg-6 grid-margin stretch-card">
-                <div class="card">
+                <div class="card" style="height : 350px">
                     <div class="card-header" style="background-color : #fff">
                         <div class="col-md-12">
                             <h4 class="card-title" style="font-size : 24px ; color : #4b4b4b ; margin-top : 10px">Successful Order Driver</h4>
@@ -146,76 +146,132 @@
                                 <input id="from" name="date" type="date" class="form-control" ng-model="vm.filter3.from" ng-change="vm.sOrder()" />
                             </div>
                         </div>
-                        <div id="sOrder" class="row" style="margin : 0 ; padding : 4% ; display : none">
-                            <div class="col-md-12" style="padding : 0 ; padding-bottom: 4%;border-bottom: 1px solid rgba(0,0,0,.125);">
-                                <div class="col-md-6">
-                                    <div class="row" style=" text-align: center;display: block;">
-                                        <span>Number OF Order</span>
+                        <div id="sOrder" class="row" style="margin : 0 ; padding : 0 ; display : none">
+
+                            <div class="col-md-8" style="padding : 4%">
+                                <div class="row">
+                                    <div class="col-md-9">
+                                        <span style="color: #7b6f69;">
+                                            On Duty
+                                        </span>
                                     </div>
-                                    <div class="row" style=" text-align: center; display: block; margin-top: 7%; font-size: 18px; font-style: italic; color: #7b6f69;font-weight: bold;">
+                                    <div class="col-md-3" style="text-align : right">
+                                        <span>
+                                            {{vm.listSucOrder.AV | number:2}} %
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="col-md-12" style=" margin-top: 5%;padding: 0;">
+                                    <div class="progress">
+                                        <div class="progress-bar bg-dark progress-bar-striped" role="progressbar" style="width: {{vm.listSucOrder.AV | number:0}}%" aria-valuenow="{{vm.listSucOrder.AV | number:0}}" aria-valuemin="0"
+                                             aria-valuemax="10">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <span style="color: #7b6f69;">
+                                            Start&nbsp;&nbsp;
+                                        </span>
+                                        <span style="font-style : italic">
+                                            {{vm.listSucOrder.Start | date : "HH : mm"}}
+                                        </span>
+                                    </div>
+                                    <div class="col-md-8" style="text-align: right;">
+                                        <span style="color: #7b6f69;">
+                                            End&nbsp;&nbsp;
+                                        </span>
+                                        <span style="font-style : italic">
+                                            {{vm.listSucOrder.End | date : "HH : mm"}}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4" style="padding : 0 ; border-left: 1px solid rgba(0,0,0,.125);">
+                                <div class="col-md-12" style="border-bottom: 1px solid rgba(0,0,0,.125); padding-top : 5% ; padding-bottom : 5% ; padding-left : 18% ; padding-left : 18%">
+                                    <div class="row">
+                                        <span style="color: #7b6f69;">Orders</span>
+                                    </div>
+                                    <div class="row" style=" margin-top: 4%; font-size: 18px; font-style: italic; font-weight: bold;">
                                         <span>
                                             {{vm.listSucOrder.NumberOfOrder}}
                                         </span>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
-                                    <div class="row" style=" text-align: center;display: block;">
-                                        <span>Work Hours</span>
+                                <div class="col-md-12" style="padding-top : 5% ; padding-bottom : 5% ;padding-left : 18% ; padding-left : 18%">
+                                    <div class="row">
+                                        <span style="color: #7b6f69;">Hours</span>
                                     </div>
-                                    <div class="row" style=" text-align: center; display: block; margin-top: 7%; font-size: 18px; font-style: italic; color: #7b6f69;font-weight: bold;">
+                                    <div class="row" style=" margin-top: 4%; font-size: 18px;font-weight : bold ;font-style: italic">
                                         <span>
-                                            {{vm.listSucOrder.WorkHours}}
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-12" style="margin : 0 ; padding : 4% ; padding-bottom : 0 ">
-                                <div class="row" style="padding-bottom : 3%">
-                                    <span>
-                                        Avarage :
-                                    </span>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-8" style="margin-left : 5% ; margin-top : 1%">
-                                        <div class="progress">
-                                            <div class="progress-bar bg-dark progress-bar-striped" role="progressbar" style="width:{{vm.listSucOrder.AV}} %" aria-valuenow="100" aria-valuemin="0"
-                                                 aria-valuemax="100">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <span>
-                                            {{vm.listSucOrder.AV}} %
-                                        </span>
-                                    </div>
-                                </div>
-
-                                <div class="col-md-12">
-                                    <div class="col-md-4">
-                                        <span>
-                                            Start : {{vm.listSucOrder.Start}}
-                                        </span>
-                                    </div>
-                                    <div class="col-md-4" style="float : right">
-                                        <span>
-                                            End : {{vm.listSucOrder.End}}
+                                            {{vm.listSucOrder.WorkHours | number : 0}}
                                         </span>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div id="sResult" style="text-align : center ; display : none ">
-                            <img width="500" src="~/template/beeOrder logo/NO_RESULT.png" />
+                            <img  style="margin-bottom: -11%;margin-top: -3%;" width="380" src="~/template/beeOrder logo/NO_RESULT.png" />
                         </div>
-                        <div style="text-align : center ; padding-top : 14% ; height: 289px; " ng-show="vm.sloading">
+                        <div style="text-align : center ; padding-top : 5% ; margin-bottom: -20% ; height: 289px; " ng-show="vm.sloading">
                             <img width="100" src="~/Content/beeorder_logo.gif" />
                         </div>
                     </div>
                 </div>
             </div>
             <div class="col-lg-6 grid-margin stretch-card">
-                <div class="card">
+                <div class="card" style="height : 350px">
                     <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-11 col-sm-8">
+                                <span class="card-title" style="font-size : 24px ; color : #4b4b4b">Accepted & Rejected Orders </span>
+                            </div>
+                            <div class="col-md-1 col-sm-4 " style="text-align: center;font-size: 20px;  cursor : pointer">
+                                <i data-toggle="modal" data-target="#arOrder" class="glyphicon glyphicon-filter"></i>
+                            </div>
+                        </div>
+                        <div id="arTable" class="table-responsive" style="display : none ; width : 99% ; margin-top : 2%" ng-cloak>
+                            <table class="table table-bordered" style="margin-top :1%">
+                                <thead style="border : 0">
+                                    <tr>
+
+                                        <th width="40">
+                                            Restaurants Name
+                                        </th>
+                                        <th width="30">
+                                            Accepted
+                                        </th>
+                                        <th width="30">
+                                            Rejected
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="item in vm.arOrderL">
+                                        <td>
+                                            {{item.Name}}
+                                        </td>
+                                        <td>
+                                            {{item.Accepted}}
+                                        </td>
+                                        <td>
+                                            {{item.Reject}}
+                                        </td>
+                                    <tr>
+                                        <td style="text-align : center;color: #61747b;font-style: italic; " colspan="4">
+                                            <a href="@Url.Action("AcceptedRejected","Dashboard")" style="cursor : pointer"> show more ...</a>
+
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div id="arNoResult" style="text-align : center  ;display : none">
+                            <img style="margin-bottom : -7%" width="500" src="~/template/beeOrder logo/NO_RESULT.png" />
+                        </div>
+                        <div style="text-align : center ; padding-top : 18% ; height: 289px; " ng-show="vm.loading4">
+                            <img width="100" src="~/Content/beeorder_logo.gif" />
+                        </div>
                     </div>
                 </div>
             </div>
@@ -249,10 +305,6 @@
             </div>
         </div>
 
-
-
-
-
         <!-- The Pie Modal -->
         <div class="modal" id="dType" style="padding-right : 50% !important">
             <div class="modal-dialog modal-lg">
@@ -267,12 +319,6 @@
                     <!-- Modal body -->
                     <div class="modal-body">
 
-                        @*<div class="row">
-                                <div class="col-md-6">
-                                    <label style="font-weight: 400;color: #2e444b;">Date : </label>
-                                    <input id="from" name="date" type="text" class="form-control input--style-2 js-datepicker" ng-model="vm.filter1.from" />
-                                </div>
-                            </div>*@
 
                         <div class="row">
                             <div class="col-md-6">
@@ -395,6 +441,37 @@
             </div>
         </div>
 
+
+
+        <!-- A R Orders-->
+        <div class="modal" id="arOrder" style="padding-right : 50% !important">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h4 class="modal-title" style="font-weight: 400;color: #2e444b;">Accepted & Rejected Orders Filter</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label style="font-weight: 400;color: #2e444b;">From : </label>
+                                <input id="from" name="date" type="date" class="form-control" ng-model="vm.filter4.from" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="vm.AcceptReject()">Filter</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
     </div>
 
 </div>

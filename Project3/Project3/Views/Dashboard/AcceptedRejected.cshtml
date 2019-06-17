@@ -1,0 +1,103 @@
+﻿<style>
+    .table tbody > tr > td {
+        vertical-align: middle !important
+    }
+
+    .progress {
+        margin-bottom: 0 !important;
+    }
+
+    .bg-danger {
+        background-color: #2e444b !important
+    }
+</style>
+<div class="main-panel" ng-controller="AcReController as vm" ng-init="vm.init()">
+    <div class="content-wrapper">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-11 col-sm-8">
+                                <span class="card-title" style="font-size : 24px ; color : #4b4b4b">Accepted & Rejected Orders </span>
+                            </div>
+                            <div class="col-md-1 col-sm-4 " style="text-align: center;font-size: 20px;  cursor : pointer">
+                                <i data-toggle="modal" data-target="#filter" class="glyphicon glyphicon-filter"></i>
+                            </div>
+                        </div>
+                        <div id="farTable" class="table-responsive" style="display : none ; margin-top : 2%" ng-cloak>
+                            <table class="table table-bordered" style="margin-top :1%">
+                                <thead style="border : 0">
+                                    <tr>
+
+                                        <th width="40">
+                                            Restaurants Name
+                                        </th>
+                                        <th width="30">
+                                            Accepted
+                                        </th>
+                                        <th width="30">
+                                            Rejected
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="item in vm.farOrderList">
+                                        <td>
+                                            {{item.Name}}
+                                        </td>
+                                        <td>
+                                            {{item.Accepted}}
+                                        </td>
+                                        <td>
+                                            {{item.Reject}}
+                                        </td>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div id="farNoResult" style="text-align : center  ;display : none">
+                            <img  width="500" src="~/template/beeOrder logo/NO_RESULT.png" />
+                        </div>
+                        <div style="text-align : center ; padding-top : 6% ; height: 289px; " ng-show="vm.loading5">
+                            <img width="100" src="~/Content/beeorder_logo.gif" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="modal" id="filter" style="padding-right : 50% !important">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h4 class="modal-title" style="font-weight: 400;color: #2e444b;">In Out Delivery Time Filter</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label style="font-weight: 400;color: #2e444b;">From : </label>
+                                <input id="from" name="date" type="date" class="form-control" ng-model="vm.filter5.from" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="vm.fAcceptReject()">Filter</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+

@@ -33,5 +33,9 @@ namespace Project3.Controllers
         {
             return View();
         }
+        public ActionResult AcceptedRejected()
+        {
+            return View();
+        }
     }
 }
