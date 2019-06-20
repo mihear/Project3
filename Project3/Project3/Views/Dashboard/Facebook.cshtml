@@ -1,21 +1,136 @@
-﻿<div class="main-panel" ng-controller="facebookController as vm">
+﻿<style>
+
+   td{
+       white-space : initial !important
+   }
+</style>
+
+<div class="main-panel" ng-controller="facebookController as vm">
     <div class="content-wrapper">
         <div class="row">
             <div class="col-lg-6 grid-margin stretch-card">
                 <div class="card">
+                    <div class="card-header" style="background-color : #fff">
+                        <div class="col-md-12">
+                            <h4 class="card-title" style="font-size : 24px ; color : #4b4b4b ; margin-top : 10px">Top Effecting Users</h4>
+                        </div>
+                    </div>
                     <div class="card-body">
-                        <h4 class="card-title">Positivity</h4>
-                        <canvas id="pieChart" style="height:250px"></canvas>
+                        <canvas id="myChart" width="580" height="400" style="display : none"></canvas>
+                        <div style="text-align : center ; padding-top : 20% ; height: 289px; " ng-show="vm.loader1">
+                            <img width="100" src="~/Content/beeorder_logo.gif" />
+                        </div>
                     </div>
                 </div>
             </div>
             <div class="col-lg-6 grid-margin stretch-card">
-                @*<div class="card">
-                    <div class="card-body">
-                        <h4 class="card-title">test</h4>
-                        <canvas id="barChart" style="height:230px"></canvas>
+                <div class="card">
+                    <div class="card-header" style="background-color : #fff">
+                        <div class="col-md-12">
+                            <h4 class="card-title" style="font-size : 24px ; color : #4b4b4b ; margin-top : 10px">Top Effecting Resturnt</h4>
+                        </div>
                     </div>
-                </div>*@
+                    <div class="card-body">
+                        <canvas id="myChart1" width="580" height="400" style="display : none"></canvas>
+                        <div style="text-align : center ; padding-top : 20% ; height: 289px; " ng-show="vm.loader2">
+                            <img width="100" src="~/Content/beeorder_logo.gif" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header" style="background-color : #fff">
+                        <div class="col-md-12">
+                            <h4 class="card-title" style="font-size : 24px ; color : #4b4b4b ; margin-top : 10px">Top Positive Post</h4>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive" ng-cloak>
+            <table class="table table-bordered">
+                <thead style="border : 0">
+                    <tr>
+                        <th style="width : 10%">
+                            Positive Reaction
+                        </th>
+                        <th style="width : 90%">
+                            Post Description
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="item in vm.TopActivityPost">
+                        <td>
+                            {{item.Count | number:0}}
+                        </td>
+                        <td>
+                            {{item.Post}}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="row" style="padding-top : 2%">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header" style="background-color : #fff">
+                        <div class="col-md-12">
+                            <h4 class="card-title" style="font-size : 24px ; color : #4b4b4b ; margin-top : 10px">Top Negative Post</h4>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive" ng-cloak>
+                            <table class="table table-bordered">
+                                <thead style="border : 0">
+                                    <tr>
+                                        <th width="30">
+                                            Negative Reaction
+                                        </th>
+                                        <th width="70">
+                                            Post Description
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="item in vm.LessActivityPost">
+                                        <td>
+                                            {{item.Count | number:0}}
+                                        </td>
+                                        <td>
+                                            {{item.Post}}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="row" style="padding-top : 2%">
+            <div class="col-lg-6 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-header" style="background-color : #fff">
+                        <div class="col-md-12">
+                            <h4 class="card-title" style="font-size : 24px ; color : #4b4b4b ; margin-top : 10px">Top Effecting Users</h4>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <h5 style="margin-bottom : 4%">Post Number : {{vm.all}}</h5>
+                        <canvas id="pieChart" width="480" height="300"></canvas>
+                        <div style="text-align : center ; padding-top : 20% ; height: 289px; " ng-show="vm.loader3">
+                            <img width="100" src="~/Content/beeorder_logo.gif" />
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

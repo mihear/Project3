@@ -147,42 +147,16 @@
                             </div>
                         </div>
                         <div id="sOrder" class="row" style="margin : 0 ; padding : 0 ; display : none">
-
-                            <div class="col-md-8" style="padding : 4%">
-                                <div class="row">
-                                    <div class="col-md-9">
-                                        <span style="color: #7b6f69;">
-                                            On Duty
-                                        </span>
-                                    </div>
-                                    <div class="col-md-3" style="text-align : right">
-                                        <span>
-                                            {{vm.listSucOrder.AV | number:2}} %
-                                        </span>
+                            <div class="col-md-4" style="padding : 0 ; border-left: 1px solid rgba(0,0,0,.125);">
+                                <div class="col-md-12" >
+                                    <div class="row" style="display: block; text-align :center ;  padding-top :15% ; padding-bottom : 14%">
+                                        <span style="color: #7b6f69;">Order Per Houre</span>
                                     </div>
                                 </div>
-                                <div class="col-md-12" style=" margin-top: 5%;padding: 0;">
-                                    <div class="progress">
-                                        <div class="progress-bar bg-dark progress-bar-striped" role="progressbar" style="width: {{vm.listSucOrder.AV | number:0}}%" aria-valuenow="{{vm.listSucOrder.AV | number:0}}" aria-valuemin="0"
-                                             aria-valuemax="10">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <span style="color: #7b6f69;">
-                                            Start&nbsp;&nbsp;
-                                        </span>
-                                        <span style="font-style : italic">
-                                            {{vm.listSucOrder.Start | date : "HH : mm"}}
-                                        </span>
-                                    </div>
-                                    <div class="col-md-8" style="text-align: right;">
-                                        <span style="color: #7b6f69;">
-                                            End&nbsp;&nbsp;
-                                        </span>
-                                        <span style="font-style : italic">
-                                            {{vm.listSucOrder.End | date : "HH : mm"}}
+                                <div class="col-md-12">
+                                    <div class="row" style="display : block;  font-size: 34px;font-weight : bold ;font-style: italic ; text-align : center">
+                                        <span style="color : rgba(0, 0, 0, 0.7215686274509804)">
+                                            {{vm.listSucOrder.AV | number:2}}
                                         </span>
                                     </div>
                                 </div>
@@ -190,11 +164,33 @@
                             <div class="col-md-4" style="padding : 0 ; border-left: 1px solid rgba(0,0,0,.125);">
                                 <div class="col-md-12" style="border-bottom: 1px solid rgba(0,0,0,.125); padding-top : 5% ; padding-bottom : 5% ; padding-left : 18% ; padding-left : 18%">
                                     <div class="row">
-                                        <span style="color: #7b6f69;">Orders</span>
+                                        <span style="color: #7b6f69;">Start</span>
                                     </div>
                                     <div class="row" style=" margin-top: 4%; font-size: 18px; font-style: italic; font-weight: bold;">
-                                        <span>
+                                        <span style="color : rgba(0, 0, 0, 0.7215686274509804)">
+                                            {{vm.listSucOrder.Start | date : "HH : mm"}}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="col-md-12" style="padding-top : 5% ; padding-bottom : 5% ;padding-left : 18% ; padding-left : 18%">
+                                    <div class="row">
+                                        <span style="color: #7b6f69;">Orders</span>
+                                    </div>
+                                    <div class="row" style=" margin-top: 4%; font-size: 18px;font-weight : bold ;font-style: italic">
+                                        <span style="color : rgba(0, 0, 0, 0.7215686274509804)">
                                             {{vm.listSucOrder.NumberOfOrder}}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4" style="padding : 0 ; border-left: 1px solid rgba(0,0,0,.125);">
+                                <div class="col-md-12" style="border-bottom: 1px solid rgba(0,0,0,.125); padding-top : 5% ; padding-bottom : 5% ; padding-left : 18% ; padding-left : 18%">
+                                    <div class="row">
+                                        <span style="color: #7b6f69;"> End</span>
+                                    </div>
+                                    <div class="row" style=" margin-top: 4%; font-size: 18px; font-style: italic; font-weight: bold;">
+                                        <span style="color : rgba(0, 0, 0, 0.7215686274509804)">
+                                            {{vm.listSucOrder.End | date : "HH : mm"}}
                                         </span>
                                     </div>
                                 </div>
@@ -203,7 +199,7 @@
                                         <span style="color: #7b6f69;">Hours</span>
                                     </div>
                                     <div class="row" style=" margin-top: 4%; font-size: 18px;font-weight : bold ;font-style: italic">
-                                        <span>
+                                        <span style="color : rgba(0, 0, 0, 0.7215686274509804)">
                                             {{vm.listSucOrder.WorkHours | number : 0}}
                                         </span>
                                     </div>
