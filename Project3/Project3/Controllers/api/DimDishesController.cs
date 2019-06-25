@@ -85,6 +85,24 @@ namespace Project3.Controllers.api
                 return Ok(date);
             }
         }
+        //Data Mining 
+        [HttpGet]
+        public IHttpActionResult DishForMining()
+        {
+            var date = db.Database
+                .SqlQuery<UserMining>("select distinct UDM.id , d.name from DimUser d inner join DishDataMining UDM on d.[UserAltKey] = UDM.id").ToList();
+            return Ok(date);
+        }
+        public IHttpActionResult DishDataMining(int id)
+        {
+            if (id == 0)
+            {
+                return BadRequest();
+            }
+            var date = db.Database
+                .SqlQuery<DishDataMining>("select * from DishDataMining UDM where id=@id", new SqlParameter("@id", id)).ToList();
+            return Ok(date);
+        }
         protected override void Dispose(bool disposing)
         {
             if (disposing)

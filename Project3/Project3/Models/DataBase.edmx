@@ -155,6 +155,20 @@
           <Property Name="CreationTime" Type="datetime2" Precision="7" />
           <Property Name="CurrentRecord" Type="nchar" MaxLength="10" Nullable="false" />
         </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'beeorderWH.dbo.DishDataMining' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="DishDataMining">
+          <Key>
+            <PropertyRef Name="id" />
+            <PropertyRef Name="Date" />
+            <PropertyRef Name="prediction" />
+            <PropertyRef Name="Count" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="Date" Type="date" Nullable="false" />
+          <Property Name="prediction" Type="bit" Nullable="false" />
+          <Property Name="Count" Type="float" Nullable="false" />
+        </EntityType>
         <EntityType Name="FacebookComment">
           <Key>
             <PropertyRef Name="Id" />
@@ -259,6 +273,20 @@
           <Property Name="version" Type="int" />
           <Property Name="definition" Type="varbinary(max)" />
         </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'beeorderWH.dbo.UserDataMining' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="UserDataMining">
+          <Key>
+            <PropertyRef Name="id" />
+            <PropertyRef Name="Date" />
+            <PropertyRef Name="prediction" />
+            <PropertyRef Name="Conut" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="Date" Type="date" Nullable="false" />
+          <Property Name="prediction" Type="bit" Nullable="false" />
+          <Property Name="Conut" Type="float" Nullable="false" />
+        </EntityType>
         <Association Name="FK_FacebookComment_FacebookPosts">
           <End Role="FacebookPosts" Type="Self.FacebookPosts" Multiplicity="0..1" />
           <End Role="FacebookComment" Type="Self.FacebookComment" Multiplicity="*" />
@@ -342,6 +370,22 @@
           <EntitySet Name="FactBill" EntityType="Self.FactBill" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="OldDateDim" EntityType="Self.OldDateDim" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DishDataMining" EntityType="Self.DishDataMining" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [DishDataMining].[id] AS [id], 
+    [DishDataMining].[Date] AS [Date], 
+    [DishDataMining].[prediction] AS [prediction], 
+    [DishDataMining].[Count] AS [Count]
+    FROM [dbo].[DishDataMining] AS [DishDataMining]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="UserDataMining" EntityType="Self.UserDataMining" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [UserDataMining].[id] AS [id], 
+    [UserDataMining].[Date] AS [Date], 
+    [UserDataMining].[prediction] AS [prediction], 
+    [UserDataMining].[Conut] AS [Conut]
+    FROM [dbo].[UserDataMining] AS [UserDataMining]</DefiningQuery>
+          </EntitySet>
           <AssociationSet Name="FK_FacebookComment_FacebookPosts" Association="Self.FK_FacebookComment_FacebookPosts">
             <End Role="FacebookPosts" EntitySet="FacebookPosts" />
             <End Role="FacebookComment" EntitySet="FacebookComment" />
@@ -693,6 +737,8 @@
             <End Role="FacebookPost" EntitySet="FacebookPosts" />
             <End Role="FacebookComment" EntitySet="FacebookComments" />
           </AssociationSet>
+          <EntitySet Name="DishDataMinings" EntityType="beeorderWHModel.DishDataMining" />
+          <EntitySet Name="UserDataMinings" EntityType="beeorderWHModel.UserDataMining" />
         </EntityContainer>
         <EntityType Name="FacebookComment">
           <Key>
@@ -745,6 +791,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="DishDataMining">
+          <Key>
+            <PropertyRef Name="id" />
+            <PropertyRef Name="Date" />
+            <PropertyRef Name="prediction" />
+            <PropertyRef Name="Count" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="prediction" Type="Boolean" Nullable="false" />
+          <Property Name="Count" Type="Double" Nullable="false" />
+        </EntityType>
+        <EntityType Name="UserDataMining">
+          <Key>
+            <PropertyRef Name="id" />
+            <PropertyRef Name="Date" />
+            <PropertyRef Name="prediction" />
+            <PropertyRef Name="Conut" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="prediction" Type="Boolean" Nullable="false" />
+          <Property Name="Conut" Type="Double" Nullable="false" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1012,6 +1082,26 @@
                 <ScalarProperty Name="Comment" ColumnName="Comment" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DishDataMinings">
+            <EntityTypeMapping TypeName="beeorderWHModel.DishDataMining">
+              <MappingFragment StoreEntitySet="DishDataMining">
+                <ScalarProperty Name="Count" ColumnName="Count" />
+                <ScalarProperty Name="prediction" ColumnName="prediction" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserDataMinings">
+            <EntityTypeMapping TypeName="beeorderWHModel.UserDataMining">
+              <MappingFragment StoreEntitySet="UserDataMining">
+                <ScalarProperty Name="Conut" ColumnName="Conut" />
+                <ScalarProperty Name="prediction" ColumnName="prediction" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

@@ -322,6 +322,8 @@
       <End Role="FacebookPost" EntitySet="FacebookPosts" />
       <End Role="FacebookComment" EntitySet="FacebookComments" />
     </AssociationSet>
+    <EntitySet Name="DishDataMinings" EntityType="beeorderWHModel.DishDataMining" />
+    <EntitySet Name="UserDataMinings" EntityType="beeorderWHModel.UserDataMining" />
   </EntityContainer>
   <EntityType Name="FacebookComment">
     <Key>
@@ -374,4 +376,28 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <EntityType Name="DishDataMining">
+    <Key>
+      <PropertyRef Name="id" />
+      <PropertyRef Name="Date" />
+      <PropertyRef Name="prediction" />
+      <PropertyRef Name="Count" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" />
+    <Property Name="Date" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="prediction" Type="Boolean" Nullable="false" />
+    <Property Name="Count" Type="Double" Nullable="false" />
+  </EntityType>
+  <EntityType Name="UserDataMining">
+    <Key>
+      <PropertyRef Name="id" />
+      <PropertyRef Name="Date" />
+      <PropertyRef Name="prediction" />
+      <PropertyRef Name="Conut" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" />
+    <Property Name="Date" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="prediction" Type="Boolean" Nullable="false" />
+    <Property Name="Conut" Type="Double" Nullable="false" />
+  </EntityType>
 </Schema>
