@@ -29,8 +29,13 @@ function restaurantsService($http) {
     this.getRestTypeOrder = function getRestTypeOrder() {
         return $http.get('/api/DimRestaurants/RestTypeOrder');
     }
+    this.DishForMining = function DishForMining() {
+        return $http.get('/api/DimDishes/DishForMining');
+    }
+    this.DishDataMining = function DishDataMining(filter) {
 
-
+        return $http.post('/api/DimDishes/DishDataMining?id=' + filter);
+    };
 }
 
 app.controller('restaurantsController', restaurantsController);
@@ -46,13 +51,14 @@ function restaurantsController(restaurantsService) {
     vm.filterDish = {}
     vm.OnOffTopFilter = {}
     vm.OnOffFilter = {}
+    vm.filterF = {}
 
     vm.orderRateLowest = orderRateLowest
     vm.orderRateHighest = orderRateHighest
     vm.OnOffOrderTop = OnOffOrderTop
     vm.DishLowest = DishLowest
     vm.DishHighest = DishHighest
-
+    vm.DishDataMining = DishDataMining
     function init() {
         var date = new Date();
         var firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
@@ -453,9 +459,9 @@ function restaurantsController(restaurantsService) {
     })
 
     function OnOffOrderTop() {
-        debugger
+        
         restaurantsService.getOnOffOrderTop(vm.OnOffTopFilter).then(function (response) {
-            debugger
+            
             vm.OnOffTop = response.data;          
             console.log(vm.OnOffTop)
         })
@@ -471,7 +477,7 @@ function restaurantsController(restaurantsService) {
             vm.names[i] = vm.RestType[i].Name;
             vm.y[i] = vm.RestType[i].Count
         }
-        debugger
+        
         var doughnutPieData = {
             datasets: [{
                 data: vm.y,
@@ -515,6 +521,87 @@ function restaurantsController(restaurantsService) {
         $("#pieChart").css('display', 'block');
 
     })
+
+
+
+
+
+    restaurantsService.DishForMining().then(function (response) {
+
+        vm.Alldishmining = response.data;
+        console.log(vm.Alldishmining)
+    })
+
+    function DishDataMining() {
+
+        debugger
+        restaurantsService.DishDataMining(vm.filterF).then(function (response) {
+            debugger
+            vm.Mining = response.data;
+            if (vm.Mining.length > 0) {
+                $("#noResultMin").css('display', 'none');
+                $("#areaChart").css('display', 'block');
+
+                count = []
+                date = []
+                for (var i = 0; i < vm.Mining.length; i++) {
+                    date[i] = vm.Mining[i].Date;
+                    count[i] = vm.Mining[i].Count;
+                }
+
+
+                var areaData = {
+                    labels: date,
+                    datasets: [{
+                        label: '#',
+                        data: count,
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)',
+                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(153, 102, 255, 0.2)',
+                            'rgba(255, 159, 64, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(255,99,132,1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)'
+                        ],
+                        borderWidth: 1,
+                        fill: 'origin', // 0: fill to 'origin'
+                        fill: '+2', // 1: fill to dataset 3
+                        fill: 1, // 2: fill to dataset 1
+                        fill: false, // 3: no fill
+                        fill: '-2' // 4: fill to dataset 2
+                    }]
+                };
+
+                var areaOptions = {
+                    plugins: {
+                        filler: {
+                            propagate: true
+                        }
+                    }
+                }
+
+                if ($("#areaChart").length) {
+                    var areaChartCanvas = $("#areaChart").get(0).getContext("2d");
+                    var areaChart = new Chart(areaChartCanvas, {
+                        type: 'line',
+                        data: areaData,
+                        options: areaOptions
+                    });
+                }
+            } 
+
+
+        })
+    }
+
 
 
 }

@@ -33,7 +33,12 @@ namespace Project3.Controllers.api
             var date = db.Database
                .SqlQuery<OrderRate>("select top (10) Resturant as Name,COUNT(Id)  as Count from FacebookPosts group by Resturant order by Count desc")
                .ToList();
-            return Ok(date);
+            date.Add(new OrderRate()
+            {
+                Name = "Design",
+                Count = 0
+            });
+            return Ok(date.Where(m => m.Name!=""));
         }
         [HttpPost]
         public IHttpActionResult TopActivityPost()

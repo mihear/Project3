@@ -150,7 +150,18 @@ namespace Project3.Controllers.api
             }
             var date = db.Database
                 .SqlQuery<UserDataMining>("select * from UserDataMining UDM where id=@id", new SqlParameter("@id", id)).ToList();
-            return Ok(date);
+            List<DataMining> list = new List<DataMining>();
+            foreach(var item in date)
+            {
+                list.Add(new DataMining()
+                {
+                    id = item.id,
+                    Count = item.Conut,
+                    Date = item.Date.ToShortDateString(),
+                    prediction = item.prediction
+                });
+            }
+            return Ok(list);
         }
 
         protected override void Dispose(bool disposing)

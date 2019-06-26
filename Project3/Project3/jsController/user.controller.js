@@ -26,7 +26,13 @@ function userService($http) {
         return $http.post('/api/DimUsers/AreaOrderH', filter);
     };
 
+    this.DishForMining = function DishForMining() {
+        return $http.get('/api/DimUsers/UserForMining');
+    }
+    this.DishDataMining = function DishDataMining(filter) {
 
+        return $http.post('/api/DimUsers/UserDataMining?id=' + filter);
+    };
 
 
 }
@@ -71,6 +77,7 @@ function userController(userService) {
     orderRateLowest();
     DishLowest(); 
     areaOrderLowest();
+    vm.DishDataMining = DishDataMining
 
     function orderRateLowest() {
         vm.oRL = true
@@ -633,6 +640,82 @@ function userController(userService) {
         });
     }
 
+
+    userService.DishForMining().then(function (response) {
+
+        vm.Alldishmining = response.data;
+        console.log(vm.Alldishmining)
+    })
+
+    function DishDataMining() {
+
+        debugger
+        userService.DishDataMining(vm.filterF).then(function (response) {
+            debugger
+            vm.Mining = response.data;
+            if (vm.Mining.length > 0) {
+                $("#noResultMin").css('display', 'none');
+                $("#areaChart").css('display', 'block');
+
+                count = []
+                date = []
+                for (var i = 0; i < vm.Mining.length; i++) {
+                    date[i] = vm.Mining[i].Date;
+                    count[i] = vm.Mining[i].Count;
+                }
+
+
+                var areaData = {
+                    labels: date,
+                    datasets: [{
+                        label: '#',
+                        data: count,
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)',
+                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(153, 102, 255, 0.2)',
+                            'rgba(255, 159, 64, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(255,99,132,1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)'
+                        ],
+                        borderWidth: 1,
+                        fill: 'origin', // 0: fill to 'origin'
+                        fill: '+2', // 1: fill to dataset 3
+                        fill: 1, // 2: fill to dataset 1
+                        fill: false, // 3: no fill
+                        fill: '-2' // 4: fill to dataset 2
+                    }]
+                };
+
+                var areaOptions = {
+                    plugins: {
+                        filler: {
+                            propagate: true
+                        }
+                    }
+                }
+
+                if ($("#areaChart").length) {
+                    var areaChartCanvas = $("#areaChart").get(0).getContext("2d");
+                    var areaChart = new Chart(areaChartCanvas, {
+                        type: 'line',
+                        data: areaData,
+                        options: areaOptions
+                    });
+                }
+            }
+
+
+        })
+    }
 
 
 
