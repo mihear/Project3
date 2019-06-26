@@ -64,6 +64,44 @@
                 </div>
             </div>
         </div>
+        <div class="row" style="margin-bottom : 2%">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header" style="background : #fff">
+                        <div class="col-md-9">
+                            <h4 class="card-title" style="font-size : 24px ; color : #4b4b4b ; margin-top : 10px">User Predication</h4>
+                        </div>
+                        <div class="col-md-1" style="text-align: right;
+    padding-right: 0;
+    margin-top: 7px;
+    padding-top: 7px;">
+                            <span style="font-weight: 400;color: #2e444b;">User Name :</span>
+                        </div>
+                        <div class="col-md-2" style="padding-top: 7px;">
+                            <select class="form-control" ng-model="vm.filterF" ng-change="vm.DishDataMining()">
+                                <option ng-value="item.id" id="dr" ng-repeat="item in vm.Alldishmining">
+                                    {{item.name}}
+                                </option>
+                            </select>
+                        </div>
+                        @*<div class="col-md-1" style="text-align: right;
+                        padding-top: 7px;">
+                                                <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="vm.DishDataMining()">Filter</button>
+
+                                            </div>*@
+                    </div>
+                    <div class="card-body">
+                        <div style="max-height : 415px">
+                            <canvas id="areaChart" style=" max-height : 415px; display : none"></canvas>
+
+                        </div>
+                        <div id="noResultMin" style="text-align : center  ; padding-top : 5%">
+                            <img width="500" src="~/template/beeOrder logo/NO_RESULT.png" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="row">
             <div class="col-md-6 grid-margin">
                 <div class="card" style="height : 480px">
@@ -98,6 +136,8 @@
             </div>
 
         </div>
+
+
 
         <!-- The Modal -->
         <div class="modal" id="Order_RateL" style="padding-right : 50% !important">

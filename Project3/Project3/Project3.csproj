@@ -228,6 +228,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>DataBase.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Models\DataMining.cs" />
     <Compile Include="Models\DimDate.cs">
       <DependentUpon>DataBase.tt</DependentUpon>
     </Compile>
