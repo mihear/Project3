@@ -21,7 +21,8 @@
         <EntityTypeShape EntityType="beeorderWHModel.FacebookComment" Width="1.5" PointX="10.625" PointY="4.375" />
         <EntityTypeShape EntityType="beeorderWHModel.FacebookPost" Width="1.5" PointX="8.375" PointY="4" />
         <AssociationConnector Association="beeorderWHModel.FK_FacebookComment_FacebookPosts" />
-        <AssociationConnector Association="beeorderWHModel.FK_FacebookComment_FacebookPosts" />
+        <EntityTypeShape EntityType="beeorderWHModel.DishDataMining" Width="1.5" PointX="5.375" PointY="0.75" />
+        <EntityTypeShape EntityType="beeorderWHModel.UserDataMining" Width="1.5" PointX="8.375" PointY="9.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

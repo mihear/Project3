@@ -243,6 +243,9 @@
     <Compile Include="Models\DimUser.cs">
       <DependentUpon>DataBase.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\DishDataMining.cs">
+      <DependentUpon>DataBase.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Drivers\DriversCharts.cs" />
     <Compile Include="Models\Drivers\DriversOrder.cs" />
     <Compile Include="Models\Drivers\DriversType.cs" />
@@ -270,6 +273,10 @@
     <Compile Include="Models\sysdiagram.cs">
       <DependentUpon>DataBase.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\UserDataMining.cs">
+      <DependentUpon>DataBase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\UserMining.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>

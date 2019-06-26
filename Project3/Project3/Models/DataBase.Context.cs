@@ -35,5 +35,7 @@ namespace Project3.Models
         public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
         public virtual DbSet<FacebookComment> FacebookComments { get; set; }
         public virtual DbSet<FacebookPost> FacebookPosts { get; set; }
+        public virtual DbSet<DishDataMining> DishDataMinings { get; set; }
+        public virtual DbSet<UserDataMining> UserDataMinings { get; set; }
     }
 }

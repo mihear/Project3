@@ -134,6 +134,24 @@ namespace Project3.Controllers.api
                 " group by[DimUser].AreaEngName order by count").ToList();
             return Ok(date);
         }
+        //Data Mining 
+        [HttpGet]
+        public IHttpActionResult UserForMining()
+        {
+            var date = db.Database
+                .SqlQuery<UserMining>("select distinct UDM.id , d.name from DimUser d inner join UserDataMining UDM on d.[UserAltKey] = UDM.id").ToList();
+            return Ok(date);
+        }
+        public IHttpActionResult UserDataMining(int id)
+        {
+            if (id == 0)
+            {
+                return BadRequest();
+            }
+            var date = db.Database
+                .SqlQuery<UserDataMining>("select * from UserDataMining UDM where id=@id", new SqlParameter("@id", id)).ToList();
+            return Ok(date);
+        }
 
         protected override void Dispose(bool disposing)
         {

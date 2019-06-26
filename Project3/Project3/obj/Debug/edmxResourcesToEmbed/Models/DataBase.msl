@@ -265,5 +265,25 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <EntitySetMapping Name="DishDataMinings">
+      <EntityTypeMapping TypeName="beeorderWHModel.DishDataMining">
+        <MappingFragment StoreEntitySet="DishDataMining">
+          <ScalarProperty Name="Count" ColumnName="Count" />
+          <ScalarProperty Name="prediction" ColumnName="prediction" />
+          <ScalarProperty Name="Date" ColumnName="Date" />
+          <ScalarProperty Name="id" ColumnName="id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="UserDataMinings">
+      <EntityTypeMapping TypeName="beeorderWHModel.UserDataMining">
+        <MappingFragment StoreEntitySet="UserDataMining">
+          <ScalarProperty Name="Conut" ColumnName="Conut" />
+          <ScalarProperty Name="prediction" ColumnName="prediction" />
+          <ScalarProperty Name="Date" ColumnName="Date" />
+          <ScalarProperty Name="id" ColumnName="id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
   </EntityContainerMapping>
 </Mapping>
