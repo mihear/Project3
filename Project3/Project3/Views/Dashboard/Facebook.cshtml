@@ -16,8 +16,9 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <canvas id="myChart" width="580" height="400" style="display : none"></canvas>
-                        <div style="text-align : center ; padding-top : 20% ; height: 289px; " ng-show="vm.loader1">
+                        <h5 style="margin-bottom : 4%">Post Number : {{vm.all}}</h5>
+                        <canvas id="pieChart" width="480" height="300"></canvas>
+                        <div style="text-align : center ; padding-top : 20% ; height: 289px; " ng-show="vm.loader3">
                             <img width="100" src="~/Content/beeorder_logo.gif" />
                         </div>
                     </div>
@@ -124,14 +125,14 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <h5 style="margin-bottom : 4%">Post Number : {{vm.all}}</h5>
-                        <canvas id="pieChart" width="480" height="300"></canvas>
-                        <div style="text-align : center ; padding-top : 20% ; height: 289px; " ng-show="vm.loader3">
+                        <canvas id="myChart" width="580" height="400" style="display : none"></canvas>
+                        <div style="text-align : center ; padding-top : 20% ; height: 289px; " ng-show="vm.loader1">
                             <img width="100" src="~/Content/beeorder_logo.gif" />
                         </div>
                     </div>
                 </div>
             </div>
+      
         </div>
     </div>
 </div>
