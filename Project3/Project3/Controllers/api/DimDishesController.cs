@@ -90,7 +90,7 @@ namespace Project3.Controllers.api
         public IHttpActionResult DishForMining()
         {
             var date = db.Database
-                .SqlQuery<UserMining>("select distinct UDM.id , d.name from DimUser d inner join DishDataMining UDM on d.[UserAltKey] = UDM.id").ToList();
+                .SqlQuery<UserMining>("select distinct UDM.id , d.DishEngName as name from DimDish d inner join DishDataMining UDM on d.[DishAltKey] = UDM.id").ToList();
             return Ok(date);
         }
         public IHttpActionResult DishDataMining(int id)

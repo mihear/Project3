@@ -26,6 +26,10 @@ function facebookService($http) {
         
         return $http.post('/api/FaceBook/Negative')
     };
+    this.Gray = function Gray() {
+
+        return $http.post('/api/FaceBook/Gray')
+    };
 }
 app.controller('facebookController', facebookController);
 
@@ -213,8 +217,12 @@ function facebookController(facebookService) {
                 vm.Negative = response.data;
                 vm.data[1] = vm.Negative
 
+                facebookService.Gray().then(function (response) {
+                    vm.Gray = response.data;
+                    vm.data[2] = vm.Gray
 
-                vm.all = vm.Positive + vm.Negative
+
+                    vm.all = vm.Positive + vm.Negative + vm.Gray
 
 
 
@@ -239,7 +247,7 @@ function facebookController(facebookService) {
                     }],
 
                     // These labels appear in the legend and in the tooltips when hovering different arcs
-                    labels: ['Positive Post','Negative Post']
+                    labels: ['Positive Post','Negative Post' , 'Gray Post']
                 };
                 var doughnutPieOptions = {
                     responsive: true,
@@ -258,7 +266,7 @@ function facebookController(facebookService) {
                         options: doughnutPieOptions
                     });
                 }
-
+                })
             })
 
         })
